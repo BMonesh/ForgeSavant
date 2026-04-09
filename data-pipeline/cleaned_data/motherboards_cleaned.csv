@@ -1,0 +1,13 @@
+﻿name,type,manufacturer,socket,chipset,form_factor,memory_slots,max_memory,pcie_slots,sata_ports,m2_slots,lan,usb_ports,price,source
+ASRock B660M Steel Legend,Desktop,ASRock,LGA 1700,B660,Micro-ATX,2,64GB,1,4,2,2.5G,6,11999,mdcomputers.in
+ASUS Prime B550M-A,Desktop,ASUS,AM4,B550,Micro-ATX,2,64GB,1,4,1,1G,6,9499,amazon.in
+ASUS TUF Gaming B760M-Plus,Desktop,ASUS,LGA 1700,B760,Micro-ATX,2,64GB,1,4,2,2.5G,6,13499,mdcomputers.in
+ASUS ROG Strix B550-F,Desktop,ASUS,AM4,B550,ATX,4,128GB,2,6,2,2.5G,8,16499,amazon.in
+ASUS ROG Strix X670E-E,Desktop,ASUS,AM5,X670E,ATX,4,128GB,3,4,4,2.5G,12,36999,amazon.in
+Gigabyte B550 AORUS Elite V2,Desktop,Gigabyte,AM4,B550,ATX,4,128GB,2,6,2,1G,6,12999,amazon.in
+Gigabyte Z690 AORUS Elite AX,Desktop,Gigabyte,LGA 1700,Z690,ATX,4,128GB,3,6,4,2.5G,10,21999,flipkart.com
+Gigabyte X670 AORUS Elite AX,Desktop,Gigabyte,AM5,X670,ATX,4,128GB,3,4,3,2.5G,10,24999,flipkart.com
+MSI MAG B550 Tomahawk,Desktop,MSI,AM4,B550,ATX,4,128GB,2,6,2,2.5G,8,14499,amazon.in
+MSI MAG B660 Tomahawk,Desktop,MSI,LGA 1700,B660,ATX,4,128GB,2,6,2,2.5G,8,14999,flipkart.com
+MSI PRO B650-P WiFi,Desktop,MSI,AM5,B650,ATX,4,128GB,2,4,2,2.5G,8,17999,amazon.in
+MSI MPG Z790 Edge WiFi,Desktop,MSI,LGA 1700,Z790,ATX,4,128GB,3,6,4,2.5G,10,29999,amazon.in

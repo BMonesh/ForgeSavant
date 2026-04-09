@@ -1,0 +1,86 @@
+[
+  {
+    "component": "processors",
+    "timestamp": "2026-04-09T23:45:29.883933",
+    "raw_rows": 15,
+    "cleaned_rows": 14,
+    "duplicates_removed": 1,
+    "duplicate_pct": 6.7,
+    "null_values_in_raw": 0,
+    "null_values_in_clean": 0,
+    "price_range": {
+      "min": 12499.0,
+      "max": 52999.0,
+      "mean": 29241.21
+    },
+    "unique_manufacturers": 2,
+    "sources": [
+      "amazon.in",
+      "flipkart.com",
+      "mdcomputers.in"
+    ]
+  },
+  {
+    "component": "gpus",
+    "timestamp": "2026-04-09T23:45:29.893479",
+    "raw_rows": 13,
+    "cleaned_rows": 11,
+    "duplicates_removed": 2,
+    "duplicate_pct": 15.4,
+    "null_values_in_raw": 0,
+    "null_values_in_clean": 0,
+    "price_range": {
+      "min": 22999.0,
+      "max": 159999.0,
+      "mean": 58908.09
+    },
+    "unique_manufacturers": 2,
+    "sources": [
+      "amazon.in",
+      "flipkart.com",
+      "mdcomputers.in"
+    ]
+  },
+  {
+    "component": "motherboards",
+    "timestamp": "2026-04-09T23:45:29.903836",
+    "raw_rows": 12,
+    "cleaned_rows": 12,
+    "duplicates_removed": 0,
+    "duplicate_pct": 0.0,
+    "null_values_in_raw": 0,
+    "null_values_in_clean": 0,
+    "price_range": {
+      "min": 9499.0,
+      "max": 36999.0,
+      "mean": 18832.33
+    },
+    "unique_manufacturers": 4,
+    "sources": [
+      "amazon.in",
+      "flipkart.com",
+      "mdcomputers.in"
+    ]
+  },
+  {
+    "component": "ram",
+    "timestamp": "2026-04-09T23:45:29.915947",
+    "raw_rows": 11,
+    "cleaned_rows": 10,
+    "duplicates_removed": 1,
+    "duplicate_pct": 9.1,
+    "null_values_in_raw": 0,
+    "null_values_in_clean": 0,
+    "price_range": {
+      "min": 3999.0,
+      "max": 14999.0,
+      "mean": 8249.0
+    },
+    "unique_manufacturers": 4,
+    "sources": [
+      "amazon.in",
+      "flipkart.com",
+      "mdcomputers.in"
+    ]
+  }
+]

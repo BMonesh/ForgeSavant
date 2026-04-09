@@ -1,0 +1,137 @@
+{
+  "timestamp": "2026-04-09T23:45:25.117296",
+  "files": [
+    {
+      "filename": "ram_raw.csv",
+      "rows": 11,
+      "columns": [
+        "name",
+        "type",
+        "manufacturer",
+        "capacity",
+        "ram_type",
+        "speed",
+        "cas_latency",
+        "voltage",
+        "rgb",
+        "price",
+        "source"
+      ],
+      "null_counts": {
+        "name": 0,
+        "type": 0,
+        "manufacturer": 0,
+        "capacity": 0,
+        "ram_type": 0,
+        "speed": 0,
+        "cas_latency": 0,
+        "voltage": 0,
+        "rgb": 0,
+        "price": 0,
+        "source": 0
+      },
+      "duplicate_names": 1
+    },
+    {
+      "filename": "gpus_raw.csv",
+      "rows": 13,
+      "columns": [
+        "name",
+        "type",
+        "manufacturer",
+        "core_count",
+        "base_clock",
+        "boost_clock",
+        "memory",
+        "tdp",
+        "price",
+        "source"
+      ],
+      "null_counts": {
+        "name": 0,
+        "type": 0,
+        "manufacturer": 0,
+        "core_count": 0,
+        "base_clock": 0,
+        "boost_clock": 0,
+        "memory": 0,
+        "tdp": 0,
+        "price": 0,
+        "source": 0
+      },
+      "duplicate_names": 1
+    },
+    {
+      "filename": "motherboards_raw.csv",
+      "rows": 12,
+      "columns": [
+        "name",
+        "type",
+        "manufacturer",
+        "socket",
+        "chipset",
+        "form_factor",
+        "memory_slots",
+        "max_memory",
+        "pcie_slots",
+        "sata_ports",
+        "m2_slots",
+        "lan",
+        "usb_ports",
+        "price",
+        "source"
+      ],
+      "null_counts": {
+        "name": 0,
+        "type": 0,
+        "manufacturer": 0,
+        "socket": 0,
+        "chipset": 0,
+        "form_factor": 0,
+        "memory_slots": 0,
+        "max_memory": 0,
+        "pcie_slots": 0,
+        "sata_ports": 0,
+        "m2_slots": 0,
+        "lan": 0,
+        "usb_ports": 0,
+        "price": 0,
+        "source": 0
+      },
+      "duplicate_names": 0
+    },
+    {
+      "filename": "processors_raw.csv",
+      "rows": 15,
+      "columns": [
+        "name",
+        "type",
+        "manufacturer",
+        "cores",
+        "threads",
+        "base_clock",
+        "boost_clock",
+        "cache",
+        "socket",
+        "tdp",
+        "price",
+        "source"
+      ],
+      "null_counts": {
+        "name": 0,
+        "type": 0,
+        "manufacturer": 0,
+        "cores": 0,
+        "threads": 0,
+        "base_clock": 0,
+        "boost_clock": 0,
+        "cache": 0,
+        "socket": 0,
+        "tdp": 0,
+        "price": 0,
+        "source": 0
+      },
+      "duplicate_names": 1
+    }
+  ]
+}

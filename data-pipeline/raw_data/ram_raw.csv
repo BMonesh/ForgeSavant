@@ -1,0 +1,12 @@
+name,type,manufacturer,capacity,ram_type,speed,cas_latency,voltage,rgb,price,source
+Corsair Vengeance LPX 16GB,Desktop,Corsair,16GB (2x8GB),DDR4,3200 MHz,16,1.35V,false,4299,amazon.in
+G.Skill Trident Z5 32GB,Desktop,G.Skill,32GB (2x16GB),DDR5,6000 MHz,30,1.35V,true,10999,flipkart.com
+Kingston Fury Beast 16GB,Desktop,Kingston,16GB (2x8GB),DDR4,3200 mhz,16,1.35V,false,3999,amazon.in
+Corsair Vengeance RGB 32GB,Desktop,corsair,32GB (2x16GB),DDR5,5600 MHz,36,1.25V,true,9499,mdcomputers.in
+G.Skill Ripjaws V 16GB,Desktop,G.Skill,16GB (2x8GB),DDR4,3600 MHz,18,1.35V,false,4499,amazon.in
+Kingston Fury Beast 32GB,Desktop,Kingston,32GB (2x16GB),DDR5,5200 MHz,40,1.25V,false,7999,flipkart.com
+Corsair Dominator Platinum 32GB,Desktop,Corsair,32GB (2x16GB),DDR5,6200 MHz,36,1.35 V,true,14999,amazon.in
+TeamGroup T-Force Delta 16GB,Desktop,TeamGroup,16GB (2x8GB),ddr4,3200 MHz,16,1.35V,true,4199,mdcomputers.in
+G.Skill Trident Z Neo 32GB,Desktop,G.Skill,32GB (2x16GB),DDR4,3600 MHz,16,1.35V,true,8999,amazon.in
+Corsair Vengeance LPX 16GB,Desktop,Corsair,16GB (2x8GB),DDR4,3200 MHz,16,1.35V,false,4499,flipkart.com
+Kingston Fury Renegade 32GB,Desktop,Kingston,32GB (2x16GB),DDR5,6400 MHz,32,1.40V,false,12999,amazon.in

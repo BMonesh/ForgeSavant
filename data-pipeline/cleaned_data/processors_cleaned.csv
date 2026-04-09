@@ -1,0 +1,15 @@
+﻿name,type,manufacturer,cores,threads,base_clock,boost_clock,cache,socket,tdp,price,source
+AMD Ryzen 5 5600X,Desktop,AMD,6,12,3.7 GHz,4.6 GHz,35MB,AM4,65W,14999,amazon.in
+AMD Ryzen 5 7600X,Desktop,AMD,6,12,4.7 GHz,5.3 GHz,38MB,AM5,105W,21499,mdcomputers.in
+AMD Ryzen 7 5800X,Desktop,AMD,8,16,3.8 GHz,4.7 GHz,36MB,AM4,105W,22999,amazon.in
+AMD Ryzen 7 5800X3D,Desktop,AMD,8,16,3.4 GHz,4.5 GHz,100MB,AM4,105W,27499,amazon.in
+AMD RYZEN 7 7700X,Desktop,AMD,8,16,4.5 GHz,5.4 GHz,40MB,AM5,105W,29999,amazon.in
+AMD Ryzen 9 5900X,Desktop,AMD,12,24,3.7 GHz,4.8 GHz,70MB,AM4,105W,34999,flipkart.com
+AMD Ryzen 9 7900X,Desktop,AMD,12,24,4.7 GHz,5.6 GHz,76MB,AM5,170W,42999,mdcomputers.in
+Intel Core i5-12400F,Desktop,Intel,6,12,2.5 GHz,4.4 GHz,18MB,LGA 1700,65W,12499,amazon.in
+Intel Core i5 12400F,Desktop,Intel,6,12,2.5 GHz,4.4 GHz,18MB,LGA 1700,65W,12899,mdcomputers.in
+Intel Core i5-13600K,Desktop,Intel,14,20,3.5 GHz,5.1 GHz,24MB,LGA 1700,125W,25999,flipkart.com
+Intel Core i7-12700K,Desktop,Intel,12,20,3.6 GHz,5.0 GHz,25MB,LGA 1700,125W,28999,flipkart.com
+intel core i7-13700K,Desktop,Intel,16,24,3.4 GHz,5.4 GHz,30MB,LGA 1700,125W,35999,amazon.in
+Intel Core i9-12900K,Desktop,Intel,16,24,3.2 GHz,5.2 GHz,30MB,LGA 1700,125W,44990,amazon.in
+Intel Core i9-13900K,Desktop,Intel,24,32,3.0 GHz,5.8 GHz,36MB,LGA 1700,125W,52999,flipkart.com
