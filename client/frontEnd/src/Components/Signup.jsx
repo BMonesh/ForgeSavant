@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";  // Corrected import
-import logo from "../assets/ForgeSavant2.png";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../Styles/signup.css";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
+import { useSession } from "../auth/SessionContext";
+import { getAuthError } from "../auth/authErrors";
+import BrandLogo from "./ui/BrandLogo";
 
 function Signup() {
   const [fullname, setFullname] = useState("");
@@ -13,172 +14,102 @@ function Signup() {
   const [message, setMessage] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const location = useLocation();
+  const { signIn } = useSession();
+  const isGoogleAuthEnabled = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
   const validateForm = () => {
-    let valid = true;
-    if (!validateEmail(email)) {
-      setEmailError("Please enter a valid email address.");
-      valid = false;
-    } else {
-      setEmailError("");
-    }
-    if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long.");
-      valid = false;
-    } else {
-      setPasswordError("");
-    }
-    return valid;
+    const nextEmailError = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+      ? ""
+      : "Enter a valid email address.";
+    const nextPasswordError = password.length >= 8
+      ? ""
+      : "Use at least 8 characters.";
+    setEmailError(nextEmailError);
+    setPasswordError(nextPasswordError);
+    return !nextEmailError && !nextPasswordError;
   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    setMessage(""); // Clear any existing messages
-    if (!validateForm()) {
-      return;
-    }
-    console.log(fullname, email, password);
-    try {
-      const response = await axios.post("https://s51-monesh-capstone-forgesavant.onrender.com/signup", {
-        fullname,
-        email,
-        password
-      });
+    setMessage("");
+    if (!validateForm()) return;
+    setIsSubmitting(true);
 
-      if (response.status === 201) {
-        localStorage.setItem("user", JSON.stringify(fullname));
-        localStorage.setItem('email', email);
-        navigate('/build'); // Navigate to /build page after successful sign-up
-      } else {
-        console.log("Error data: ", response.data); // Debugging log
-        if (response.data.message === "User already exists") {
-          setMessage("User already exists. Please login.");
-        } else {
-          setMessage("Sign-up failed. Please try again.");
-        }
-      }
+    try {
+      const response = await api.post("/signup", { fullname, email, password });
+      signIn(response.data);
+      navigate(location.state?.returnTo || "/build", { replace: true });
     } catch (error) {
       console.error("Error during sign-up:", error);
-      setMessage("An error occurred. Please try again.");
+      setMessage(getAuthError(error, "Account creation failed. Try again."));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleGoogleSignUp = async (credentialResponse) => {
+    setMessage("");
+    setIsSubmitting(true);
+
     try {
-      const decoded = jwtDecode(credentialResponse.credential);
-      console.log(decoded);
-
-      // Check if the user already exists
-      const existingUserResponse = await axios.post("https://s51-monesh-capstone-forgesavant.onrender.com/checkGoogleUser", {
-        email: decoded.email,
+      const response = await api.post("/googleSignup", {
+        credential: credentialResponse.credential,
       });
-
-      if (existingUserResponse.data.exists) {
-        // User exists, log them in
-        const loginResponse = await axios.post("https://s51-monesh-capstone-forgesavant.onrender.com/googleLogin", {
-          email: decoded.email,
-          googleLogin: true,
-        });
-
-        if (loginResponse.status === 200) {
-          console.log("Login successful:", loginResponse.data);
-          localStorage.setItem("user", JSON.stringify(loginResponse.data));
-          localStorage.setItem('email', decoded.email);
-          navigate('/build'); // Navigate to /build page after successful login
-        }
-      } else {
-        // User does not exist, create a new account
-        const signupResponse = await axios.post("https://s51-monesh-capstone-forgesavant.onrender.com/googleSignup", {
-          fullname: decoded.name,
-          email: decoded.email,
-        });
-
-        if (signupResponse.status === 201) {
-          console.log("Sign-up successful:", signupResponse.data);
-          localStorage.setItem("user", JSON.stringify(decoded.name)); 
-          localStorage.setItem('email', decoded.email);
-          navigate('/build'); // Navigate to /build page after successful sign-up
-        }
-      }
+      signIn(response.data);
+      navigate(location.state?.returnTo || "/build", { replace: true });
     } catch (error) {
-      console.error("Error during Google sign-up/login:", error);
-      setMessage("An error occurred. Please try again.");
+      console.error("Error during Google sign-up:", error);
+      setMessage(getAuthError(error, "Google account creation failed. Try again."));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="Signup">
-      <div className="left-side">
-        <img src={logo} alt="logo" className="logo" />
-      </div>
-      <div className="right-side">
-        <div className="head">
-          <h3>"Hello!"</h3>
-          <p className="signup-text">
-            "Sign up to get started"
-          </p>
+      <section className="auth-context" aria-label="ForgeSavant account benefits">
+        <Link to="/" className="auth-brand" aria-label="ForgeSavant builder">
+          <BrandLogo className="brand-logo-auth" />
+        </Link>
+        <div className="auth-copy">
+          <p className="ui-kicker">New builder profile</p>
+          <h1>Start with a clean parts record.</h1>
+          <p>Store each verified selection against one account and return to the complete build later.</p>
         </div>
-        <form onSubmit={handleFormSubmit} className="form">
-          <input
-            type="text"
-            name="fullname"
-            placeholder="Full Name"
-            aria-label="Full Name"
-            value={fullname}
-            onChange={(e) => setFullname(e.target.value)}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            aria-label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          {emailError && <p className="error-message">{emailError}</p>}
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            aria-label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {passwordError && <p className="error-message">{passwordError}</p>}
-          <button type="submit" className="register">
-            Register
-          </button>
-          <GoogleLogin
-            onSuccess={handleGoogleSignUp}
-            onError={() => {
-              console.log("Login Failed");
-            }}
-          />
-          <Link to="/loginAuthentication">
-            <button
-              type="button"
-              style={{
-                cursor: "pointer",
-                backgroundColor: "transparent",
-                color: "white",
-              }}
-              id="login"
-            >
-              <p>Already have an account? Login here.</p>
+        <dl className="auth-proof">
+          <div><dt>Verified flow</dt><dd>Selections unlock when upstream rules match.</dd></div>
+          <div><dt>Private history</dt><dd>Saved builds are protected by your session.</dd></div>
+        </dl>
+      </section>
+
+      <main className="auth-form-panel">
+        <div className="auth-form-shell">
+          <header className="head">
+            <p className="ui-kicker">Create account</p>
+            <h2>Builder profile</h2>
+            <p className="signup-text">Save compatible configurations and revisit them from any session.</p>
+          </header>
+          <form onSubmit={handleFormSubmit} className="form">
+            <label htmlFor="signup-fullname">Full name</label>
+            <input id="signup-fullname" type="text" autoComplete="name" placeholder="Your name" value={fullname} onChange={(event) => setFullname(event.target.value)} required />
+            <label htmlFor="signup-email">Email</label>
+            <input id="signup-email" type="email" autoComplete="email" placeholder="you@example.com" aria-describedby={emailError ? "signup-email-error" : undefined} value={email} onChange={(event) => setEmail(event.target.value)} required />
+            {emailError ? <p id="signup-email-error" className="field-error" role="alert">{emailError}</p> : null}
+            <label htmlFor="signup-password">Password</label>
+            <input id="signup-password" type="password" autoComplete="new-password" placeholder="At least 8 characters" aria-describedby={passwordError ? "signup-password-error" : undefined} value={password} onChange={(event) => setPassword(event.target.value)} required />
+            {passwordError ? <p id="signup-password-error" className="field-error" role="alert">{passwordError}</p> : null}
+            <button type="submit" className="register" disabled={isSubmitting}>
+              {isSubmitting ? "Creating account..." : "Create account"}
             </button>
-          </Link>
-        </form>
-        {message && <p className="error-message">{message}</p>}
-      </div>
+            {isGoogleAuthEnabled ? <GoogleLogin onSuccess={handleGoogleSignUp} onError={() => setMessage("Google account creation failed. Try again.")} /> : null}
+            <Link to="/loginAuthentication" state={location.state} className="auth-link">Sign in instead</Link>
+          </form>
+          {message ? <p className="error-message" role="alert">{message}</p> : null}
+        </div>
+      </main>
     </div>
   );
 }

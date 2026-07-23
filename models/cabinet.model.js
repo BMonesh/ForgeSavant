@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { componentMetadataFields } = require('./componentMetadata.schema');
 
 const cabinetSchema = new mongoose.Schema({
   name: {
@@ -29,8 +30,11 @@ const cabinetSchema = new mongoose.Schema({
   },
   image_url: {
     type: String,
-    required: true
-  }
+    required: false,
+    default: ""
+  },
+  provenance: { type: mongoose.Schema.Types.Mixed },
+  ...componentMetadataFields,
 });
 
 const Cabinet = mongoose.model('cabinets', cabinetSchema);

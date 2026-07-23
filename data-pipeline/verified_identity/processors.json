@@ -1,0 +1,15 @@
+[
+  { "name": "AMD Ryzen 5 5600X", "manufacturerPartNumber": "100-100000065BOX", "sourceUrl": "https://www.amd.com/en/products/processors/desktops/ryzen/5000-series/amd-ryzen-5-5600x.html" },
+  { "name": "AMD Ryzen 5 7600X", "manufacturerPartNumber": "100-100000593WOF", "sourceUrl": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-5-7600x.html" },
+  { "name": "AMD Ryzen 7 5800X", "manufacturerPartNumber": "100-100000063WOF", "sourceUrl": "https://www.amd.com/en/products/processors/desktops/ryzen/5000-series/amd-ryzen-7-5800x.html" },
+  { "name": "AMD Ryzen 7 5800X3D", "manufacturerPartNumber": "100-100000651POF", "sourceUrl": "https://www.amd.com/en/products/processors/desktops/ryzen/5000-series/amd-ryzen-7-5800x3d.html" },
+  { "currentName": "AMD RYZEN 7 7700X", "name": "AMD Ryzen 7 7700X", "manufacturerPartNumber": "100-100000591WOF", "sourceUrl": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7700x.html" },
+  { "name": "AMD Ryzen 9 5900X", "manufacturerPartNumber": "100-100000061WOF", "sourceUrl": "https://www.amd.com/en/products/processors/desktops/ryzen/5000-series/amd-ryzen-9-5900x.html" },
+  { "name": "AMD Ryzen 9 7900X", "manufacturerPartNumber": "100-100000589WOF", "sourceUrl": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-9-7900x.html" },
+  { "name": "Intel Core i5-12400F", "manufacturerPartNumber": "BX8071512400F", "sourceUrl": "https://www.intel.com/content/www/us/en/products/sku/134587/intel-core-i512400f-processor-18m-cache-up-to-4-40-ghz/ordering.html" },
+  { "name": "Intel Core i5-13600K", "manufacturerPartNumber": "BX8071513600K", "sourceUrl": "https://www.intel.com/content/www/us/en/products/sku/230493/intel-core-i513600k-processor-24m-cache-up-to-5-10-ghz/ordering.html" },
+  { "name": "Intel Core i7-12700K", "manufacturerPartNumber": "BX8071512700K", "sourceUrl": "https://www.intel.com/content/www/us/en/products/sku/134594/intel-core-i712700k-processor-25m-cache-up-to-5-00-ghz/ordering.html" },
+  { "currentName": "intel core i7-13700K", "name": "Intel Core i7-13700K", "manufacturerPartNumber": "BX8071513700K", "sourceUrl": "https://www.intel.com/content/www/us/en/products/sku/230500/intel-core-i713700k-processor-30m-cache-up-to-5-40-ghz/ordering.html" },
+  { "name": "Intel Core i9-12900K", "manufacturerPartNumber": "BX8071512900K", "sourceUrl": "https://www.intel.com/content/www/us/en/products/sku/134599/intel-core-i912900k-processor-30m-cache-up-to-5-20-ghz/ordering.html" },
+  { "name": "Intel Core i9-13900K", "manufacturerPartNumber": "BX8071513900K", "sourceUrl": "https://www.intel.com/content/www/us/en/products/sku/230496/intel-core-i913900k-processor-36m-cache-up-to-5-80-ghz/ordering.html" }
+]

@@ -1,119 +1,182 @@
 .Navbar {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
   z-index: 1000;
   display: flex;
-  height: 10vh;
-  justify-content: space-between;
+  min-height: var(--nav-height);
   align-items: center;
-  padding: 10px 20px;
-  background-color: rgba(0, 0, 0, 0.221);
-  backdrop-filter: blur(20px);
-  color: #fff;
-  font-family: 'Russo One';
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid #d9ddd6;
+  background: #f5f6f2;
+  color: #111311;
+  padding: 0 clamp(18px, 3vw, 44px);
+}
+
+.Navbar-home {
+  border-bottom: 1px solid #d9ddd6;
+  background: #f5f6f2;
+  color: #111311;
+}
+
+.Navbar-workbench {
+  border-bottom: 1px solid #d9ddd6;
+  background: #f5f6f2;
+  color: #111311;
+}
+
+.Navbar-home .brand-link {
+  border-right-color: #d9ddd6;
+}
+
+.Navbar-home .nav-action,
+.Navbar-home .nav-logout {
+  color: #41463f;
+}
+
+.Navbar-home .nav-action:hover,
+.Navbar-home .nav-action[aria-current="page"],
+.Navbar-home .nav-logout:hover {
+  border-color: #c8cdc4;
+  background: #ffffff;
+  color: #111311;
+}
+
+.Navbar-home .nav-avatar {
+  border-color: #c8cdc4;
+  color: #41463f;
+}
+
+.nav-home-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.5vw, 36px);
+  margin-right: clamp(10px, 2vw, 28px);
+}
+
+.nav-home-links a {
+  color: #41463f;
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.nav-home-links a:hover {
+  color: #111311;
+}
+
+.left-Nav,
+.right-Nav,
+.brand-link,
+.nav-action,
+.nav-logout,
+.nav-build-name {
+  display: flex;
+  align-items: center;
 }
 
 .left-Nav {
-  display: flex;
-  align-items: center;
+  min-width: 0;
+  align-self: stretch;
+  gap: 28px;
 }
 
-#brandLogo {
-  width: 160px;
+.brand-link {
+  align-self: stretch;
+  border-right: 1px solid #d9ddd6;
+  padding-right: 28px;
+}
+
+.nav-brand-logo {
+  height: 48px;
+  width: 56px;
+}
+
+.nav-build-name {
+  min-width: 0;
+  gap: 7px;
+  color: #62665f;
+  font-size: 0.82rem;
+}
+
+.nav-build-name strong {
+  overflow: hidden;
+  color: #111311;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .right-Nav {
-  display: flex;
-  align-items: center;
+  flex: 0 0 auto;
+  gap: 6px;
+  margin-left: auto;
 }
 
-.right-Nav button{
-  margin-right: 35px;
-}
-
-#btn {
-  font-size: 17px;
+.nav-action,
+.nav-logout {
+  min-height: 42px;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
   background: transparent;
-  border: none;
-  padding: 0.4em 1.2em;
-  color: #F9D949;
-  font-family: 'Russo one';
-  text-transform: uppercase;
-  position: relative;
-  transition: 0.5s ease;
+  color: #41463f;
   cursor: pointer;
+  padding: 8px 11px;
+  font-weight: 700;
 }
 
-#btn::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 2px;
-  width: 0;
-  background-color: #F9D949;
-  transition: 0.5s ease;
+.nav-action:hover,
+.nav-action[aria-current="page"],
+.nav-logout:hover {
+  border-color: #c8cdc4;
+  background: #ffffff;
+  color: #111311;
 }
 
-#btn:hover {
-  color: #1e1e2b;
-  transition-delay: 0.5s;
+.nav-action[aria-current="page"] {
+  box-shadow: inset 0 -2px var(--color-accent);
 }
 
-#btn:hover::before {
-  width: 100%;
+.nav-avatar {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #c8cdc4;
+  border-radius: 50%;
+  color: #41463f;
 }
 
-#btn::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 0;
-  width: 100%;
-  background-color: #F9D949;
-  transition: 0.4s ease;
-  z-index: -1;
-}
+@media (max-width: 720px) {
+  .Navbar {
+    width: 100%;
+    min-height: 62px;
+    overflow: hidden;
+    padding-inline: 14px;
+  }
 
-#btn:hover::after {
-  height: 100%;
-  transition-delay: 0.4s;
-  color: aliceblue;
-}
+  .brand-link {
+    border-right: 0;
+    padding-right: 0;
+  }
 
-.Build {
-  padding: 10px 20px;
-  font-family: 'Russo One';
-  background-color: #F9D949;
-  color: #000000;
-  width: 150px; 
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: 0.5s ease;
-}
+  .nav-build-name,
+  .nav-home-links,
+  .nav-logout span,
+  .nav-action span,
+  .nav-avatar {
+    display: none;
+  }
 
-.Build:hover{
-  transform: scale(1.05);
-  background-color: #f7d435; 
-}
+  .nav-brand-logo {
+    height: 40px;
+    width: 47px;
+  }
 
-.logout{
-  padding: 10px 20px;
-  font-family: 'Russo One';
-  background-color: #F9D949;
-  color: #000000;
-  width: 150px; 
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: 0.5s ease;
-}
-
-.logout:hover{
-  transform: scale(1.05);
-  background-color: #f7d435;
+  .nav-action,
+  .nav-logout {
+    width: 42px;
+    justify-content: center;
+    padding-inline: 0;
+  }
 }

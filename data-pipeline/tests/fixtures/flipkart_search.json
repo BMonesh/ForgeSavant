@@ -1,0 +1,15 @@
+{
+  "productInfoList": [
+    {
+      "productBaseInfoV1": {
+        "productId": "TEST-CPU-5600X",
+        "title": "AMD Ryzen 5 5600X Desktop Processor",
+        "flipkartSellingPrice": { "amount": 12999, "currency": "INR" },
+        "flipkartSpecialPrice": { "amount": 12499, "currency": "INR" },
+        "productUrl": "https://www.flipkart.com/example-processor",
+        "imageUrls": { "400x400": "https://example.test/processor.jpg" }
+      },
+      "productShippingInfoV1": { "inStock": true }
+    }
+  ]
+}

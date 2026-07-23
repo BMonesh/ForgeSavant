@@ -1,10 +1,171 @@
-html {
-  scroll-behavior: smooth;
+:root {
+  color-scheme: light;
+  font-family: "Segoe UI Variable", Aptos, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --color-background: #f5f6f2;
+  --color-surface: #ffffff;
+  --color-elevated: #e9ebe5;
+  --color-text: #111311;
+  --color-muted: #62665f;
+  --color-subtle: #858b82;
+  --color-border: #d9ddd6;
+  --color-accent: #b9ff2c;
+  --color-success: #28785e;
+  --color-warning: #c77b08;
+  --color-danger: #cf3f3f;
+  --color-info: #111311;
+  --font-body: Inter, "Segoe UI Variable", Aptos, "Segoe UI", sans-serif;
+  --font-utility: "Cascadia Code", "Cascadia Mono", monospace;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --shadow-dialog: 0 22px 60px rgb(22 33 39 / 0.2);
+  --shadow-panel: none;
+  --nav-height: 68px;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 }
 
-*{
-  padding: 0;
-  margin: 0;
+html {
+  scroll-behavior: smooth;
+  background: var(--color-background);
+}
+
+* {
   box-sizing: border-box;
 }
 
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  border: 0;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-info) 72%, white);
+  outline-offset: 3px;
+}
+
+.app-main {
+  min-height: 100vh;
+}
+
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: 12px;
+  z-index: 2000;
+  transform: translateY(-140%);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: #111311;
+  padding: 10px 14px;
+  font-weight: 700;
+  transition: transform 120ms var(--ease-standard);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.ui-kicker {
+  color: var(--color-subtle);
+  font-family: var(--font-utility);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.ui-button,
+.MuiButton-root {
+  min-height: 44px !important;
+  border-radius: var(--radius-md) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  box-shadow: none !important;
+  transition:
+    background-color 120ms var(--ease-standard),
+    border-color 120ms var(--ease-standard),
+    color 120ms var(--ease-standard),
+    transform 120ms var(--ease-standard) !important;
+}
+
+.MuiButton-containedPrimary {
+  background-color: var(--color-accent) !important;
+  color: var(--color-text) !important;
+}
+
+.MuiButton-containedPrimary:hover {
+  background-color: #a7e92a !important;
+}
+
+.MuiButton-outlinedPrimary {
+  border-color: var(--color-border) !important;
+  color: var(--color-muted) !important;
+}
+
+.MuiButton-outlinedPrimary:hover {
+  border-color: var(--color-subtle) !important;
+  background-color: var(--color-elevated) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { componentMetadataFields } = require('./componentMetadata.schema');
 
 // Define the schema for the Motherboard model
 const MotherboardSchema = new mongoose.Schema({
@@ -23,6 +24,10 @@ const MotherboardSchema = new mongoose.Schema({
     chipset: {
       type: String,
       required: true,
+    },
+    memory_type: {
+      type: String,
+      required: false,
     },
     form_factor: {
       type: String,
@@ -61,6 +66,8 @@ const MotherboardSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  provenance: { type: mongoose.Schema.Types.Mixed },
+  ...componentMetadataFields,
 });
 
 // Create the Motherboard model from the schema

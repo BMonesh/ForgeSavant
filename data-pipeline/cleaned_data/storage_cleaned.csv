@@ -1,0 +1,5 @@
+name,type,manufacturer,capacity,interface,form_factor,speed,technology,encryption,tbw,warranty,price,image_url,source,source_url,currency,availability,collected_at,data_status
+Samsung 980 1TB NVMe SSD,SSD,Samsung,1TB,NVMe,M.2 2280,3500 MB/s,TLC NAND,AES 256-bit,600TB,5 years,6499,,ForgeSavant curated dataset,,INR,unknown,,seed
+WD Blue SN580 1TB NVMe SSD,SSD,Western Digital,1TB,NVMe,M.2 2280,4150 MB/s,TLC NAND,None,600TB,5 years,5899,,ForgeSavant curated dataset,,INR,unknown,,seed
+Crucial BX500 1TB SATA SSD,SSD,Crucial,1TB,SATA,2.5 inch,540 MB/s,3D NAND,None,360TB,3 years,4999,,ForgeSavant curated dataset,,INR,unknown,,seed
+Seagate Barracuda 2TB HDD,HDD,Seagate,2TB,SATA,3.5 inch,7200 RPM,CMR,None,N/A,2 years,5299,,ForgeSavant curated dataset,,INR,unknown,,seed

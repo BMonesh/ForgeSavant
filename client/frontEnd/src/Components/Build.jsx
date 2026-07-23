@@ -1,797 +1,399 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../Styles/Build.css";
 import pc from "../assets/custom-gaming-pc.png";
-import processorImg from "../assets/Processor-Background-PNG-Image.png";
-import motherboardImg from "../assets/Motherboard-PNG.png";
-import graphicCardImg from "../assets/graphics-card-image.png";
-import storageImg from "../assets/pngwing.com.png";
-import RAMImg from "../assets/RAM-Memory-Transparent.png";
-import SmpsImg from "../assets/SMPS-image.png";
-import Button from "@mui/material/Button";
+import performanceLabHardware from "../assets/performance-lab-hardware.webp";
+import processorImg from "../assets/Processor-Background-PNG-Image.webp";
+import motherboardImg from "../assets/Motherboard-PNG.webp";
+import graphicCardImg from "../assets/graphics-card-image.webp";
+import storageImg from "../assets/pngwing.com.webp";
+import RAMImg from "../assets/RAM-Memory-Transparent.webp";
+import SmpsImg from "../assets/SMPS-image.webp";
+import api from "../services/api";
+import BuildSummary from "./builder/BuildSummary";
+import BuildStatusDock from "./builder/BuildStatusDock";
+import CompatibilityRail from "./builder/CompatibilityRail";
+import ComponentPicker from "./builder/ComponentPicker";
+import HardwareStage from "./builder/HardwareStage";
+import { useSession } from "../auth/SessionContext";
 import {
-  GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
-} from "@google/generative-ai";
-import APIKey from "../APIKey";
-import { selectClasses } from "@mui/material";
+  calculateRecommendedPsu,
+  canVisitStep,
+  emptySelection,
+  estimatePerformance,
+  getItemsForStep,
+  getFirstIncompleteStep,
+  getRailSteps,
+  getRuleEvidence,
+  getSelectedForStep,
+  hydrateSavedBuild,
+  isBuildComplete,
+  isStepSelected,
+  resetAfterStep,
+  stepLabels,
+  stepOrder,
+} from "./builder/buildUtils";
+import { clearBuildDraft, loadBuildDraft, saveBuildDraft } from "./builder/buildDraft";
 
 const imagePaths = {
+  platform: processorImg,
   processor: processorImg,
   motherboard: motherboardImg,
   gpu: graphicCardImg,
-  storage: storageImg,
+  primaryStorage: storageImg,
+  secondaryStorage: storageImg,
   ram: RAMImg,
   smps: SmpsImg,
+  cabinet: pc,
+  review: pc,
+};
+
+const stepDescriptions = {
+  platform: "Choose the CPU family. This constrains the processor list.",
+  processor: "Select a CPU. Motherboards will be filtered by its socket.",
+  motherboard: "Pick a board that matches the CPU socket and exposes the right form factor.",
+  gpu: "Choose the graphics card used for power and performance estimates.",
+  primaryStorage: "Select an NVMe drive for the primary storage slot.",
+  secondaryStorage: "Select a SATA drive for secondary storage.",
+  ram: "Pick memory that matches the motherboard-supported RAM generation.",
+  smps: "Choose a power supply at or above the calculated wattage target.",
+  cabinet: "Choose a cabinet that supports the selected motherboard form factor.",
+};
+
+const emptyCatalog = {
+  gpu: [],
+  cpu: [],
+  cabinet: [],
+  storage: [],
+  smps: [],
+  motherboard: [],
+  ram: [],
 };
 
 const Build = () => {
-  const [gpuData, setGpuData] = useState([]);
-  const [cpuData, setCpuData] = useState([]);
-  const [cabinetData, setCabinetData] = useState([]);
-  const [storageData, setStorageData] = useState([]);
-  const [smpsData, setSmpsData] = useState([]);
-  const [motherboardData, setMotherboardData] = useState([]);
-  const [ramData, setRamData] = useState([]);
-
-  const [platform, setPlatform] = useState("");
-  const [selectedProcessor, setSelectedProcessor] = useState({ name: "" });
-  const [selectedMotherboard, setSelectedMotherboard] = useState({ name: "" });
-  const [selectedGPU, setSelectedGPU] = useState({ name: "" });
-  const [selectedStorage, setSelectedStorage] = useState({ name: "" });
-  const [selectedSecondStorage, setSelectedSecondStroge] = useState({
-    name: "",
-  });
-  const [selectedRAM, setSelectedRAM] = useState({ name: "" });
-  const [selectedSMPS, setSelectedSMPS] = useState({ name: "" });
-  const [selectedCabinet, setSelectedCabinet] = useState({ name: "" });
-
-  const [showProcessorModal, setShowProcessorModal] = useState(false);
-  const [showMotherboardModal, setShowMotherboardModal] = useState(false);
-  const [showGPUModal, setShowGPUModal] = useState(false);
-  const [showStorageModal, setShowStorageModal] = useState(false);
-  const [showSecondStorageModal, setShowSecondStorageModal] = useState(false);
-  const [showRAMModal, setShowRAMModal] = useState(false);
-  const [showSMPSModal, setShowSMPSModal] = useState(false);
-  const [showCabinetModal, setShowCabinetModal] = useState(false);
-
-  const [currentImage, setCurrentImage] = useState(pc);
-
-  const [message, setMessage] = useState("");
-
-  const [PSUSuggest, setPSUSuggest] = useState("");
-
-  const [scores, setScores] = useState({});
-
+  const location = useLocation();
   const navigate = useNavigate();
+  const [initialDraft] = useState(() =>
+    location.state?.newBuild ? null : loadBuildDraft()
+  );
+  const [catalog, setCatalog] = useState(emptyCatalog);
+  const [catalogStatus, setCatalogStatus] = useState("idle");
+  const [catalogError, setCatalogError] = useState("");
+  const [selection, setSelection] = useState(initialDraft?.selection || emptySelection);
+  const [currentStepId, setCurrentStepId] = useState(initialDraft?.currentStepId || "platform");
+  const [sourceSaveId, setSourceSaveId] = useState(initialDraft?.sourceSaveId || null);
+  const [saveState, setSaveState] = useState("idle");
+  const [message, setMessage] = useState("");
+  const [serverCompatibility, setServerCompatibility] = useState(null);
+  const [compatibilityStatus, setCompatibilityStatus] = useState("idle");
+  const [serverAnalytics, setServerAnalytics] = useState(null);
+  const { isAuthenticated } = useSession();
 
-  const updateImage = (stage) => {
-    setCurrentImage(imagePaths[stage] || pc);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [
-          gpuResponse,
-          cpuResponse,
-          cabinetResponse,
-          storageResponse,
-          smpsResponse,
-          motherboardResponse,
-          ramResponse,
-        ] = await Promise.all([
-          axios.get("https://s51-monesh-capstone-forgesavant.onrender.com/GPU"),
-          axios.get("https://s51-monesh-capstone-forgesavant.onrender.com/CPU"),
-          axios.get("https://s51-monesh-capstone-forgesavant.onrender.com/cabinet"),
-          axios.get("https://s51-monesh-capstone-forgesavant.onrender.com/storage"),
-          axios.get("https://s51-monesh-capstone-forgesavant.onrender.com/smps"),
-          axios.get("https://s51-monesh-capstone-forgesavant.onrender.com/motherboard"),
-          axios.get("https://s51-monesh-capstone-forgesavant.onrender.com/ram"),
-        ]);
-
-        setGpuData(gpuResponse.data);
-        setCpuData(cpuResponse.data);
-        setCabinetData(cabinetResponse.data);
-        setStorageData(storageResponse.data);
-        setSmpsData(smpsResponse.data);
-        setMotherboardData(motherboardResponse.data);
-        setRamData(ramResponse.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handlePlatformSelect = (selectedPlatform) => {
-    updateImage("processor");
-    setPlatform(selectedPlatform);
-    setShowProcessorModal(true);
-  };
-
-  const handleComponentSelect = (data, setSelected) => async (event) => {
-    const selected = data.find((obj) => obj._id === event.target.value);
-    setSelected(selected);
-
-    if (setSelected === setSelectedCabinet){
-      setCurrentImage(selected.image_url);
-    }
-  };
-
-  const apiSearch = async () => {
-    const psuSuggestion = await run(
-      `processor: ${selectedProcessor.name}\nmotherboard: ${selectedMotherboard.name}\ngpu: ${selectedGPU.name}`
-    );
-    const performance = await runPerformance(
-      `cpu: ${selectedProcessor.name}, gpu: ${selectedMotherboard.name}, motherboard: ${selectedGPU.name}`
-    );
-    setPSUSuggest(psuSuggestion.trim());
-    setScores(performance);
-  };
-
-  const handleNext = (currModal, nextModal, image) => {
-    currModal(false);
-    nextModal(true);
-    updateImage(image);
-  };
-
-  const filterData = (data, criteria) => {
-    return data.filter(criteria);
-  };
-
-  //PSU Generate
-  const genAI = new GoogleGenerativeAI(APIKey);
-
-  const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-pro",
-    systemInstruction:
-      'Return just the value of PSU wattage recommended no need of explanation or any extra words. example: "650" note the value must be max watt',
-  });
-
-  const generationConfig = {
-    temperature: 1,
-    topP: 0.95,
-    topK: 64,
-    maxOutputTokens: 8192,
-    responseMimeType: "text/plain",
-  };
-
-  async function run(prompt) {
-    const chatSession = model.startChat({
-      generationConfig,
-      // safetySettings: Adjust safety settings
-      // See https://ai.google.dev/gemini-api/docs/safety-settings
-      history: [
-        {
-          role: "user",
-          parts: [
-            {
-              text: "processor: Intel Core i9-12900k\nMotherboard: ASUS ROG Strix Z690-E Gaming\nGPU: Nvidia Geforce RTX 3080",
-            },
-          ],
-        },
-        {
-          role: "model",
-          parts: [{ text: "750W - 850W \n" }],
-        },
-      ],
-    });
-
-    const result = await chatSession.sendMessage(prompt);
-    const response = result.response.text();
-    console.log(response);
-    return response;
-  }
-
-  //Performance generate
-  const modelPerformance = genAI.getGenerativeModel({
-    model: "gemini-1.5-pro",
-    systemInstruction:
-      "Using the components detail give the cinebench score and fps in cyberpunk game. Output example: cinebench: 7000, cyberpunk: 87 (don't give in string format)",
-  });
-
-  const generationConfigPerformance = {
-    temperature: 1,
-    topP: 0.95,
-    topK: 64,
-    maxOutputTokens: 8192,
-    responseMimeType: "application/json",
-  };
-
-  async function runPerformance(prompt) {
-    const chatSession = modelPerformance.startChat({
-      generationConfig: generationConfigPerformance,
-      history: [
-        {
-          role: "user",
-          parts: [
-            {
-              text: "cpu: Intel Core i9-12900K, gpu: Nvidia GeForce RTX 3080, motherboard: ASUS ROG Strix Z690-E Gaming",
-            },
-          ],
-        },
-        {
-          role: "model",
-          parts: [{ text: '{"cinebench": 25000, "cyberpunk": 100}\n' }],
-        },
-      ],
-    });
-
-    const result = await chatSession.sendMessage(prompt);
-    const responseText = result.response.text();
+  const loadCatalog = useCallback(async () => {
+    setCatalogStatus("loading");
+    setCatalogError("");
 
     try {
-      const responseObject = JSON.parse(responseText);
-      return responseObject;
+      const response = await api.get("/api/v1/catalog");
+      const data = response.data.data;
+
+      setCatalog({
+        gpu: data.gpus,
+        cpu: data.processors,
+        cabinet: data.cabinets,
+        storage: data.storage,
+        smps: data.powerSupplies,
+        motherboard: data.motherboards,
+        ram: data.ram,
+      });
+      setCatalogStatus("ready");
     } catch (error) {
-      console.error("Failed to parse response as JSON:", error);
-      return null;
+      console.error("Error fetching component catalog:", error);
+      setCatalogError("Unable to load component catalog.");
+      setCatalogStatus("error");
     }
-  }
+  }, []);
 
-  const handleSave = async (e) => {
-    e.preventDefault();
-    const email = localStorage.getItem("email");
+  useEffect(() => {
+    loadCatalog();
+  }, [loadCatalog]);
 
-    if (!email) {
-      setMessage("Login to save");
-      console.log(message);
-    } else {
-      try {
-        const response = await axios.post("https://s51-monesh-capstone-forgesavant.onrender.com/saves", {
-          cpu: selectedProcessor.name,
-          motherboard: selectedMotherboard.name,
-          gpu: selectedGPU.name,
-          primaryStorage: selectedStorage.name,
-          secondaryStorage: selectedSecondStorage.name,
-          ram: selectedRAM.name,
-          powerSupply: selectedSMPS.name,
-          cabinet: selectedCabinet.name,
-          email: email,
-          cinebench: scores.cinebench,
-          cyberpunk: scores.cyberpunk,
-          image: selectedCabinet.image_url,
-        });
+  useEffect(() => {
+    saveBuildDraft({ selection, currentStepId, sourceSaveId });
+  }, [currentStepId, selection, sourceSaveId]);
 
-        console.log("Response Status:", response.status);
+  useEffect(() => {
+    const componentIds = {
+      processor: selection.processor?._id,
+      motherboard: selection.motherboard?._id,
+      gpu: selection.gpu?._id,
+      primaryStorage: selection.primaryStorage?._id,
+      secondaryStorage: selection.secondaryStorage?._id,
+      ram: selection.ram?._id,
+      smps: selection.smps?._id,
+      cabinet: selection.cabinet?._id,
+    };
 
-        if (response.status === 201) {
-          console.log("Saved successfully");
-          navigate("/profile");
-        } else {
-          console.log("Unexpected response status:", response.status);
-        }
-      } catch (err) {
-        console.error("Error during save:", err);
+    if (!Object.values(componentIds).some(Boolean)) {
+      setServerCompatibility(null);
+      setCompatibilityStatus("idle");
+      return;
+    }
+
+    let active = true;
+    setCompatibilityStatus("checking");
+    api.post("/api/v1/compatibility/evaluate", { componentIds })
+      .then((response) => {
+        if (!active) return;
+        setServerCompatibility(response.data);
+        setCompatibilityStatus("ready");
+      })
+      .catch((error) => {
+        if (!active) return;
+        console.error("Compatibility evaluation failed:", error);
+        setServerCompatibility(null);
+        setCompatibilityStatus("error");
+      });
+
+    return () => { active = false; };
+  }, [selection]);
+
+  useEffect(() => {
+    if (!selection.processor?._id || !selection.gpu?._id) {
+      setServerAnalytics(null);
+      return;
+    }
+
+    let active = true;
+    api.post("/api/v1/analytics/estimate", {
+      componentIds: { processor: selection.processor._id, gpu: selection.gpu._id },
+    })
+      .then((response) => {
+        if (active) setServerAnalytics(response.data);
+      })
+      .catch((error) => {
+        if (!active) return;
+        console.error("Performance estimate failed:", error);
+        setServerAnalytics(null);
+      });
+
+    return () => { active = false; };
+  }, [selection.gpu, selection.processor]);
+
+  useEffect(() => {
+    if (location.state?.newBuild) {
+      clearBuildDraft();
+      setSelection(emptySelection);
+      setCurrentStepId("platform");
+      setSourceSaveId(null);
+      setMessage("");
+      navigate(location.pathname, { replace: true, state: null });
+      return;
+    }
+
+    if (location.state?.savedBuild && catalogStatus === "ready") {
+      const hydrated = hydrateSavedBuild(location.state.savedBuild, catalog);
+      const nextStep = getFirstIncompleteStep(hydrated);
+      setSelection(hydrated);
+      setCurrentStepId(nextStep);
+      setSourceSaveId(location.state.savedBuild._id);
+      setMessage(nextStep === "review" ? "Saved build loaded. Changes will update this record." : "Some saved parts are no longer in the catalog. Review the highlighted step.");
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [catalog, catalogStatus, location.pathname, location.state, navigate]);
+
+  const estimate = useMemo(
+    () => ({
+      psuTarget: calculateRecommendedPsu(selection.processor, selection.gpu),
+      performance: serverAnalytics?.performance
+        ? {
+            ...serverAnalytics.performance,
+            confidence: serverAnalytics.confidence,
+            modelVersion: serverAnalytics.model?.version,
+          }
+        : estimatePerformance(selection.processor, selection.gpu),
+    }),
+    [selection.gpu, selection.processor, serverAnalytics]
+  );
+
+  const railSteps = useMemo(
+    () => getRailSteps(selection, currentStepId),
+    [currentStepId, selection]
+  );
+
+  const currentItems = useMemo(
+    () => getItemsForStep(currentStepId, selection, catalog),
+    [catalog, currentStepId, selection]
+  );
+
+  const selectedPart = getSelectedForStep(selection, currentStepId);
+  const selectedId = currentStepId === "platform" ? selection.platform : selectedPart?._id;
+  const currentImage = imagePaths[currentStepId] || pc;
+
+  const setSelectedForStep = (stepId, item) => {
+    setMessage("");
+    setSaveState("idle");
+    setSelection((previousSelection) => {
+      const nextSelection = resetAfterStep(previousSelection, stepId);
+      if (stepId === "platform") {
+        nextSelection.platform = item._id;
+      } else {
+        nextSelection[stepId] = item;
+        if (stepId === "secondaryStorage") nextSelection.skipSecondaryStorage = false;
       }
+      return nextSelection;
+    });
+  };
+
+  const handleSkipSecondaryStorage = () => {
+    setSelection((previousSelection) => ({
+      ...resetAfterStep(previousSelection, "secondaryStorage"),
+      secondaryStorage: null,
+      skipSecondaryStorage: true,
+    }));
+    setCurrentStepId("ram");
+    setMessage("");
+  };
+
+  const handleRailStepSelect = (stepId) => {
+    if (!canVisitStep(selection, stepId)) {
+      return;
+    }
+    setCurrentStepId(stepId);
+    setMessage("");
+  };
+
+  const handleContinue = () => {
+    if (!isStepSelected(selection, currentStepId)) {
+      setMessage("Select a compatible option before continuing.");
+      return;
+    }
+
+    const currentIndex = stepOrder.indexOf(currentStepId);
+    const nextStep = stepOrder[currentIndex + 1] || "review";
+    setCurrentStepId(nextStep);
+    setMessage("");
+  };
+
+  const handleSave = async () => {
+    if (!isBuildComplete(selection)) {
+      setMessage("Complete every compatibility step before saving.");
+      return;
+    }
+
+    if (!isAuthenticated) {
+      setMessage("Sign in to save this build.");
+      return;
+    }
+
+    setSaveState("saving");
+    setMessage("");
+
+    try {
+      const payload = {
+        cpu: selection.processor.name,
+        motherboard: selection.motherboard.name,
+        gpu: selection.gpu.name,
+        primaryStorage: selection.primaryStorage.name,
+        secondaryStorage: selection.secondaryStorage?.name || "",
+        ram: selection.ram.name,
+        powerSupply: selection.smps.name,
+        cabinet: selection.cabinet.name,
+        image: selection.cabinet.image_url || pc,
+        componentIds: {
+          processor: selection.processor._id,
+          motherboard: selection.motherboard._id,
+          gpu: selection.gpu._id,
+          primaryStorage: selection.primaryStorage._id,
+          secondaryStorage: selection.secondaryStorage?._id,
+          ram: selection.ram._id,
+          smps: selection.smps._id,
+          cabinet: selection.cabinet._id,
+        },
+      };
+      const response = sourceSaveId
+        ? await api.put(`/saves/${sourceSaveId}`, payload)
+        : await api.post("/saves", payload);
+
+      if (response.status === 200 || response.status === 201) {
+        clearBuildDraft();
+        navigate("/profile");
+      } else {
+        setSaveState("error");
+        setMessage("Save failed. Try again.");
+      }
+    } catch (error) {
+      console.error("Error during save:", error);
+      setSaveState("error");
+      setMessage(error.response?.data?.error || "Save failed. Try again.");
     }
   };
 
+  const isCatalogLoading = catalogStatus === "loading" && currentStepId !== "platform";
+  const pickerDescription =
+    catalogError && currentStepId !== "platform"
+      ? getRuleEvidence(selection, currentStepId)
+      : stepDescriptions[currentStepId];
+
   return (
-    <React.Fragment>
-      <div className="Build_Page">
-        <div className="Build-Title">
-          <h1>
-            <span id="gold">Forge</span> Arena
-          </h1>
-          <h3>Start Forging your Dream PC</h3>
-        </div>
-        <div className="Build-Content">
-          <div className="Build-Area">
-            {platform === "" ? (
-              <div className="selection">
-                <h2>Choose Platform</h2>
-                <div>
-                  <p
-                    className="sel"
-                    onClick={() => handlePlatformSelect("AMD")}
-                  >
-                    AMD
-                  </p>
-                  <p
-                    className="sel"
-                    onClick={() => handlePlatformSelect("Intel")}
-                  >
-                    INTEL
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <>
-                {showProcessorModal && (
-                  <div className="modal-content selection">
-                    <h2>Choose Processor</h2>
-                    <select
-                      onChange={handleComponentSelect(
-                        cpuData,
-                        setSelectedProcessor
-                      )}
-                    >
-                      <option
-                        // disabled
-                        label="Available Processor"
-                        // value="default"
-                      />
-                      {filterData(
-                        cpuData,
-                        (processor) =>
-                          processor.manufacturer.toLowerCase() ===
-                          platform.toLowerCase()
-                      ).map((processor, index) => (
-                        <option key={index} value={processor._id}>
-                          {processor.name}
-                        </option>
-                      ))}
-                    </select>
-                    {selectedProcessor.name != "" ? (
-                      <div className="next">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            handleNext(
-                              setShowProcessorModal,
-                              setShowMotherboardModal,
-                              "motherboard"
-                            )
-                          }
-                        >
-                          next
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="next">
-                        <Button variant="outlined" color="primary">
-                          next
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
+    <div className="Build_Page">
+      <div className="Build-Content">
+        <CompatibilityRail
+          steps={railSteps}
+          currentStepId={currentStepId}
+          onStepSelect={handleRailStepSelect}
+        />
 
-                {showMotherboardModal && (
-                  <div className="modal-content processor-modal selection">
-                    <h2>Choose Motherboard</h2>
-                    <select
-                      onChange={handleComponentSelect(
-                        motherboardData,
-                        setSelectedMotherboard
-                      )}
-                    >
-                      <option label="Available Motherboards" />
-                      {filterData(
-                        motherboardData,
-                        (motherboard) =>
-                          motherboard.specifications.socket ===
-                          selectedProcessor.specification.socket
-                      ).map((motherboard, index) => (
-                        <option key={index} value={motherboard._id}>
-                          {motherboard.name}
-                        </option>
-                      ))}
-                    </select>
-                    {selectedMotherboard.name != "" ? (
-                      <div className="next">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            handleNext(
-                              setShowMotherboardModal,
-                              setShowGPUModal,
-                              "gpu"
-                            )
-                          }
-                        >
-                          next
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="next">
-                        <Button variant="outlined" color="primary">
-                          next
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
+        <HardwareStage
+          stepId={currentStepId}
+          title={stepLabels[currentStepId]}
+          selection={selection}
+          selectedPart={selectedPart}
+          image={currentStepId === "platform" ? performanceLabHardware : currentImage}
+        />
 
-                {showGPUModal && (
-                  <div className="modal-content processor-modal selection">
-                    <h2>Choose GPU</h2>
-                    <select
-                      onChange={handleComponentSelect(gpuData, setSelectedGPU)}
-                    >
-                      <option label="Available GPU" />
-                      {gpuData.map((gpu, index) => (
-                        <option key={index} value={gpu._id}>
-                          {gpu.name}
-                        </option>
-                      ))}
-                    </select>
-                    {selectedGPU.name != "" ? (
-                      <div className="next">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleNext(
-                              setShowGPUModal,
-                              setShowStorageModal,
-                              "storage"
-                            );
-                            apiSearch();
-                          }}
-                        >
-                          next
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="next">
-                        <Button variant="outlined" color="primary">
-                          next
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {showStorageModal && (
-                  <div className="modal-content processor-modal selection">
-                    <h2>Choose Storage</h2>
-                    <select
-                      onChange={handleComponentSelect(
-                        storageData,
-                        setSelectedStorage
-                      )}
-                    >
-                      <option label="Available Storage" />
-                      {filterData(
-                        storageData,
-                        (storage) => storage.specifications.interface === "NVMe"
-                      ).map((storage, index) => (
-                        <option key={index} value={storage._id}>
-                          {storage.name}
-                        </option>
-                      ))}
-                    </select>
-                    {selectedStorage.name != "" ? (
-                      <div className="next">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            handleNext(
-                              setShowStorageModal,
-                              setShowSecondStorageModal,
-                              "storage"
-                            )
-                          }
-                        >
-                          next
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="next">
-                        <Button variant="outlined" color="primary">
-                          next
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {showSecondStorageModal && (
-                  <div className="modal-content processor-modal selection">
-                    <h2>Choose Secondary Storage</h2>
-                    <select
-                      onChange={handleComponentSelect(
-                        storageData,
-                        setSelectedSecondStroge
-                      )}
-                    >
-                      <option label="Available Storage" />
-                      {filterData(
-                        storageData,
-                        (storage) => storage.specifications.interface === "SATA"
-                      ).map((storage, index) => (
-                        <option key={index} value={storage._id}>
-                          {storage.name}
-                        </option>
-                      ))}
-                    </select>
-                    {selectedSecondStorage.name != "" ? (
-                      <div className="next">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            handleNext(
-                              setShowSecondStorageModal,
-                              setShowRAMModal,
-                              "ram"
-                            )
-                          }
-                        >
-                          next
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="next">
-                        <Button variant="outlined" color="primary">
-                          next
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {showRAMModal && (
-                  <div className="modal-content processor-modal selection">
-                    <h2>Choose RAM</h2>
-                    <select
-                      onChange={handleComponentSelect(ramData, setSelectedRAM)}
-                    >
-                      <option label="Available RAM" />
-                      {filterData(
-                        ramData,
-                        (ram) =>
-                          ram.specifications.type ===
-                          selectedMotherboard.specifications.ram_type
-                      ).map((ram, index) => (
-                        <option key={index} value={ram._id}>
-                          {ram.name}
-                        </option>
-                      ))}
-                    </select>
-                    {selectedRAM.name != "" ? (
-                      <div className="next">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            handleNext(
-                              setShowRAMModal,
-                              setShowSMPSModal,
-                              "smps"
-                            )
-                          }
-                        >
-                          next
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="next">
-                        <Button variant="outlined" color="primary">
-                          next
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {showSMPSModal && (
-                  <div className="modal-content processor-modal selection">
-                    <h2>Choose SMPS</h2>
-                    <select
-                      onChange={handleComponentSelect(
-                        smpsData,
-                        setSelectedSMPS
-                      )}
-                    >
-                      <option label="Available SMPS" />
-                      {filterData(smpsData, (smps) => {
-                        const smpsPSU = parseInt(smps.specification.wattage);
-                        const comparePSU = parseInt(PSUSuggest);
-                        console.log(PSUSuggest);
-                        return (
-                          smpsPSU <= comparePSU && smpsPSU >= comparePSU - 100
-                        );
-                      }).map((smps, index) => (
-                        <option key={index} value={smps._id}>
-                          {smps.name}
-                        </option>
-                      ))}
-                    </select>
-                    {selectedSMPS.name != "" ? (
-                      <div className="next">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            handleNext(
-                              setShowSMPSModal,
-                              setShowCabinetModal,
-                              "cabinet"
-                            )
-                          }
-                        >
-                          next
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="next">
-                        <Button variant="outlined" color="primary">
-                          next
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {showCabinetModal && (
-                  <div className="modal-content processor-modal selection">
-                    <h2>Choose Cabinet</h2>
-                    <select
-                      onChange={
-                        handleComponentSelect(cabinetData, setSelectedCabinet)
-                      }
-                    >
-                      <option label="Available Cabinet" />
-                      {filterData(cabinetData, (cabinet) =>
-                        cabinet.specifications.motherboard_support.includes(
-                          selectedMotherboard.specifications.form_factor
-                        )
-                      ).map((cabinet, index) => (
-                        <option key={index} value={cabinet._id}>
-                          {cabinet.name}
-                        </option>
-                      ))}
-                    </select>
-                    {selectedCabinet.name != "" ? (
-                      <div className="done">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={handleSave}
-                        >
-                          Done!
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="done">
-                        <Button variant="outlined" color="primary">
-                          Done
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-          <div className="pc-img">
-            <img src={currentImage} alt="PC" />
-            {showProcessorModal && selectedProcessor.name && (
-              <div className="list">
-                <div>
-                  <p>Name:</p>
-                  <p>Cores:</p>
-                  <p>Threads:</p>
-                </div>
-                <div>
-                  <p>{selectedProcessor.name}</p>
-                  <p>{selectedProcessor.specification.cores}</p>
-                  <p>{selectedProcessor.specification.threads}</p>
-                </div>
-              </div>
-            )}
-            {showMotherboardModal && selectedMotherboard.name && (
-              <div className="list">
-                <div>
-                  <p>Name:</p>
-                  <p>Chipset:</p>
-                  <p>Lan:</p>
-                  <p>Usb Ports:</p>
-                </div>
-                <div>
-                  <p>{selectedMotherboard.name}</p>
-                  <p>{selectedMotherboard.specifications.chipset}</p>
-                  <p>{selectedMotherboard.specifications.lan}</p>
-                  <p>{selectedMotherboard.specifications.usb_ports}</p>
-                </div>
-              </div>
-            )}
-            {showGPUModal && selectedGPU.name && (
-              <div className="list">
-                <div>
-                  <p>Name:</p>
-                  <p>Core Count:</p>
-                  <p>Memory:</p>
-                  <p>TDP:</p>
-                </div>
-                <div>
-                  <p>{selectedGPU.name}</p>
-                  <p>{selectedGPU.specifications.core_count}</p>
-                  <p>{selectedGPU.specifications.memory}</p>
-                  <p>{selectedGPU.specifications.tdp}</p>
-                </div>
-              </div>
-            )}
-            {showStorageModal && selectedStorage.name && (
-              <div className="list">
-                <div>
-                  <p>Name:</p>
-                  <p>Capacity:</p>
-                  <p>Speed:</p>
-                  <p>Warranty:</p>
-                </div>
-                <div>
-                  <p>{selectedStorage.name}</p>
-                  <p>{selectedStorage.specifications.capacity}</p>
-                  <p>{selectedStorage.specifications.speed}</p>
-                  <p>{selectedStorage.specifications.warranty}</p>
-                </div>
-              </div>
-            )}
-            {showSecondStorageModal && selectedSecondStorage.name && (
-              <div className="list">
-                <div>
-                  <p>Name:</p>
-                  <p>Capacity:</p>
-                  <p>Speed:</p>
-                  <p>Warranty:</p>
-                </div>
-                <div>
-                  <p>{selectedSecondStorage.name}</p>
-                  <p>{selectedSecondStorage.specifications.capacity}</p>
-                  <p>{selectedSecondStorage.specifications.speed}</p>
-                  <p>{selectedSecondStorage.specifications.warranty}</p>
-                </div>
-              </div>
-            )}
-            {showRAMModal && selectedRAM.name && (
-              <div className="list">
-                <div>
-                  <p>Name:</p>
-                  <p>Capacity:</p>
-                  <p>Type:</p>
-                  <p>Speed:</p>
-                </div>
-                <div>
-                  <p>{selectedRAM.name}</p>
-                  <p>{selectedRAM.specifications.capacity}</p>
-                  <p>{selectedRAM.specifications.type}</p>
-                  <p>{selectedRAM.specifications.speed}</p>
-                </div>
-              </div>
-            )}
-            {showSMPSModal && selectedSMPS.name && (
-              <div className="list">
-                <div>
-                  <p>Name:</p>
-                  <p>Wattage:</p>
-                  <p>Efficiency:</p>
-                  <p>Fan Size:</p>
-                </div>
-                <div>
-                  <p>{selectedSMPS.name}</p>
-                  <p>{selectedSMPS.specification.wattage}</p>
-                  <p>{selectedSMPS.specification.efficiency}</p>
-                  <p>{selectedSMPS.specification.fan_size}</p>
-                </div>
-              </div>
-            )}
-            {showCabinetModal && selectedCabinet.name && ( <div className="list">
-              <div>
-                <p>Name:</p>
-                <p>Manufacturer:</p>
-                <p>Form Factor:</p>
-              </div>
-              <div>
-                <p>{selectedCabinet.name}</p>
-                <p>{selectedCabinet.manufacturer}</p>
-                <p>{selectedCabinet.specifications.form_factor}</p>
-              </div>
-            </div> )}
-          </div>
+        <div className="Build-Area">
+          {currentStepId === "review" ? (
+            <BuildSummary
+              selection={selection}
+              estimate={estimate}
+              saveState={saveState}
+              message={message}
+              sourceSaveId={sourceSaveId}
+              compatibility={serverCompatibility}
+              compatibilityStatus={compatibilityStatus}
+              onSave={handleSave}
+              onBack={() => setCurrentStepId("cabinet")}
+            />
+          ) : (
+            <ComponentPicker
+              stepId={currentStepId}
+              title={stepLabels[currentStepId]}
+              description={pickerDescription}
+              items={currentItems}
+              selectedId={selectedId}
+              loading={isCatalogLoading}
+              error={currentStepId === "platform" ? "" : catalogError}
+              onRetry={loadCatalog}
+              onSelect={(item) => setSelectedForStep(currentStepId, item)}
+              onSkip={handleSkipSecondaryStorage}
+              canContinue={isStepSelected(selection, currentStepId)}
+              rowImage={currentImage}
+            />
+          )}
         </div>
       </div>
-    </React.Fragment>
+
+      <BuildStatusDock
+        selection={selection}
+        estimate={estimate}
+        compatibility={serverCompatibility}
+        compatibilityStatus={compatibilityStatus}
+        canContinue={isStepSelected(selection, currentStepId)}
+        isReview={currentStepId === "review"}
+        onContinue={handleContinue}
+      />
+    </div>
   );
 };
 

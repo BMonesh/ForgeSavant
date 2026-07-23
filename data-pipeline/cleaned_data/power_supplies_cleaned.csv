@@ -1,0 +1,7 @@
+name,type,manufacturer,wattage,efficiency,modular,certifications,fan_size,dimensions,weight,price,source,source_url,currency,availability,collected_at,data_status
+Cooler Master MWE 450W Bronze,Power Supply,Cooler Master,450W,80+ Bronze,false,80+ Bronze|ATX,120mm,140 x 150 x 86 mm,1.8kg,3825,ForgeSavant curated dataset,,INR,unknown,,seed
+Cooler Master MWE 550W Bronze,Power Supply,Cooler Master,550W,80+ Bronze,false,80+ Bronze|ATX,120mm,140 x 150 x 86 mm,1.8kg,4675,ForgeSavant curated dataset,,INR,unknown,,seed
+Cooler Master MWE 650W Bronze,Power Supply,Cooler Master,650W,80+ Bronze,false,80+ Bronze|ATX,120mm,140 x 150 x 86 mm,1.8kg,5525,ForgeSavant curated dataset,,INR,unknown,,seed
+Cooler Master MWE 750W Bronze,Power Supply,Cooler Master,750W,80+ Bronze,true,80+ Bronze|ATX,120mm,140 x 150 x 86 mm,1.8kg,6375,ForgeSavant curated dataset,,INR,unknown,,seed
+Cooler Master MWE 850W Bronze,Power Supply,Cooler Master,850W,80+ Bronze,true,80+ Bronze|ATX,120mm,140 x 150 x 86 mm,1.8kg,7225,ForgeSavant curated dataset,,INR,unknown,,seed
+Cooler Master MWE 1000W Bronze,Power Supply,Cooler Master,1000W,80+ Bronze,true,80+ Bronze|ATX,120mm,140 x 150 x 86 mm,1.8kg,8500,ForgeSavant curated dataset,,INR,unknown,,seed

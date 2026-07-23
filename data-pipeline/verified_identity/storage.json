@@ -1,0 +1,30 @@
+[
+  {
+    "currentName": "Samsung 980 1TB NVMe SSD",
+    "name": "Samsung 980 1TB PCIe 3.0 NVMe M.2 SSD",
+    "manufacturer": "Samsung",
+    "manufacturerPartNumber": "MZ-V8V1T0BW",
+    "sourceUrl": "https://www.samsung.com/de/memory-storage/nvme-ssd/980-1tb-nvme-pcie-gen-3-mz-v8v1t0bw/"
+  },
+  {
+    "currentName": "WD Blue SN580 1TB NVMe SSD",
+    "name": "WD Blue SN580 1TB PCIe 4.0 NVMe M.2 SSD",
+    "manufacturer": "Western Digital",
+    "manufacturerPartNumber": "WDS100T3B0E",
+    "sourceUrl": "https://documents.westerndigital.com/content/dam/doc-library/en_us/assets/public/western-digital/product/internal-drives/wd-blue-ssd/product-brief-wd-blue-sn580-nvme-ssd.pdf"
+  },
+  {
+    "currentName": "Crucial BX500 1TB SATA SSD",
+    "name": "Crucial BX500 1TB 2.5-inch SATA SSD",
+    "manufacturer": "Crucial",
+    "manufacturerPartNumber": "CT1000BX500SSD1",
+    "sourceUrl": "https://eu.crucial.com/content/dam/crucial/ssd-products/bx500/flyer/b2c/crucial-bx500-b2c-product-flyer-en.pdf"
+  },
+  {
+    "currentName": "Seagate Barracuda 2TB HDD",
+    "name": "Seagate BarraCuda 2TB 3.5-inch SATA HDD",
+    "manufacturer": "Seagate",
+    "manufacturerPartNumber": "ST2000DM008",
+    "sourceUrl": "https://www.seagate.com/www-content/product-content/barracuda-fam/barracuda-new/en-us/docs/100817550d.pdf"
+  }
+]

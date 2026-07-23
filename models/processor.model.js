@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { componentMetadataFields } = require("./componentMetadata.schema");
 
 const ProcessorSchema = new mongoose.Schema({
   _id: {
@@ -52,6 +53,8 @@ const ProcessorSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  provenance: { type: mongoose.Schema.Types.Mixed },
+  ...componentMetadataFields,
 });
 
 // Create a model based on the schema

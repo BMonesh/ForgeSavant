@@ -1,0 +1,11 @@
+.brand-logo {
+  display: block;
+  height: 46px;
+  object-fit: contain;
+  width: 54px;
+}
+
+.brand-logo-auth {
+  height: 76px;
+  width: 90px;
+}

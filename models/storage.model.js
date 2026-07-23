@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { componentMetadataFields } = require('./componentMetadata.schema');
 
 const StorageSchema = new mongoose.Schema({
   _id: {
@@ -58,8 +59,11 @@ const StorageSchema = new mongoose.Schema({
   },
   image_url: {
     type: String,
-    required: true,
+    required: false,
+    default: "",
   },
+  provenance: { type: mongoose.Schema.Types.Mixed },
+  ...componentMetadataFields,
 });
 
 // Create the Storage model from the schema

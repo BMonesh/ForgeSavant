@@ -1,0 +1,33 @@
+[
+  {
+    "currentName": "ForgeSavant Airflow ATX Case",
+    "name": "CORSAIR 4000D AIRFLOW Tempered Glass Mid-Tower ATX Case — Black",
+    "manufacturer": "CORSAIR",
+    "manufacturerPartNumber": "CC-9011200-WW",
+    "sourceUrl": "https://www.corsair.com/ww/en/p/pc-cases/cc-9011200-ww/4000d-airflow-tempered-glass-mid-tower-atx-case-black-cc-9011200-ww",
+    "specifications": {
+      "form_factor": "Mid Tower",
+      "motherboard_support": "E-ATX, ATX, Micro-ATX, Mini-ITX",
+      "fan_support": "6x 120mm or 4x 140mm",
+      "radiator_support": "360mm front, 280mm top, 120mm rear",
+      "gpu_clearance": "360mm",
+      "cpu_cooler_clearance": "170mm",
+      "storage": "4x 2.5 inch, 2x 3.5 inch",
+      "dimensions": "453 x 230 x 466 mm"
+    }
+  },
+  {
+    "currentName": "ForgeSavant Compact Micro-ATX Case",
+    "name": "NZXT H5 Flow (2024) Compact Mid-Tower — Black",
+    "manufacturer": "NZXT",
+    "manufacturerPartNumber": "CC-H52FB-01",
+    "sourceUrl": "https://support.nzxt.com/hc/en-us/articles/40225168535451-H5-Flow-2024-Specs",
+    "specifications": {
+      "form_factor": "Compact Mid Tower",
+      "motherboard_support": "E-ATX, ATX, Micro-ATX, Mini-ITX",
+      "gpu_clearance": "410mm",
+      "cpu_cooler_clearance": "170mm",
+      "dimensions": "430 x 225 x 465 mm"
+    }
+  }
+]

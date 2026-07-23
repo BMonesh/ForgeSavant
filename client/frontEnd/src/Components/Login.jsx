@@ -1,140 +1,96 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";  // Corrected import
-import logo from "../assets/ForgeSavant2.png";
-import "../Styles/login.css";  // Updated CSS file
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import "../Styles/login.css";
+import api from "../services/api";
+import { useSession } from "../auth/SessionContext";
+import { getAuthError } from "../auth/authErrors";
+import BrandLogo from "./ui/BrandLogo";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { signIn } = useSession();
+  const isGoogleAuthEnabled = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
+  const returnTo = location.state?.returnTo || "/build";
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    setMessage(""); // Clear any existing messages
-    try {
-      const response = await axios.post("https://s51-monesh-capstone-forgesavant.onrender.com/login", {
-        email,
-        password
-      });
+    setMessage("");
+    setIsSubmitting(true);
 
-      if (response.status === 200) {
-        console.log("Login successful:", response.data);
-        localStorage.setItem("user", response.data)
-        localStorage.setItem('email', email)
-        navigate('/build'); // Navigate to /dashboard page after successful login
-      } else {
-        console.log("Error data: ", response.data); // Debugging log
-        if (response.data.message === "Invalid credentials") {
-          setMessage("Invalid credentials. Please try again.");
-        } else {
-          setMessage("Login failed. Please try again.");
-        }
-      }
+    try {
+      const response = await api.post("/login", { email, password });
+      signIn(response.data);
+      navigate(returnTo, { replace: true });
     } catch (error) {
       console.error("Error during login:", error);
-      setMessage("An error occurred. Please try again.");
+      setMessage(getAuthError(error, "Sign in failed. Try again."));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleGoogleLogin = async (credentialResponse) => {
+    setMessage("");
+    setIsSubmitting(true);
+
     try {
-      const decoded = jwtDecode(credentialResponse.credential);
-
-      // Check if the user already exists
-      const existingUserResponse = await axios.post("https://s51-monesh-capstone-forgesavant.onrender.com/checkGoogleUser", {
-        email: decoded.email,
+      const response = await api.post("/googleLogin", {
+        credential: credentialResponse.credential,
       });
-
-      if (existingUserResponse.data.exists) {
-        // User exists, log them in
-        const loginResponse = await axios.post("https://s51-monesh-capstone-forgesavant.onrender.com/googleLogin", {
-          email: decoded.email,
-          fullname: decoded.name
-        });
-
-        if (loginResponse.status === 200) {
-          console.log("Login successful:", loginResponse.data);
-          localStorage.setItem("user", JSON.stringify(loginResponse.data));
-          localStorage.setItem('email', decoded.email);
-          navigate('/build'); // Navigate to /build page after successful login
-        }
-      } else {
-        // User does not exist, create a new account and log in
-        const signupResponse = await axios.post("https://s51-monesh-capstone-forgesavant.onrender.com/googleSignup", {
-          fullname: decoded.name,
-          email: decoded.email,
-        });
-
-        if (signupResponse.status === 201) {
-          localStorage.setItem("user", JSON.stringify(decoded.name));
-          localStorage.setItem('email', decoded.email);
-          navigate('/build'); // Navigate to /build page after successful sign-up
-        }
-      }
+      signIn(response.data);
+      navigate(returnTo, { replace: true });
     } catch (error) {
       console.error("Error during Google login:", error);
-      setMessage("An error occurred. Please try again.");
+      setMessage(getAuthError(error, "Google sign in failed. Try again."));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="Login">
-      <div className="left-side-login">
-        <img src={logo} alt="logo" className="logo-login" />
-      </div>
-      <div className="right-side-login">
-        <div className="head-login">
-          <h3>"Welcome Back!"</h3>
-          <p className="login-text">
-            "Login to continue"
-          </p>
+      <section className="auth-context" aria-label="ForgeSavant account benefits">
+        <Link to="/" className="auth-brand" aria-label="ForgeSavant builder">
+          <BrandLogo className="brand-logo-auth" />
+        </Link>
+        <div className="auth-copy">
+          <p className="ui-kicker">Compatibility workbench</p>
+          <h1>Keep every build decision traceable.</h1>
+          <p>Save component lists, revisit compatibility choices, and keep estimates tied to your account.</p>
         </div>
-        <form onSubmit={handleFormSubmit} className="form-login">
-          <input
-            type="text"
-            name="email"
-            placeholder="Email"
-            aria-label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            aria-label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit" className="login-button">
-            Login
-          </button>
-          <GoogleLogin
-            onSuccess={handleGoogleLogin}
-            onError={() => {
-              console.log("Login Failed");
-            }}
-          />
-          <Link to="/signup">
-          <button
-            type="button"
-            style={{
-              cursor: "pointer",
-              backgroundColor: "transparent",
-              color: "white",
-            }}
-            id="sign-up"
-          >
-            <p>Don't have an account? Sign up here.</p>
-          </button>
-          </Link>
-        </form>
-        {message && <p className="error-message-login">{message}</p>}
-      </div>
+        <dl className="auth-proof">
+          <div><dt>Rule filters</dt><dd>Socket, memory, power, and case constraints.</dd></div>
+          <div><dt>Saved builds</dt><dd>Private records scoped to your account.</dd></div>
+        </dl>
+      </section>
+
+      <main className="auth-form-panel">
+        <div className="auth-form-shell">
+          <header className="head-login">
+            <p className="ui-kicker">Account access</p>
+            <h2>Sign in</h2>
+            <p className="login-text">Continue to your saved builds and active workbench.</p>
+          </header>
+          <form onSubmit={handleFormSubmit} className="form-login">
+            <label htmlFor="login-email">Email</label>
+            <input id="login-email" type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} required />
+            <label htmlFor="login-password">Password</label>
+            <input id="login-password" type="password" autoComplete="current-password" placeholder="Enter your password" value={password} onChange={(event) => setPassword(event.target.value)} required />
+            <button type="submit" className="login-button" disabled={isSubmitting}>
+              {isSubmitting ? "Signing in..." : "Sign in"}
+            </button>
+            {isGoogleAuthEnabled ? <GoogleLogin onSuccess={handleGoogleLogin} onError={() => setMessage("Google sign in failed. Try again.")} /> : null}
+            <Link to="/signup" state={location.state} className="auth-link">Create an account</Link>
+          </form>
+          {message ? <p className="error-message-login" role="alert">{message}</p> : null}
+        </div>
+      </main>
     </div>
   );
 }

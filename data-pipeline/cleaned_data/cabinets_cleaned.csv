@@ -1,0 +1,3 @@
+name,type,manufacturer,form_factor,motherboard_support,fan_support,radiator_support,gpu_clearance,cpu_cooler_clearance,storage,dimensions,price,image_url,source,source_url,currency,availability,collected_at,data_status
+ForgeSavant Airflow ATX Case,Cabinet,ForgeSavant,Mid Tower,"ATX, Micro-ATX, Mini-ITX",6x 120mm,"360mm front, 240mm top",360mm,165mm,"2x 2.5 inch, 2x 3.5 inch",450 x 210 x 470 mm,5999,,ForgeSavant curated dataset,,INR,unknown,,seed
+ForgeSavant Compact Micro-ATX Case,Cabinet,ForgeSavant,Mini Tower,"Micro-ATX, Mini-ITX",4x 120mm,240mm front,320mm,155mm,"2x 2.5 inch, 1x 3.5 inch",390 x 205 x 410 mm,4299,,ForgeSavant curated dataset,,INR,unknown,,seed

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { componentMetadataFields } = require('./componentMetadata.schema');
 
 const RamSchema = new mongoose.Schema({
   name: {
@@ -44,6 +45,8 @@ const RamSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  provenance: { type: mongoose.Schema.Types.Mixed },
+  ...componentMetadataFields,
 });
 
 
