@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { componentMetadataFields } = require('./componentMetadata.schema');
 
 const PowerSupplySchema = new mongoose.Schema({
   name: {
@@ -48,6 +49,8 @@ const PowerSupplySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  provenance: { type: mongoose.Schema.Types.Mixed },
+  ...componentMetadataFields,
 });
 
 // Create the PowerSupply model from the schema

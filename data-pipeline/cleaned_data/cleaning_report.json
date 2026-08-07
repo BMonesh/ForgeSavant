@@ -1,7 +1,7 @@
 [
   {
     "component": "processors",
-    "timestamp": "2026-04-09T23:45:29.883933",
+    "timestamp": "2026-07-20T18:03:44.324703",
     "raw_rows": 15,
     "cleaned_rows": 14,
     "duplicates_removed": 1,
@@ -22,7 +22,7 @@
   },
   {
     "component": "gpus",
-    "timestamp": "2026-04-09T23:45:29.893479",
+    "timestamp": "2026-07-20T18:03:44.367992",
     "raw_rows": 13,
     "cleaned_rows": 11,
     "duplicates_removed": 2,
@@ -43,7 +43,7 @@
   },
   {
     "component": "motherboards",
-    "timestamp": "2026-04-09T23:45:29.903836",
+    "timestamp": "2026-07-20T18:03:44.466538",
     "raw_rows": 12,
     "cleaned_rows": 12,
     "duplicates_removed": 0,
@@ -64,7 +64,7 @@
   },
   {
     "component": "ram",
-    "timestamp": "2026-04-09T23:45:29.915947",
+    "timestamp": "2026-07-20T18:03:44.502398",
     "raw_rows": 11,
     "cleaned_rows": 10,
     "duplicates_removed": 1,

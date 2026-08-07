@@ -1,102 +1,185 @@
-@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
-
-.Login {
-    display: flex;
-    height: 100vh;
-    background-color: black;
+.Login,
+.Signup {
+  min-height: 100svh;
+  background:
+    linear-gradient(rgb(255 215 0 / 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 215 0 / 0.045) 1px, transparent 1px),
+    radial-gradient(circle at 50% 18%, rgb(255 215 0 / 0.08), transparent 32rem),
+    var(--color-background);
+  background-size: var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size), auto, auto;
 }
 
-.left-side-login {
-    flex: 1;
-    background-color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: calc(52% - 160px);
+.auth-form-panel {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  padding: clamp(24px, 6vw, 72px) 20px;
 }
 
-.logo-login {
-    height: 25vh;
+.auth-form-shell {
+  width: min(100%, 480px);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+  background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+  padding: clamp(24px, 5vw, 48px);
 }
 
-.right-side-login {
-    flex: 1;
-    background-color: #f9d949;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    padding: 200px;
-    font-family: 'Russo One', sans-serif;
-    /* padding: 20px; */
+.auth-brand {
+  display: inline-flex;
+  min-width: 48px;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  margin-bottom: clamp(36px, 7vw, 64px);
 }
 
-.right-side-login h3 {
-    font-family: 'Russo One', sans-serif;
-    font-size: 24px;
-    margin-bottom: 10px;
-    margin-left: 0;
+.head-login,
+.head {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 32px;
 }
 
-.login-text {
-    font-family: 'Russo One', sans-serif;
-    font-size: 16px;
-    margin-bottom: 20px;
-    margin-left: 0;
+.head-login h1,
+.head h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 4.3rem);
+  letter-spacing: -0.055em;
+  line-height: 0.94;
 }
 
-.form-login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+.login-text,
+.signup-text {
+  max-width: 44ch;
+  color: var(--color-muted);
 }
 
-.form-login input {
-    font-family: 'Russo One', sans-serif;
-    width: 80%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: none;
+.form-login,
+.form {
+  display: grid;
+  gap: 10px;
 }
 
-.login-button {
-    font-family: 'Russo One', sans-serif;
-    width: 80%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
+.form-login label,
+.form label {
+  color: var(--color-muted);
+  font-family: var(--font-utility);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.login-button:hover {
-    background-color: #0056b3;
+.form-login input,
+.form input {
+  min-height: 50px;
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  padding: 12px 14px;
+  transition: border-color var(--motion-fast) var(--ease-standard);
 }
 
-.right-side-login button[type="button"] {
-    width: auto;
-    background-color: transparent;
-    color: black;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 20px;
+.form-login input:hover,
+.form input:hover {
+  border-color: var(--color-subtle);
 }
 
-.head-login {
-    margin-right: 46%;
+.form-login input::placeholder,
+.form input::placeholder {
+  color: var(--color-subtle);
 }
 
+.login-button,
+.register {
+  min-height: 50px;
+  border-radius: 0;
+  background: var(--color-accent);
+  color: var(--color-background);
+  cursor: pointer;
+  font-weight: 800;
+  margin-top: 12px;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+
+.register:hover:not(:disabled),
+.login-button:hover:not(:disabled) {
+  background: #ffe347;
+}
+
+.login-button:disabled,
+.register:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.auth-provider {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  border-top: 1px solid var(--color-border);
+  margin-top: 14px;
+  padding-top: 22px;
+}
+
+.auth-provider > span {
+  color: var(--color-subtle);
+  font-family: var(--font-utility);
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.auth-link {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 44px;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.auth-link:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.auth-status {
+  min-height: 18px;
+}
+
+.field-error,
+.error-message,
 .error-message-login {
-    font-family: 'Russo One', sans-serif;
-    color: red;
-    margin-top: 10px;
+  border-left: 3px solid var(--color-danger);
+  background: rgb(255 59 48 / 0.1);
+  color: #ff817a;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  font-weight: 650;
 }
 
-#sign-up p{
-    color: black;
+.error-message,
+.error-message-login {
+  margin-top: 16px;
+}
+
+@media (max-width: 520px) {
+  .auth-form-panel {
+    align-items: start;
+    padding: 20px 12px;
+  }
+
+  .auth-form-shell {
+    padding: 24px 20px 30px;
+  }
+
+  .auth-brand {
+    margin-bottom: 38px;
+  }
 }

@@ -247,7 +247,7 @@ def clean_processors(input_path: str, output_path: str) -> pd.DataFrame:
     df = df.sort_values(["manufacturer", "price"]).reset_index(drop=True)
 
     # Export
-    df.to_csv(output_path, index=False, encoding="utf-8-sig")
+    df.to_csv(output_path, index=False, encoding="utf-8-sig", lineterminator="\n")
     logger.info(
         f"Processors cleaned: {original_count} raw -> {len(df)} clean -> {output_path}"
     )
@@ -277,7 +277,7 @@ def clean_gpus(input_path: str, output_path: str) -> pd.DataFrame:
     df = deduplicate_by_price(df, "name")
     df = df.sort_values(["manufacturer", "price"]).reset_index(drop=True)
 
-    df.to_csv(output_path, index=False, encoding="utf-8-sig")
+    df.to_csv(output_path, index=False, encoding="utf-8-sig", lineterminator="\n")
     logger.info(f"GPUs cleaned: {original_count} raw -> {len(df)} clean -> {output_path}")
     return df
 
@@ -294,6 +294,7 @@ def clean_motherboards(input_path: str, output_path: str) -> pd.DataFrame:
 
     df["manufacturer"] = df["manufacturer"].apply(normalize_manufacturer)
     df["socket"] = df["socket"].apply(normalize_socket)
+    df["memory_type"] = df["memory_type"].apply(normalize_ram_type)
     df["form_factor"] = df["form_factor"].apply(normalize_form_factor)
     df["max_memory"] = df["max_memory"].apply(normalize_memory)
 
@@ -306,7 +307,7 @@ def clean_motherboards(input_path: str, output_path: str) -> pd.DataFrame:
     df = deduplicate_by_price(df, "name")
     df = df.sort_values(["manufacturer", "price"]).reset_index(drop=True)
 
-    df.to_csv(output_path, index=False, encoding="utf-8-sig")
+    df.to_csv(output_path, index=False, encoding="utf-8-sig", lineterminator="\n")
     logger.info(
         f"Motherboards cleaned: {original_count} raw -> {len(df)} clean -> {output_path}"
     )
@@ -340,7 +341,7 @@ def clean_ram(input_path: str, output_path: str) -> pd.DataFrame:
     df = deduplicate_by_price(df, "name")
     df = df.sort_values(["manufacturer", "price"]).reset_index(drop=True)
 
-    df.to_csv(output_path, index=False, encoding="utf-8-sig")
+    df.to_csv(output_path, index=False, encoding="utf-8-sig", lineterminator="\n")
     logger.info(f"RAM cleaned: {original_count} raw -> {len(df)} clean -> {output_path}")
     return df
 
@@ -464,14 +465,14 @@ def main():
             print(f"    Cleaned rows:  {s['cleaned_rows']}")
             print(f"    Duplicates:    {s['duplicates_removed']} ({s['duplicate_pct']}%)")
             print(f"    Manufacturers: {s['unique_manufacturers']}")
-            print(f"    Price range:   ₹{s['price_range']['min']:,.0f} - ₹{s['price_range']['max']:,.0f}")
-            print(f"    Avg price:     ₹{s['price_range']['mean']:,.0f}")
+            print(f"    Price range:   INR {s['price_range']['min']:,.0f} - INR {s['price_range']['max']:,.0f}")
+            print(f"    Avg price:     INR {s['price_range']['mean']:,.0f}")
             print(f"    Sources:       {', '.join(s['sources'])}")
         print(f"\n{'='*60}\n")
 
         # Save stats to JSON
         stats_path = os.path.join(CLEANED_DIR, "cleaning_report.json")
-        with open(stats_path, "w") as f:
+        with open(stats_path, "w", newline="\n") as f:
             json.dump(all_stats, f, indent=2)
         logger.info(f"Stats saved to {stats_path}")
 

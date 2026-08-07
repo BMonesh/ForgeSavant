@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0",
+  "records": [
+    {
+      "category": "processors",
+      "catalogName": "AMD Ryzen 5 5600X",
+      "manufacturer": "AMD",
+      "manufacturerPartNumber": "100-100000065BOX",
+      "officialSourceUrl": "https://www.amd.com/en/products/processors/desktops/ryzen/5000-series/amd-ryzen-5-5600x.html",
+      "observedAt": "2026-07-23T00:00:00+00:00",
+      "documentRevision": "",
+      "specifications": {
+        "cores": 6,
+        "threads": 12,
+        "socket": "AM4"
+      },
+      "gtins": [],
+      "imageUrl": "",
+      "reviewNotes": "Values transcribed from the official product page and reviewed before ingestion."
+    }
+  ]
+}

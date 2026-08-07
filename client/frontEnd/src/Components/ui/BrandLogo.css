@@ -1,0 +1,12 @@
+.brand-logo {
+  display: block;
+  width: 42px;
+  height: 42px;
+  color: var(--color-accent);
+  overflow: visible;
+}
+
+.brand-logo-auth {
+  width: 72px;
+  height: 72px;
+}

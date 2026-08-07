@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { componentMetadataFields } = require('./componentMetadata.schema');
 
 const GraphicsCardSchema = new mongoose.Schema({
   _id: {
@@ -45,6 +46,8 @@ const GraphicsCardSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  provenance: { type: mongoose.Schema.Types.Mixed },
+  ...componentMetadataFields,
 });
 
 // Create the GraphicsCard model from the schema

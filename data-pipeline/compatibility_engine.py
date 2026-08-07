@@ -401,7 +401,7 @@ def main():
             print("  No compatible motherboards found in database.")
         else:
             for _, mobo in compatible_mobos.iterrows():
-                print(f"  {mobo['name']} - ₹{mobo['price']:,.0f} ({mobo['form_factor']})")
+                print(f"  {mobo['name']} - INR {mobo['price']:,.0f} ({mobo['form_factor']})")
 
     elif args.demo:
         # Demo: validate a sample build
@@ -435,7 +435,7 @@ def main():
 
             status = "VALID" if summary["valid"] else "INVALID"
             print(f"  Status:          {status}")
-            print(f"  Total Cost:      ₹{summary['total_cost']:,.0f}")
+            print(f"  Total Cost:      INR {summary['total_cost']:,.0f}")
             print(f"  Est. Power Draw: {summary['estimated_tdp_watts']}W")
             print(f"  Recommended PSU: {summary['recommended_psu_watts']}W")
             print(f"  Checks Passed:   {summary['checks_passed']}")
@@ -452,7 +452,7 @@ def main():
                     print(f"    - {e}")
 
             for check in result.checks:
-                icon = "✓" if check.compatible else "✗"
+                icon = "OK" if check.compatible else "FAIL"
                 print(f"\n  [{icon}] {check.rule}")
                 print(f"      {check.details}")
 

@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: forgesavant-preview
+    runtime: node
+    plan: free
+    branch: codex/application-data-platform-overhaul
+    buildCommand: npm ci && npm ci --prefix client/frontEnd && npm --prefix client/frontEnd run build
+    startCommand: npm start
+    healthCheckPath: /ready
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ANALYTICS_PSEUDONYM_SECRET
+        generateValue: true
+      - key: ADMIN_EMAILS
+        value: 2005.monesh@gmail.com
+      - key: AMAZON_ASSOCIATE_TAG
+        value: forgesavantpc-21

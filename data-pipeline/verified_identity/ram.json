@@ -1,0 +1,73 @@
+[
+  {
+    "currentName": "Corsair Vengeance LPX 16GB",
+    "name": "CORSAIR VENGEANCE LPX 16GB (2x8GB) DDR4-3200 C16 Black",
+    "manufacturer": "CORSAIR",
+    "manufacturerPartNumber": "CMK16GX4M2B3200C16",
+    "sourceUrl": "https://www.corsair.com/us/en/p/memory/cmk16gx4m2b3200c16/vengeance-lpx-16gb-2-x-8gb-ddr4-dram-3200mhz-c16-memory-kit-black-cmk16gx4m2b3200c16"
+  },
+  {
+    "currentName": "Corsair Vengeance RGB 32GB",
+    "name": "CORSAIR VENGEANCE RGB 32GB (2x16GB) DDR5-5600 C36 Black",
+    "manufacturer": "CORSAIR",
+    "manufacturerPartNumber": "CMH32GX5M2B5600C36",
+    "sourceUrl": "https://www.corsair.com/ww/en/p/ddr5-ram/cmh32gx5m2b5600c36/vengeance-rgb-32gb-2x16gb-ddr5-dram-5600mhz-c36-memory-kit-black-cmh32gx5m2b5600c36"
+  },
+  {
+    "currentName": "Corsair Dominator Platinum 32GB",
+    "name": "CORSAIR DOMINATOR PLATINUM RGB 32GB (2x16GB) DDR5-6200 C36 Black",
+    "manufacturer": "CORSAIR",
+    "manufacturerPartNumber": "CMT32GX5M2X6200C36",
+    "sourceUrl": "https://www.corsair.com/us/en/p/memory/cmt32gx5m2x6200c36/dominator-platinum-rgb-32gb-2x16gb-ddr5-dram-6200mhz-c36-memory-kit-black-cmt32gx5m2x6200c36",
+    "specifications": { "voltage": "1.30V" }
+  },
+  {
+    "currentName": "G.Skill Ripjaws V 16GB",
+    "name": "G.SKILL Ripjaws V 16GB (2x8GB) DDR4-3600 CL18 Black",
+    "manufacturer": "G.SKILL",
+    "manufacturerPartNumber": "F4-3600C18D-16GVK",
+    "sourceUrl": "https://www.gskill.com/specification/165/184/1562832515/F4-3600C18D-16GVK-Specification"
+  },
+  {
+    "currentName": "G.Skill Trident Z Neo 32GB",
+    "name": "G.SKILL Trident Z Neo 32GB (2x16GB) DDR4-3600 CL16",
+    "manufacturer": "G.SKILL",
+    "manufacturerPartNumber": "F4-3600C16D-32GTZNC",
+    "sourceUrl": "https://www.gskill.com/specification/165/326/1562840211/F4-3600C16D-32GTZNC-Specification"
+  },
+  {
+    "currentName": "G.Skill Trident Z5 32GB",
+    "name": "G.SKILL Trident Z5 32GB (2x16GB) DDR5-6000 CL30 Black",
+    "manufacturer": "G.SKILL",
+    "manufacturerPartNumber": "F5-6000J3040F16GX2-TZ5K",
+    "sourceUrl": "https://www.gskill.com/specification/165/371/1649667420/F5-6000J3040F16GX2-TZ5K-F5-6000J3040F16GA2-TZ5K-Specification"
+  },
+  {
+    "currentName": "Kingston Fury Beast 16GB",
+    "name": "Kingston FURY Beast 16GB (2x8GB) DDR4-3200 CL16 Black",
+    "manufacturer": "Kingston",
+    "manufacturerPartNumber": "KF432C16BBK2/16",
+    "sourceUrl": "https://www.kingston.com/datasheets/KF432C16BBK2_16.pdf"
+  },
+  {
+    "currentName": "Kingston Fury Beast 32GB",
+    "name": "Kingston FURY Beast 32GB (2x16GB) DDR5-5200 CL40 Black",
+    "manufacturer": "Kingston",
+    "manufacturerPartNumber": "KF552C40BBK2-32",
+    "sourceUrl": "https://www.kingston.com/datasheets/KF552C40BBK2-32.pdf"
+  },
+  {
+    "currentName": "Kingston Fury Renegade 32GB",
+    "name": "Kingston FURY Renegade 32GB (2x16GB) DDR5-6400 CL32 Silver/Black",
+    "manufacturer": "Kingston",
+    "manufacturerPartNumber": "KF564C32RSK2-32",
+    "sourceUrl": "https://www.kingston.com/datasheets/KF564C32RSK2-32.pdf"
+  },
+  {
+    "currentName": "TeamGroup T-Force Delta 16GB",
+    "name": "TEAMGROUP T-FORCE DELTA RGB 16GB (2x8GB) DDR4-3200 CL16 Black",
+    "manufacturer": "TEAMGROUP",
+    "manufacturerPartNumber": "TF3D416G3200HC16CDC01",
+    "sourceUrl": "https://www.teamgroupinc.com/es/product-detail/memory/T-FORCE/delta-rgb-ddr4-black/delta-rgb-ddr4-black-TF3D416G3200HC16CDC01/"
+  }
+]

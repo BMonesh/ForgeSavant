@@ -1,0 +1,50 @@
+[
+  {
+    "currentName": "Cooler Master MWE 450W Bronze",
+    "name": "Cooler Master MWE 450 Bronze V2 Full Range",
+    "manufacturer": "Cooler Master",
+    "manufacturerPartNumber": "MPE-4501-ACAAW",
+    "sourceUrl": "https://www.coolermaster.com/en-global/products/mwe-450-bronze-v2-full-range.html",
+    "specifications": { "wattage": "450W", "efficiency": "80+ Bronze", "modular": false }
+  },
+  {
+    "currentName": "Cooler Master MWE 550W Bronze",
+    "name": "Cooler Master MWE 550 Bronze V2 Full Range",
+    "manufacturer": "Cooler Master",
+    "manufacturerPartNumber": "MPE-5501-ACAAW",
+    "sourceUrl": "https://www.coolermaster.com/en-global/products/mwe-550-bronze-v2-full-range.html",
+    "specifications": { "wattage": "550W", "efficiency": "80+ Bronze", "modular": false }
+  },
+  {
+    "currentName": "Cooler Master MWE 650W Bronze",
+    "name": "Cooler Master MWE 650 Bronze V2 Full Range",
+    "manufacturer": "Cooler Master",
+    "manufacturerPartNumber": "MPE-6501-ACAAW",
+    "sourceUrl": "https://www.coolermaster.com/en-global/products/mwe-650-bronze-v2-full-range.html",
+    "specifications": { "wattage": "650W", "efficiency": "80+ Bronze", "modular": false }
+  },
+  {
+    "currentName": "Cooler Master MWE 750W Bronze",
+    "name": "Cooler Master MWE 750 Bronze V2 Full Range",
+    "manufacturer": "Cooler Master",
+    "manufacturerPartNumber": "MPE-7501-ACAAW",
+    "sourceUrl": "https://www.coolermaster.com/en-global/products/mwe-750-bronze-v2-full-range.html",
+    "specifications": { "wattage": "750W", "efficiency": "80+ Bronze", "modular": false }
+  },
+  {
+    "currentName": "Cooler Master MWE 850W Bronze",
+    "name": "Cooler Master MWE Gold 850 V2 ATX 3.1",
+    "manufacturer": "Cooler Master",
+    "manufacturerPartNumber": "MPE-8501-AFAAG-3E",
+    "sourceUrl": "https://www.coolermaster.com/en-global/products/mwe-gold-850-v2-atx-3-1.html",
+    "specifications": { "wattage": "850W", "efficiency": "80+ Gold", "modular": true, "dimensions": "160 x 150 x 86 mm" }
+  },
+  {
+    "currentName": "Cooler Master MWE 1000W Bronze",
+    "name": "Cooler Master MWE Gold 1050 V2 Full Modular",
+    "manufacturer": "Cooler Master",
+    "manufacturerPartNumber": "MPE-A501-AFCAG",
+    "sourceUrl": "https://www.coolermaster.com/en-global/products/mwe-gold-1050-v2-full-modular.html",
+    "specifications": { "wattage": "1050W", "efficiency": "80+ Gold", "modular": true, "fan_size": "140mm", "dimensions": "180 x 150 x 86 mm" }
+  }
+]
