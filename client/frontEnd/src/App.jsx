@@ -14,6 +14,7 @@ import AdminAffiliateLinks from "./Components/AdminAffiliateLinks";
 import AffiliateDisclosure from "./Components/AffiliateDisclosure";
 import Benchmarks from "./Components/Benchmarks";
 import About from "./Components/About";
+import NotFound from "./Components/NotFound";
 import './App.css'
 import { useSession } from "./auth/SessionContext";
 
@@ -66,7 +67,7 @@ const App = () => {
         <Route path="/components/:category/:id" element={renderPage(<ComponentDetail />)} />
         <Route path="/affiliate-disclosure" element={renderPage(<AffiliateDisclosure />)} />
         <Route path="/benchmarks" element={renderPage(<Benchmarks />)} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={renderPage(<NotFound />)} />
       </Routes>
     </Router>
   );
