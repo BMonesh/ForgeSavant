@@ -10,6 +10,7 @@ const CATEGORY_MODELS = {
   cabinets: "cabinets",
 };
 const HTTPS_URL = /^https:\/\//i;
+const MANUFACTURER_SOURCE = /^manufacturer_[a-z0-9_]{2,51}$/;
 const SHA256 = /^[a-f0-9]{64}$/i;
 const FORBIDDEN_OBJECT_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 
@@ -17,6 +18,14 @@ const text = (value) => String(value ?? "").trim();
 const validDate = (value) => {
   const parsed = new Date(value);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const manufacturerSourceId = (value) => {
+  try {
+    const hostname = new URL(value).hostname.replace(/^www\./i, "").toLowerCase();
+    const slug = hostname.replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+    return slug ? `manufacturer_${slug}`.slice(0, 64) : "";
+  } catch { return ""; }
 };
 
 const normalizeSpecifications = (value, errors) => {
@@ -81,7 +90,17 @@ const normalizeObservation = (raw, index, now = new Date()) => {
   if (normalized.schema_version !== "1.0") errors.push("schema_version must be 1.0");
   if (!SHA256.test(normalized.observation_id)) errors.push("observation_id must be a SHA-256 value");
   if (normalized.observation_kind !== "product_content") errors.push("observation_kind must be product_content");
-  if (normalized.source !== "open_icecat") errors.push("source must be open_icecat");
+  const openIcecat = normalized.source === "open_icecat";
+  const manufacturer = MANUFACTURER_SOURCE.test(normalized.source);
+  if (!openIcecat && !manufacturer) errors.push("source must be open_icecat or a verified manufacturer source");
+  if (openIcecat && normalized.source_tier !== "open") errors.push("open_icecat source_tier must be open");
+  if (manufacturer && normalized.source_tier !== "manufacturer") errors.push("manufacturer source_tier must be manufacturer");
+  if (manufacturer && (!normalized.manufacturer_url || normalized.manufacturer_url !== normalized.source_record_url)) {
+    errors.push("manufacturer evidence must use one HTTPS official source URL");
+  }
+  if (manufacturer && manufacturerSourceId(normalized.manufacturer_url) !== normalized.source) {
+    errors.push("manufacturer source does not match the official source hostname");
+  }
   if (!CATEGORY_MODELS[category]) errors.push("catalog_category is not supported");
   if (!normalized.source_product_id) errors.push("source_product_id is required");
   if (!normalized.manufacturer || !normalized.manufacturer_part_number) errors.push("manufacturer identity is required");
@@ -122,6 +141,10 @@ const reviewContent = async ({ observations, catalogModels, now = new Date() }) 
     );
     if (!matches.length) return { index: row.index, status: "unmatched", reason: "No exact catalog manufacturer part number match", observation: row.observation };
     if (matches.length > 1) return { index: row.index, status: "ambiguous", reason: "Manufacturer part number matches multiple catalog records", observation: row.observation };
+    if (MANUFACTURER_SOURCE.test(row.observation.source)
+      && text(matches[0].identity?.manufacturerPartNumberSourceUrl) !== row.observation.manufacturer_url) {
+      return { index: row.index, status: "rejected", errors: ["Official source URL does not match the verified catalog identity"], warnings: row.warnings, observation: row.observation };
+    }
     return {
       index: row.index,
       status: "accepted",
@@ -131,7 +154,7 @@ const reviewContent = async ({ observations, catalogModels, now = new Date() }) 
     };
   });
   return {
-    source: "open_icecat",
+    source: "catalog_content",
     checksum: feedChecksum(normalized),
     rows,
     counts: { received: observations.length, ...summarize(rows) },

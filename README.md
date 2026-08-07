@@ -199,7 +199,7 @@ npm run catalog:quality  # profile identity, provenance, mappings, and saved ref
 npm run catalog:identity:audit  # validate manufacturer identity evidence without writes
 npm run catalog:identity:apply  # back up and apply conflict-free identity evidence
 npm run pipeline:run    # ingest Open Icecat observations and rebuild analytics safely
-npm run catalog:content:export   # build the ignored admin-review feed from the lake
+npm run catalog:content:export   # export only product-content evidence (Icecat + reviewed manufacturer)
 npm run catalog:content:preview  # exact-MPN Atlas match; never writes
 npm run catalog:content:apply    # append the reviewed evidence batch idempotently
 npm run analytics:notebook  # execute the reproducible ML-readiness assessment
@@ -260,7 +260,7 @@ See [`CATALOG_DATA_QUALITY.md`](CATALOG_DATA_QUALITY.md) for the current measure
 | POST | `/api/v1/admin/offers/preview` | Validate and match an authorized CSV/JSON feed payload |
 | POST | `/api/v1/admin/offers/apply` | Apply accepted rows from a signed, unexpired preview |
 | GET | `/api/v1/admin/content/history` | List reviewed product-content import batches |
-| POST | `/api/v1/admin/content/preview` | Validate and exactly match an Open Icecat evidence feed |
+| POST | `/api/v1/admin/content/preview` | Validate and exactly match an exported product-content evidence feed |
 | POST | `/api/v1/admin/content/apply` | Append evidence from a signed, unexpired review |
 | GET | `/api/v1/admin/analytics/data-quality` | Return the protected data-quality and pipeline-health summary |
 | GET | `/health` | Application and database health |

@@ -286,9 +286,11 @@ credentials in the scheduler command itself. The job loads the ignored project
 
 ### 13. Promote reviewed product content
 
-Open Icecat content is deliberately separated from the compatibility catalog.
-Export the latest logical observation for every accessible source product, then
-perform an exact manufacturer-part-number review against Atlas:
+Open Icecat and reviewed official-manufacturer content are deliberately
+separated from the compatibility catalog. Export the latest logical
+product-content observation for every source product, then perform an exact
+manufacturer-part-number review against Atlas. Benchmark, retail-offer, and
+build-outcome observations are excluded from this contract:
 
 ```bash
 npm run catalog:content:export
@@ -299,8 +301,9 @@ npm run catalog:content:apply
 The apply step is idempotent and appends `productContentEvidence`; it does not
 replace curated specifications, compatibility rules, or prices. Icecat's
 source-reported regional SKU is preserved separately from the verified part
-number used for the lookup. Administrators can run the same signed preview and
-apply workflow from `/admin/content`.
+number used for the lookup. Manufacturer observations must use the exact HTTPS
+source already recorded in the verified identity manifest. Administrators can
+run the same signed preview and apply workflow from `/admin/content`.
 
 Generate and execute the inspectable model-readiness notebook with:
 

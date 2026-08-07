@@ -37,13 +37,26 @@ const observation = {
   ingested_at: "2026-07-20T00:01:00.000Z",
   raw_sha256: "b".repeat(64),
 };
+const manufacturerObservation = {
+  ...observation,
+  observation_id: "c".repeat(64),
+  source: "manufacturer_manufacturer_example",
+  source_tier: "manufacturer",
+  source_product_id: "GPU-EXAMPLE-1",
+  manufacturer_url: "https://manufacturer.example/gpu",
+  source_record_url: "https://manufacturer.example/gpu",
+  raw_sha256: "d".repeat(64),
+};
 
 const mockCatalog = (t) => t.mock.method(GraphicsCard, "find", () => ({
   select: () => ({ lean: async () => [{
     _id: componentId,
     name: "ASUS Example GPU",
     manufacturer: "ASUS",
-    identity: { manufacturerPartNumber: "GPU-EXAMPLE-1" },
+    identity: {
+      manufacturerPartNumber: "GPU-EXAMPLE-1",
+      manufacturerPartNumberSourceUrl: "https://manufacturer.example/gpu",
+    },
   }] }),
 }));
 
@@ -63,6 +76,32 @@ test("admin previews content using exact manufacturer part number matching", asy
   assert.equal(response.body.data.counts.accepted, 1);
   assert.equal(response.body.data.rows[0].match.id, componentId);
   assert.ok(response.body.data.previewToken);
+});
+
+test("admin previews official manufacturer evidence only for the verified identity URL", async (t) => {
+  mockUser(t, "admin@example.com");
+  mockCatalog(t);
+  const authorization = { Authorization: `Bearer ${tokenFor("admin@example.com")}` };
+  const accepted = await request(app)
+    .post("/api/v1/admin/content/preview")
+    .set(authorization)
+    .send({ observations: [manufacturerObservation] })
+    .expect(200);
+  assert.equal(accepted.body.data.source, "catalog_content");
+  assert.equal(accepted.body.data.counts.accepted, 1);
+
+  const rejected = await request(app)
+    .post("/api/v1/admin/content/preview")
+    .set(authorization)
+    .send({ observations: [{
+      ...manufacturerObservation,
+      source: "manufacturer_other_example",
+      manufacturer_url: "https://other.example/gpu",
+      source_record_url: "https://other.example/gpu",
+    }] })
+    .expect(200);
+  assert.equal(rejected.body.data.counts.rejected, 1);
+  assert.match(rejected.body.data.rows[0].errors.join(" "), /verified catalog identity/i);
 });
 
 test("admin applies a signed content preview without changing curated specifications", async (t) => {

@@ -8,8 +8,9 @@ export const parseContentFile = async (file) => {
   } catch {
     throw new Error("Content feed is not valid JSON");
   }
-  if (payload?.schema_version !== "1.0" || payload?.source !== "open_icecat" || !Array.isArray(payload?.observations)) {
-    throw new Error("Content feed does not match the ForgeSavant Open Icecat contract");
+  const supportedSource = ["forgesavant_product_content", "open_icecat"].includes(payload?.source);
+  if (payload?.schema_version !== "1.0" || !supportedSource || !Array.isArray(payload?.observations)) {
+    throw new Error("Content feed does not match the ForgeSavant product-content contract");
   }
   return payload;
 };

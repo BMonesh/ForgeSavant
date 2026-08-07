@@ -19,6 +19,8 @@ def export_feed(lake_dir: Path = LAKE_DIR, output_path: Path = OUTPUT_PATH) -> d
             if not line.strip():
                 continue
             record = json.loads(line)
+            if record.get("observation_kind") != "product_content":
+                continue
             logical_key = (
                 record.get("source"),
                 record.get("catalog_category"),
@@ -29,8 +31,12 @@ def export_feed(lake_dir: Path = LAKE_DIR, output_path: Path = OUTPUT_PATH) -> d
                 observations[logical_key] = record
     payload = {
         "schema_version": "1.0",
-        "source": "open_icecat",
+        "source": "forgesavant_product_content",
         "exported_at": datetime.now(timezone.utc).isoformat(),
+        "source_counts": dict(sorted({
+            source: sum(row.get("source") == source for row in observations.values())
+            for source in {row.get("source", "unknown") for row in observations.values()}
+        }.items())),
         "observations": sorted(observations.values(), key=lambda row: (row["catalog_category"], row["catalog_name"])),
     }
     output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")

@@ -20,6 +20,7 @@ class ExportContentFeedTests(unittest.TestCase):
             older.parent.mkdir(parents=True)
             newer.parent.mkdir(parents=True)
             base = {
+                "observation_kind": "product_content",
                 "source": "open_icecat",
                 "catalog_category": "gpus",
                 "catalog_name": "Example GPU",
@@ -36,12 +37,21 @@ class ExportContentFeedTests(unittest.TestCase):
                 "observation_id": "b" * 64,
                 "manufacturer_part_number": "VERIFIED-MPN",
                 "ingested_at": "2026-07-22T00:00:00+00:00",
+            }) + "\n" + json.dumps({
+                **base,
+                "observation_kind": "benchmark",
+                "source": "blender_open_data",
+                "source_product_id": "benchmark-1",
+                "manufacturer_part_number": "VERIFIED-MPN",
+                "ingested_at": "2026-07-22T00:01:00+00:00",
             }) + "\n", encoding="utf-8")
             output = root / "feed.json"
 
             payload = export_feed(root, output)
 
             self.assertEqual(len(payload["observations"]), 1)
+            self.assertEqual(payload["source"], "forgesavant_product_content")
+            self.assertEqual(payload["source_counts"], {"open_icecat": 1})
             self.assertEqual(payload["observations"][0]["manufacturer_part_number"], "VERIFIED-MPN")
 
 
