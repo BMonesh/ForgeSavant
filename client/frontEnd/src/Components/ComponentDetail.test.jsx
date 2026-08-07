@@ -28,7 +28,14 @@ const component = {
     sourceUrl: "",
     importChecksum: "",
   }],
-  retailerMappings: [],
+  retailerMappings: [{
+    source: "amazon.in",
+    sourceItemId: "B09V2W32QX",
+    sourceTitle: "AMD Ryzen 5 5600X",
+    sourceUrl: "https://www.amazon.in/dp/B09V2W32QX?tag=forgesavantpc-21",
+    relationshipType: "affiliate_link",
+    matchMethod: "manual",
+  }],
 };
 
 describe("ComponentDetail", () => {
@@ -47,8 +54,13 @@ describe("ComponentDetail", () => {
     );
 
     expect(await screen.findByRole("heading", { name: component.name })).toBeInTheDocument();
-    expect(screen.getByText("Sample catalog value · No retailer observation")).toBeInTheDocument();
+    expect(screen.getByText("Planning catalog value · No retailer observation")).toBeInTheDocument();
     expect(screen.getByText("Sample baseline")).toBeInTheDocument();
     expect(screen.getByText("Not observed")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /View on Amazon.in/i })).toHaveAttribute(
+      "href",
+      "https://www.amazon.in/dp/B09V2W32QX?tag=forgesavantpc-21"
+    );
+    expect(screen.getByText(/As an Amazon Associate I earn from qualifying purchases/i)).toBeInTheDocument();
   });
 });

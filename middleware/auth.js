@@ -34,6 +34,8 @@ const authenticate = async (req, res, next) => {
       fullname: user.fullname,
       email: user.email,
       isAdmin: isAdminEmail(user.email),
+      analyticsConsent: Boolean(user.analyticsConsent),
+      analyticsConsentedAt: user.analyticsConsentedAt || null,
     };
     next();
   } catch (err) {

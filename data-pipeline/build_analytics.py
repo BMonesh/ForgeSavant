@@ -9,6 +9,8 @@ from pathlib import Path
 
 import duckdb
 
+from build_coverage_queue import build_coverage_queue
+
 
 BASE_DIR = Path(__file__).resolve().parent
 LAKE_DIR = BASE_DIR / "lake"
@@ -82,6 +84,10 @@ def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, 
           source_reported_part_number VARCHAR, source_name VARCHAR, source_category VARCHAR,
           gtins_json JSON, specifications_json JSON,
           image_url VARCHAR, manufacturer_url VARCHAR, source_record_url VARCHAR,
+          price DOUBLE, currency VARCHAR, availability VARCHAR, import_checksum VARCHAR,
+          event_type VARCHAR, subject_hash VARCHAR, build_hash VARCHAR, component_ids_json JSON,
+          build_total DOUBLE, compatibility_status VARCHAR,
+          compatibility_engine_version VARCHAR, analytics_model_version VARCHAR,
           observed_at TIMESTAMPTZ, ingested_at TIMESTAMPTZ, raw_sha256 VARCHAR
         )
     """)
@@ -102,8 +108,9 @@ def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, 
             ) for run in runs],
         )
     if observations:
+        placeholders = ", ".join("?" for _ in range(32))
         connection.executemany(
-            "INSERT INTO catalog_observations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            f"INSERT INTO catalog_observations VALUES ({placeholders})",
             [(
                 row["observation_id"], row["observation_kind"], row["source"], row.get("source_tier", ""),
                 row["source_product_id"], row["catalog_category"], row.get("catalog_name", ""),
@@ -111,7 +118,13 @@ def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, 
                 row.get("source_reported_part_number", ""), row.get("name", ""),
                 row.get("category", ""), json.dumps(row.get("gtins", []), ensure_ascii=False),
                 json.dumps(row.get("specifications", {}), ensure_ascii=False), row.get("image_url", ""),
-                row.get("manufacturer_url", ""), row.get("source_record_url", ""), row["observed_at"],
+                row.get("manufacturer_url", ""), row.get("source_record_url", ""), row.get("price"),
+                row.get("currency", ""), row.get("availability", ""), row.get("import_checksum", ""),
+                row.get("event_type", ""), row.get("subject_hash", ""), row.get("build_hash", ""),
+                json.dumps(row.get("component_ids", {}), ensure_ascii=False), row.get("build_total"),
+                row.get("compatibility_status", ""), row.get("compatibility_engine_version", ""),
+                row.get("analytics_model_version", ""),
+                row["observed_at"],
                 row["ingested_at"], row["raw_sha256"],
             ) for row in observations],
         )
@@ -132,6 +145,59 @@ def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, 
             ORDER BY ingested_at DESC, observation_id DESC
           ) AS logical_rank
           FROM catalog_observations
+          WHERE observation_kind = 'product_content'
+        ) WHERE logical_rank = 1
+    """)
+    connection.execute("""
+        CREATE VIEW retail_price_history AS
+        SELECT observation_id, source, source_product_id, catalog_category, catalog_name,
+               manufacturer, manufacturer_part_number, price, currency, availability,
+               source_record_url, observed_at, ingested_at, import_checksum, raw_sha256
+        FROM catalog_observations
+        WHERE observation_kind = 'retail_offer'
+    """)
+    connection.execute("""
+        CREATE VIEW current_retail_offers AS
+        SELECT * EXCLUDE (logical_rank) FROM (
+          SELECT *, row_number() OVER (
+            PARTITION BY source, source_product_id
+            ORDER BY observed_at DESC, ingested_at DESC, observation_id DESC
+          ) AS logical_rank
+          FROM retail_price_history
+        ) WHERE logical_rank = 1
+    """)
+    connection.execute("""
+        CREATE VIEW build_outcome_observations AS
+        SELECT observation_id, event_type, subject_hash, build_hash, component_ids_json,
+               build_total, currency, compatibility_status, compatibility_engine_version,
+               analytics_model_version, observed_at, ingested_at, raw_sha256
+        FROM catalog_observations
+        WHERE observation_kind = 'build_outcome'
+    """)
+    connection.execute("""
+        CREATE VIEW benchmark_observations AS
+        SELECT observation_id, source, source_product_id, catalog_category, catalog_name,
+               manufacturer, manufacturer_part_number,
+               json_extract_string(specifications_json, '$.benchmarkName') AS benchmark_name,
+               json_extract_string(specifications_json, '$.metricName') AS metric_name,
+               CAST(json_extract(specifications_json, '$.metricValue') AS DOUBLE) AS metric_value,
+               json_extract_string(specifications_json, '$.unit') AS unit,
+               json_extract_string(specifications_json, '$.workload') AS workload,
+               json_extract_string(specifications_json, '$.resolution') AS resolution,
+               json_extract_string(specifications_json, '$.usageBasis') AS usage_basis,
+               CAST(json_extract(specifications_json, '$.sampleCount') AS INTEGER) AS sample_count,
+               source_record_url, observed_at, ingested_at, raw_sha256
+        FROM catalog_observations
+        WHERE observation_kind = 'benchmark'
+    """)
+    connection.execute("""
+        CREATE VIEW current_benchmark_observations AS
+        SELECT * EXCLUDE (logical_rank) FROM (
+          SELECT *, row_number() OVER (
+            PARTITION BY source, source_product_id
+            ORDER BY observed_at DESC, ingested_at DESC, observation_id DESC
+          ) AS logical_rank
+          FROM benchmark_observations
         ) WHERE logical_rank = 1
     """)
     connection.execute("""
@@ -152,7 +218,11 @@ def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, 
         GROUP BY source, catalog_category, status
     """)
 
-    for table in ("ingestion_runs", "catalog_observations", "current_catalog_observations", "source_coverage"):
+    for table in (
+        "ingestion_runs", "catalog_observations", "current_catalog_observations",
+        "retail_price_history", "current_retail_offers", "build_outcome_observations",
+        "benchmark_observations", "current_benchmark_observations", "source_coverage",
+    ):
         target = (parquet_dir / f"{table}.parquet").resolve().as_posix().replace("'", "''")
         connection.execute(f"COPY {table} TO '{target}' (FORMAT PARQUET, COMPRESSION ZSTD)")
 
@@ -172,6 +242,43 @@ def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, 
                count(*) FILTER (WHERE image_url <> '')
         FROM current_catalog_observations
     """).fetchone()
+    retail_totals = connection.execute("""
+        SELECT count(*),
+               count(DISTINCT catalog_category || ':' || manufacturer_part_number),
+               count(DISTINCT source),
+               count(*) FILTER (WHERE price > 0 AND length(currency) = 3),
+               max(observed_at)
+        FROM retail_price_history
+    """).fetchone()
+    current_retail_totals = connection.execute("""
+        SELECT count(*), count(DISTINCT catalog_category || ':' || manufacturer_part_number)
+        FROM current_retail_offers
+    """).fetchone()
+    outcome_totals = connection.execute("""
+        SELECT count(*), count(DISTINCT subject_hash), count(DISTINCT build_hash),
+               count(*) FILTER (WHERE event_type = 'build_saved'),
+               count(*) FILTER (WHERE event_type = 'build_updated'),
+               count(DISTINCT CAST(observed_at AS DATE))
+        FROM build_outcome_observations
+    """).fetchone()
+    benchmark_totals = connection.execute("""
+        SELECT count(*),
+               count(DISTINCT catalog_category || ':' || manufacturer_part_number),
+               count(DISTINCT benchmark_name || ':' || metric_name || ':' || unit),
+               count(DISTINCT source), count(DISTINCT CAST(observed_at AS DATE))
+        FROM benchmark_observations
+    """).fetchone()
+    current_benchmark_total = connection.execute(
+        "SELECT count(*) FROM current_benchmark_observations"
+    ).fetchone()[0]
+    benchmark_rows = connection.execute("""
+        SELECT catalog_category, catalog_name, manufacturer, manufacturer_part_number,
+               benchmark_name, metric_name, metric_value, unit, workload, sample_count,
+               source_record_url, observed_at,
+               dense_rank() OVER (PARTITION BY catalog_category ORDER BY metric_value DESC) AS category_rank
+        FROM current_benchmark_observations
+        ORDER BY catalog_category, category_rank, catalog_name
+    """).fetchall()
     connection.close()
 
     verified_total = sum(identity_counts.values())
@@ -198,7 +305,7 @@ def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, 
         "schemaVersion": "1.0",
         "generatedAt": datetime.now(timezone.utc).isoformat(),
         "sourcePath": str(lake_dir),
-        "grain": "one immutable normalized source observation per source product content version",
+        "grain": "one immutable normalized source observation per product-content version, retailer-offer timestamp, benchmark run, or consented build outcome",
         "catalog": {
             "verifiedProducts": verified_total,
             "observedProducts": current_totals[0],
@@ -210,6 +317,31 @@ def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, 
             "runs": len(runs), "received": run_totals[0], "accepted": run_totals[1],
             "duplicates": run_totals[2], "quarantined": run_totals[3],
             "latestRunAt": run_totals[4].isoformat() if run_totals[4] else None,
+        },
+        "retail": {
+            "priceObservations": retail_totals[0],
+            "productsWithPriceHistory": retail_totals[1],
+            "currentOffers": current_retail_totals[0],
+            "productsWithCurrentOffers": current_retail_totals[1],
+            "retailers": retail_totals[2],
+            "validPriceRate": (retail_totals[3] / retail_totals[0]) if retail_totals[0] else None,
+            "latestObservedAt": retail_totals[4].isoformat() if retail_totals[4] else None,
+        },
+        "outcomes": {
+            "observations": outcome_totals[0],
+            "pseudonymousSubjects": outcome_totals[1],
+            "builds": outcome_totals[2],
+            "saved": outcome_totals[3],
+            "updated": outcome_totals[4],
+            "observationDates": outcome_totals[5],
+        },
+        "benchmarks": {
+            "observations": benchmark_totals[0],
+            "currentObservations": current_benchmark_total,
+            "products": benchmark_totals[1],
+            "metrics": benchmark_totals[2],
+            "sources": benchmark_totals[3],
+            "observationDates": benchmark_totals[4],
         },
         "quality": {
             "identityCompletenessRate": (current_totals[1] / current_totals[0]) if current_totals[0] else None,
@@ -227,6 +359,35 @@ def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, 
     }
     summary_path = analytics_dir / "data_quality_summary.json"
     summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    coverage_queue = build_coverage_queue(
+        identity_dir,
+        identity_dir.parent / "cleaned_data",
+        lake_dir,
+        coverage_report,
+        analytics_dir / "catalog_coverage_queue.json",
+        analytics_dir / "catalog_coverage_queue.csv",
+    )
+    summary["coverageQueue"] = coverage_queue["counts"]
+    summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    benchmark_payload = {
+        "schemaVersion": "1.0",
+        "generatedAt": summary["generatedAt"],
+        "grain": "newest aggregate per benchmark source and exact product/version identity",
+        "caveats": [
+            "Scores are comparable only within the same benchmark version and component category.",
+            "Blender Open Data values are public aggregate medians, not ForgeSavant lab measurements.",
+            "A benchmark rank is performance evidence for this workload, not a personalized recommendation.",
+        ],
+        "records": [{
+            "category": row[0], "catalogName": row[1], "manufacturer": row[2],
+            "manufacturerPartNumber": row[3], "benchmarkName": row[4], "metricName": row[5],
+            "metricValue": row[6], "unit": row[7], "workload": row[8], "sampleCount": row[9],
+            "sourceRecordUrl": row[10], "observedAt": row[11].isoformat(), "categoryRank": row[12],
+        } for row in benchmark_rows],
+    }
+    (analytics_dir / "benchmark_catalog_summary.json").write_text(
+        json.dumps(benchmark_payload, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     if database_path.exists():
         database_path.unlink()
     temporary_database.replace(database_path)

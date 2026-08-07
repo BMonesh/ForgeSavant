@@ -161,7 +161,9 @@ Run a bounded coverage audit against the verified manufacturer part numbers:
 python data-pipeline/audit_icecat.py --component all
 ```
 
-Use `--limit 5` for a connectivity smoke test. The generated ignored report
+Use `--limit 5` for a connectivity smoke test. Bounded runs write
+`icecat_coverage_smoke_report.json`, so they cannot replace the canonical
+full-catalog coverage metrics. The generated ignored report
 classifies every lookup as available, restricted, not found, or unavailable;
 it never contains credentials. Add `--snapshot` only when immutable raw XML is
 needed for inspectable analysis. The audit never modifies the application
@@ -201,10 +203,63 @@ This build is deterministic from the lake and can be recreated at any time. It
 does not invent unavailable prices or treat product-content coverage as retail
 coverage.
 
-### 9. Run and monitor the complete analytical pipeline
+### 9. Build the catalog coverage work queue
 
-From the repository root, run the authenticated Open Icecat audit, immutable
-ingestion, and DuckDB/Parquet rebuild as one job:
+Generate a ranked queue for every verified catalog identity:
+
+```bash
+npm run catalog:coverage
+```
+
+The ignored analytics directory receives `catalog_coverage_queue.json` for
+application use and `catalog_coverage_queue.csv` for review. A product is
+classified as covered, ready for official-manufacturer evidence capture, or
+missing an official source. Priority is driven by category coverage and the
+latest Open Icecat result.
+
+### 10. Ingest reviewed manufacturer evidence
+
+Copy `manufacturer_evidence_template.json` to the ignored
+`manufacturer_evidence_feed.json`, replace the example with reviewed values
+from the verified official product page, then run:
+
+```bash
+npm run catalog:manufacturer:ingest
+```
+
+The importer does not crawl arbitrary websites. It accepts evidence only when
+the category, manufacturer part number, and HTTPS official URL exactly match
+the verified identity manifest. Structured specifications are landed as
+immutable product-content observations and remain separate from compatibility
+rules until the existing reviewed promotion step is used.
+
+### 11. Snapshot approved retailer price history
+
+After an administrator has approved an authorized partner feed at
+`/admin/offers`, land its MongoDB price history in the immutable analytical
+store:
+
+```bash
+npm run retail:snapshot
+```
+
+For the bundled local MongoDB:
+
+```bash
+npm run retail:snapshot:local
+```
+
+Seed and planning prices are intentionally excluded. An eligible observation
+must have a stable retailer item ID, positive price, ISO currency, supported
+availability, HTTPS product URL, verified catalog MPN, and timestamp. Repeated
+runs are idempotent; new timestamps form the price history needed for later
+temporal analysis.
+
+### 12. Run and monitor the complete analytical pipeline
+
+From the repository root, run the authenticated Open Icecat audit, approved
+retailer snapshot, immutable ingestion, DuckDB/Parquet rebuild, coverage work
+queue, and model-readiness assessment as one job:
 
 ```bash
 npm run pipeline:run
@@ -229,7 +284,7 @@ pipeline:run` weekly and configure an alert on a non-zero exit code; do not put
 credentials in the scheduler command itself. The job loads the ignored project
 `.env` file.
 
-### 10. Promote reviewed product content
+### 13. Promote reviewed product content
 
 Open Icecat content is deliberately separated from the compatibility catalog.
 Export the latest logical observation for every accessible source product, then
@@ -257,6 +312,56 @@ npm run analytics:notebook
 The executed notebook is stored at `notebooks/model_readiness.ipynb`. It keeps
 descriptive analysis separate from predictive claims and records the missing
 labels and temporal evidence required before model fitting is defensible.
+
+### 14. Capture consented outcomes and reviewed benchmarks
+
+Product analytics is opt-in from the user's build-history page. Saving or
+updating a build records only pseudonymous subject/build hashes, component IDs,
+the catalog total, and model versions. It does not record email, name, IP,
+user-agent, searches, or page views. Opting out deletes that subject's existing
+events. Use a dedicated production secret:
+
+```env
+ANALYTICS_PSEUDONYM_SECRET=generate-a-separate-high-entropy-secret
+```
+
+Land consented events in the immutable lake with:
+
+```bash
+npm run outcomes:snapshot
+```
+
+For performance evidence, copy `benchmark_evidence_template.json` to the
+ignored `benchmark_evidence_feed.json`, provide an owned or licensed result
+linked to a verified manufacturer part number, then run:
+
+```bash
+npm run benchmarks:ingest
+```
+
+The benchmark contract requires a traceable HTTPS record, usage basis,
+workload, metric, unit, sample count, settings, hardware context, and test time.
+Unlicensed or identity-unmatched rows are rejected.
+
+ForgeSavant also includes an exact-model connector for Blender Open Data:
+
+```bash
+npm run benchmarks:blender
+```
+
+It currently pins Blender Benchmark 5.1.1 for reproducibility, accepts only an
+exact normalized GPU device name or an exact CPU model phrase, and preserves
+the public aggregate's median score, sample count, query URL, version, and
+collection time. Laptop, Ti, Super, and nearby model variants are not used as
+substitutes. Blender states that anonymized Open Data benchmark results are
+public-domain data:
+
+Analytics retain every dated aggregate pull as a historical snapshot, while
+`current_benchmark_observations` keeps only the newest record for each source
+and exact product/version identity. The admin dashboard reports both counts so
+repeated collection runs are not presented as independent benchmark samples.
+
+- https://www.blender.org/news/introducing-blender-benchmark/
 
 ## Data Schema
 

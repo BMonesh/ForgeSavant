@@ -5,6 +5,9 @@ const userSchema = new mongoose.Schema({
   fullname: { type: String, required: true, trim: true, maxlength: 100 },
   email: { type: String, required: true, unique: true, lowercase: true, trim: true, maxlength: 254 },
   password: { type: String },
+  analyticsConsent: { type: Boolean, default: false },
+  analyticsConsentedAt: { type: Date, default: null },
+  analyticsConsentVersion: { type: String, default: "1.0" },
 });
 
 // Hash the password before saving the user

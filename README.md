@@ -11,6 +11,7 @@ ForgeSavant is a full-stack web application for planning custom PC configuration
 - **Reviewed Product Content**: Open Icecat specifications and media land in an immutable lake, pass exact-identity review, and are promoted as evidence without overwriting compatibility rules.
 - **Integrated Data Pipeline**: Python ETL validates and imports processors, GPUs, motherboards, RAM, storage, power supplies, and cabinets with provenance metadata.
 - **Data Health Console**: Administrators can inspect catalog coverage, validation, freshness, source limitations, and pipeline execution health.
+- **Consent-first Product Analytics**: Build outcomes are off by default, pseudonymized when enabled, and deleted when a user opts out.
 - **User Profiles**: Save compatible builds and manage them through password or verified Google sign-in.
 
 ## Tech Stack
@@ -70,6 +71,26 @@ python compatibility_engine.py --demo
 python import_to_mongo.py --dry-run --all
 ```
 
+The analytical path keeps three evidence classes separate: verified
+manufacturer content, authorized retailer offer snapshots, and future
+benchmark or consented product-outcome observations. Useful root commands are:
+
+```bash
+npm run catalog:coverage
+npm run catalog:manufacturer:ingest
+npm run retail:snapshot:local
+npm run outcomes:snapshot:local
+npm run benchmarks:ingest
+npm run analytics:build
+npm run analytics:model-readiness
+```
+
+Start manufacturer review from the tracked
+`data-pipeline/manufacturer_evidence_template.json`; the populated
+`manufacturer_evidence_feed.json` is ignored. Retail snapshots include only
+offers previously approved through the signed admin import flow, so seed prices
+cannot accidentally become training data.
+
 **What it handles:**
 - Normalizes inconsistent formats across vendors (`3.7 ghz` -> `3.7 GHz`, `amd` -> `AMD`, `LGA1700` -> `LGA 1700`)
 - Deduplicates entries from configured sources (keeps the lowest price)
@@ -82,7 +103,7 @@ See [`data-pipeline/README.md`](data-pipeline/README.md) for detailed usage.
 
 ### Prerequisites
 - Node.js 20.19+ (or 22.12+)
-- MongoDB (local or Atlas)
+- Docker Desktop for the recommended local MongoDB workflow, or MongoDB Atlas
 - Python 3.10+ (for data pipeline)
 
 ### Installation
@@ -110,20 +131,37 @@ See [`data-pipeline/README.md`](data-pipeline/README.md) for detailed usage.
    npm install
    ```
 
-5. Start the development server:
+5. Initialize the local database:
    ```bash
-   # From root directory
-   npm start
+   cd ../..
+   npm run setup:local
    ```
 
-6. (Optional) Set up the data pipeline:
+   The local database is bound only to `127.0.0.1:27018` and persists in a Docker
+   volume. It does not use `URI` from `.env`, so changing hotspot IP addresses
+   cannot interrupt local development. The setup command seeds, deduplicates,
+   enriches, and validates the complete catalog. Use `npm run db:local:stop`
+   when you want to stop it. Atlas remains the recommended production database.
+   For Atlas, include the database name in the URI (for example,
+   `mongodb+srv://.../forgesavant`). If an older setup placed data in Atlas's
+   default `test` database, the one-time `npm run db:migrate:atlas` command
+   copies it into `forgesavant` only when every target collection is empty; it
+   never removes the source database.
+
+6. Start the development application:
+   ```bash
+   # Starts the local database, Express API, and Vite frontend.
+   npm run dev:local
+   ```
+
+7. (Optional) Set up the data pipeline:
    ```bash
    cd data-pipeline
    pip install -r requirements.txt
    python data_cleaner.py --all --stats
    ```
 
-7. (Optional) enable the Flipkart connector only after an affiliate account is
+8. (Optional) enable the Flipkart connector only after an affiliate account is
    approved and the API is available. Add
    `FLIPKART_AFFILIATE_ID` and `FLIPKART_AFFILIATE_TOKEN` to your local
    environment. From the repository root:
@@ -168,6 +206,27 @@ npm run analytics:notebook  # execute the reproducible ML-readiness assessment
 npm run verify           # full backend, pipeline, catalog, frontend, lint, and build gate
 ```
 
+### Reviewed Amazon.in affiliate destinations
+
+Amazon affiliate destinations are intentionally separate from retailer price
+observations. They store only an exact catalog relationship, ASIN, and a
+generated Amazon.in URL containing the configured public Associate tag. They do
+not import Amazon titles, images, prices, availability, reviews, or
+specifications, and the application does not scrape Amazon pages.
+
+Configure the public tag locally:
+
+```env
+AMAZON_ASSOCIATE_TAG=yourstore-21
+```
+
+Administrators can open `/admin/affiliate-links`, download the JSON template,
+and provide an ASIN plus either an exact catalog component ID or a verified
+manufacturer part number. A signed preview must pass before mappings are
+published. Component pages label these as paid destinations, show the required
+Amazon Associate disclosure, and continue to classify the catalog price as
+sample until an independently authorized offer observation is imported.
+
 ### Production configuration
 
 Production startup fails closed unless `URI`, a unique 32+ character
@@ -195,6 +254,7 @@ See [`CATALOG_DATA_QUALITY.md`](CATALOG_DATA_QUALITY.md) for the current measure
 | GET | `/api/v1/catalog/:category/:id` | Inspect canonical identity, price history, provenance, and retailer mappings |
 | POST | `/api/v1/compatibility/evaluate` | Evaluate a build using database component IDs |
 | POST | `/api/v1/analytics/estimate` | Return a versioned, low-confidence planning estimate for a CPU/GPU pair |
+| GET | `/api/v1/analytics/benchmarks` | Return current exact-product Blender aggregates, category ranks, sample counts, and source links |
 | GET | `/api/v1/admin/offers/status` | Verify administrator offer-import access |
 | GET | `/api/v1/admin/offers/history` | List recent applied partner-feed batches |
 | POST | `/api/v1/admin/offers/preview` | Validate and match an authorized CSV/JSON feed payload |

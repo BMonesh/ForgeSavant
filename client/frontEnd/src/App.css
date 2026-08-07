@@ -1,34 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Public+Sans:wght@600;700;800;900&display=swap");
+
 :root {
-  color-scheme: light;
-  font-family: "Segoe UI Variable", Aptos, "Segoe UI", sans-serif;
+  color-scheme: dark;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --color-background: #f5f6f2;
-  --color-surface: #ffffff;
-  --color-elevated: #e9ebe5;
-  --color-text: #111311;
-  --color-muted: #62665f;
-  --color-subtle: #858b82;
-  --color-border: #d9ddd6;
-  --color-accent: #b9ff2c;
-  --color-success: #28785e;
-  --color-warning: #c77b08;
-  --color-danger: #cf3f3f;
-  --color-info: #111311;
-  --font-body: Inter, "Segoe UI Variable", Aptos, "Segoe UI", sans-serif;
-  --font-utility: "Cascadia Code", "Cascadia Mono", monospace;
+  --color-background: #131313;
+  --color-surface: #201f1f;
+  --color-elevated: #2a2927;
+  --color-text: #f5f3ea;
+  --color-muted: #aba9a1;
+  --color-subtle: #7b7973;
+  --color-border: #45433f;
+  --color-accent: #ffd700;
+  --color-success: #ccff00;
+  --color-warning: #ffb020;
+  --color-danger: #ff3b30;
+  --color-info: #4db8ff;
+  --font-display: "Public Sans", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-utility: "JetBrains Mono", "Cascadia Mono", monospace;
   --radius-sm: 0;
   --radius-md: 0;
   --radius-lg: 0;
-  --shadow-dialog: 0 22px 60px rgb(22 33 39 / 0.2);
+  --shadow-dialog: 0 22px 60px rgb(0 0 0 / 0.45);
   --shadow-panel: none;
   --nav-height: 68px;
-  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --grid-size: 32px;
+  --motion-fast: 120ms;
+  --motion-base: 300ms;
+  --motion-emphasis: 500ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+  --z-dropdown: 20;
+  --z-sticky: 30;
+  --z-fixed: 40;
+  --z-modal-backdrop: 45;
+  --z-modal: 50;
+  --z-tooltip: 60;
+  --z-toast: 70;
+  --z-skip-link: 80;
 }
 
 html {
-  scroll-behavior: smooth;
   background: var(--color-background);
+  scroll-behavior: smooth;
 }
 
 * {
@@ -51,7 +66,11 @@ dd {
 body {
   min-width: 320px;
   min-height: 100vh;
-  background: var(--color-background);
+  background-color: var(--color-background);
+  background-image:
+    linear-gradient(rgb(245 243 234 / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(245 243 234 / 0.025) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
   color: var(--color-text);
   font-family: var(--font-body);
   line-height: 1.5;
@@ -87,28 +106,28 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--color-info) 72%, white);
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--color-accent);
   outline-offset: 3px;
 }
 
 .app-main {
-  min-height: 100vh;
+  min-height: calc(100vh - var(--nav-height));
 }
 
 .skip-link {
   position: fixed;
   left: 16px;
   top: 12px;
-  z-index: 2000;
-  transform: translateY(-140%);
+  z-index: var(--z-skip-link);
+  transform: translateY(-160%);
   border: 1px solid var(--color-accent);
-  border-radius: var(--radius-md);
   background: var(--color-accent);
-  color: #111311;
+  color: var(--color-background);
   padding: 10px 14px;
   font-weight: 700;
-  transition: transform 120ms var(--ease-standard);
+  transition: transform var(--motion-fast) var(--ease-standard);
 }
 
 .skip-link:focus {
@@ -119,47 +138,55 @@ textarea:focus-visible {
   color: var(--color-subtle);
   font-family: var(--font-utility);
   font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .ui-button,
 .MuiButton-root {
   min-height: 44px !important;
-  border-radius: var(--radius-md) !important;
+  border-radius: 0 !important;
   font-family: var(--font-body) !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
   box-shadow: none !important;
   transition:
-    background-color 120ms var(--ease-standard),
-    border-color 120ms var(--ease-standard),
-    color 120ms var(--ease-standard),
-    transform 120ms var(--ease-standard) !important;
+    background-color var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard) !important;
 }
 
 .MuiButton-containedPrimary {
   background-color: var(--color-accent) !important;
-  color: var(--color-text) !important;
+  color: var(--color-background) !important;
 }
 
 .MuiButton-containedPrimary:hover {
-  background-color: #a7e92a !important;
+  background-color: #ffe347 !important;
 }
 
 .MuiButton-outlinedPrimary {
   border-color: var(--color-border) !important;
-  color: var(--color-muted) !important;
+  color: var(--color-text) !important;
 }
 
 .MuiButton-outlinedPrimary:hover {
-  border-color: var(--color-subtle) !important;
+  border-color: var(--color-accent) !important;
   background-color: var(--color-elevated) !important;
 }
 
+::selection {
+  background: var(--color-accent);
+  color: var(--color-background);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {

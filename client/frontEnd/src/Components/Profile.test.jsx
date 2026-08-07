@@ -7,7 +7,7 @@ import api from "../services/api";
 import { SessionProvider } from "../auth/SessionContext";
 
 vi.mock("../services/api", () => ({
-  default: { get: vi.fn(), delete: vi.fn() },
+  default: { get: vi.fn(), patch: vi.fn(), delete: vi.fn() },
 }));
 
 const savedBuild = {
@@ -32,12 +32,17 @@ describe("Profile", () => {
     localStorage.setItem("token", "valid-token");
     localStorage.setItem("sessionUser", JSON.stringify({ fullname: "Monesh", email: "test@example.com" }));
     api.get.mockReset();
+    api.patch.mockReset();
     api.delete.mockReset();
   });
 
   it("loads server-scoped builds and confirms deletion", async () => {
     const user = userEvent.setup();
-    api.get.mockResolvedValue({ data: [savedBuild] });
+    api.get.mockImplementation((url) => Promise.resolve(
+      url === "/saves2"
+        ? { data: [savedBuild] }
+        : { data: { data: { enabled: false } } }
+    ));
     api.delete.mockResolvedValue({ data: { message: "Deleted" } });
 
     render(<SessionProvider><MemoryRouter><Profile /></MemoryRouter></SessionProvider>);
@@ -54,9 +59,29 @@ describe("Profile", () => {
   });
 
   it("provides a retry action when loading fails", async () => {
-    api.get.mockRejectedValueOnce({ response: { data: { error: "Database unavailable" } } });
+    api.get.mockImplementation((url) => url === "/saves2"
+      ? Promise.reject({ response: { data: { error: "Database unavailable" } } })
+      : Promise.resolve({ data: { data: { enabled: false } } }));
     render(<SessionProvider><MemoryRouter><Profile /></MemoryRouter></SessionProvider>);
     expect(await screen.findByText("Database unavailable")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Retry" })).toBeInTheDocument();
+  });
+
+  it("requires an explicit opt-in and can revoke it", async () => {
+    const user = userEvent.setup();
+    api.get.mockImplementation((url) => Promise.resolve(
+      url === "/saves2"
+        ? { data: [] }
+        : { data: { data: { enabled: false } } }
+    ));
+    api.patch.mockResolvedValue({ data: { data: { enabled: true } } });
+
+    render(<SessionProvider><MemoryRouter><Profile /></MemoryRouter></SessionProvider>);
+    const control = await screen.findByRole("checkbox");
+    expect(control).not.toBeChecked();
+    expect(screen.getByText(/does not include your name, email, searches, or page views/i)).toBeInTheDocument();
+    await user.click(control);
+    await waitFor(() => expect(api.patch).toHaveBeenCalledWith("/api/v1/privacy/analytics", { enabled: true }));
+    expect(control).toBeChecked();
   });
 });

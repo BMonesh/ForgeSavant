@@ -40,17 +40,22 @@ const AdminDataQuality = () => {
   const categories = useMemo(() => Object.entries(summary?.categories || {}), [summary]);
 
   if (state === "loading" && !summary) {
-    return <div className="quality-state" role="status"><FiActivity aria-hidden="true" /><strong>Loading data health…</strong></div>;
+    return <div className="quality-state" role="status" aria-live="polite"><FiActivity aria-hidden="true" /><strong>Loading data health…</strong><span>Retrieving the latest measured catalog and pipeline evidence.</span></div>;
   }
   if (state === "error") {
     return <div className="quality-state error" role="alert"><FiAlertTriangle aria-hidden="true" /><strong>Analytics unavailable</strong><span>{message}</span><button type="button" onClick={loadSummary}>Try again</button></div>;
   }
 
   const { catalog, pipeline, quality, freshness } = summary;
+  const retail = summary.retail || {};
+  const coverageQueue = summary.coverageQueue || {};
+  const outcomes = summary.outcomes || {};
+  const benchmarks = summary.benchmarks || {};
+  const retailSnapshot = summary.retailSnapshot || {};
   const statusLabel = summary.status === "healthy" ? "Pipeline healthy" : summary.status === "stale" ? "Pipeline stale" : "Review required";
 
   return (
-    <div className="quality-page">
+    <div className="quality-page" aria-busy={state === "loading"}>
       <header className="quality-hero">
         <div>
           <p className="ui-kicker">Data operations / quality</p>
@@ -70,6 +75,7 @@ const AdminDataQuality = () => {
         <article><span>Validation pass</span><strong>{percentage(pipeline.validationPassRate)}</strong><small>{pipeline.accepted} new, {pipeline.duplicates} already known</small></article>
         <article><span>Quarantine rate</span><strong>{percentage(quality.quarantineRate)}</strong><small>{pipeline.quarantined} records require review</small></article>
         <article><span>Freshness</span><strong>{Math.round(freshness.ageHours)}h</strong><small>Threshold {freshness.thresholdHours}h</small></article>
+        <article><span>Retail observations</span><strong>{retail.priceObservations || 0}</strong><small>{retail.productsWithPriceHistory || 0} products across {retail.retailers || 0} retailers</small></article>
       </section>
 
       <div className="quality-grid">
@@ -79,7 +85,7 @@ const AdminDataQuality = () => {
             {categories.map(([key, value]) => (
               <div className="quality-bar-row" key={key}>
                 <div><strong>{categoryLabels[key] || key}</strong><span>{value.sourceCoverage} / {value.verifiedCatalogProducts}</span></div>
-                <div className="quality-track" aria-label={`${categoryLabels[key] || key}: ${value.sourceCoverage} of ${value.verifiedCatalogProducts}`}>
+                <div className="quality-track" role="progressbar" aria-valuemin="0" aria-valuemax={value.verifiedCatalogProducts} aria-valuenow={value.sourceCoverage} aria-label={`${categoryLabels[key] || key}: ${value.sourceCoverage} of ${value.verifiedCatalogProducts}`}>
                   <span style={{ width: `${boundedPercentage(value.sourceCoverage, value.verifiedCatalogProducts)}%` }} />
                 </div>
               </div>
@@ -124,15 +130,35 @@ const AdminDataQuality = () => {
           <p><strong>Grain</strong>{summary.grain}</p>
         </section>
 
+        <section className="quality-panel quality-runs" aria-labelledby="evidence-queue-title">
+          <div className="quality-panel-heading"><div><span>04</span><h2 id="evidence-queue-title">Evidence work queue</h2></div><FiDatabase aria-hidden="true" /></div>
+          <dl>
+            <div><dt>Verified products</dt><dd>{coverageQueue.verified ?? catalog.verifiedProducts}</dd></div>
+            <div><dt>Covered</dt><dd>{coverageQueue.covered ?? catalog.observedProducts}</dd></div>
+            <div><dt>Manufacturer-ready gaps</dt><dd>{coverageQueue.manufacturerReady ?? 0}</dd></div>
+            <div><dt>Missing official source</dt><dd>{coverageQueue.sourceMissing ?? 0}</dd></div>
+            <div><dt>Current retail offers</dt><dd>{retail.currentOffers || 0}</dd></div>
+            <div><dt>Catalog products scanned</dt><dd>{retailSnapshot.scannedComponents ?? "—"}</dd></div>
+            <div><dt>Planning price rows excluded</dt><dd>{retailSnapshot.skippedEntries ?? "—"}</dd></div>
+            <div><dt>Consented outcomes</dt><dd>{outcomes.observations || 0}</dd></div>
+            <div><dt>Benchmark snapshots</dt><dd>{benchmarks.observations || 0}</dd></div>
+            <div><dt>Current benchmark records</dt><dd>{benchmarks.currentObservations || 0}</dd></div>
+            <div><dt>Benchmarked products</dt><dd>{benchmarks.products || 0}</dd></div>
+            <div><dt>Independent benchmark sources</dt><dd>{benchmarks.sources || 0}</dd></div>
+            <div><dt>Benchmark collection dates</dt><dd>{benchmarks.observationDates || 0}</dd></div>
+          </dl>
+          <p><strong>Price evidence</strong>{retail.productsWithCurrentOffers || 0} products currently have an authorized retailer offer. Seed prices are excluded from retailer analytics.</p>
+        </section>
+
         <section className="quality-panel quality-notes" aria-labelledby="notes-title">
-          <div className="quality-panel-heading"><div><span>04</span><h2 id="notes-title">Interpretation guardrails</h2></div></div>
+          <div className="quality-panel-heading"><div><span>05</span><h2 id="notes-title">Interpretation guardrails</h2></div></div>
           <ul>{summary.caveats.map((caveat) => <li key={caveat}>{caveat}</li>)}</ul>
           <details><summary>Metric definitions</summary><dl>{Object.entries(summary.definitions).map(([key, value]) => <div key={key}><dt>{key.replace(/([A-Z])/g, " $1")}</dt><dd>{value}</dd></div>)}</dl></details>
         </section>
 
         {summary.modelReadiness ? (
           <section className="quality-panel quality-model" aria-labelledby="model-title">
-            <div className="quality-panel-heading"><div><span>05</span><h2 id="model-title">Model readiness</h2></div><small>Evidence gates, not aspirational scores</small></div>
+            <div className="quality-panel-heading"><div><span>06</span><h2 id="model-title">Model readiness</h2></div><small>Evidence gates, not aspirational scores</small></div>
             <div className="quality-model-grid">
               {summary.modelReadiness.uses.map((item) => (
                 <article key={item.use}>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiArrowLeft, FiExternalLink, FiRefreshCw } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import api from "../services/api";
@@ -11,18 +11,26 @@ const label = (value) => String(value || "")
 
 const formatPrice = (value) => Number.isFinite(Number(value))
   ? `₹${Number(value).toLocaleString("en-IN")}`
-  : "Not recorded";
+  : "Unavailable";
 
 const formatDate = (value) => value
   ? new Date(value).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })
-  : "Not recorded";
+  : "Unavailable";
+
+const priceEvidence = (component) => {
+  const pricing = component?.pricing || {};
+  if (pricing.status === "live") return { key: "live", label: "Live observation" };
+  if (pricing.status === "stale") return { key: "stale", label: "Stale observation" };
+  if (Number.isFinite(Number(component?.price))) return { key: "planning", label: "Planning value" };
+  return { key: "unavailable", label: "Price unavailable" };
+};
 
 const ComponentDetail = () => {
   const { category, id } = useParams();
   const [component, setComponent] = useState(null);
   const [state, setState] = useState("loading");
 
-  useEffect(() => {
+  const loadComponent = useCallback(() => {
     let active = true;
     setState("loading");
     api.get(`/api/v1/catalog/${category}/${id}`)
@@ -35,10 +43,41 @@ const ComponentDetail = () => {
     return () => { active = false; };
   }, [category, id]);
 
-  const specifications = useMemo(() => Object.entries(component?.specifications || {}), [component]);
+  useEffect(() => loadComponent(), [loadComponent]);
 
-  if (state === "loading") return <div className="component-detail-state"><FiRefreshCw aria-hidden="true" /> Loading catalog evidence…</div>;
-  if (state === "error" || !component) return <div className="component-detail-state"><strong>Component evidence is unavailable.</strong><Link to="/build">Return to builder</Link></div>;
+  const specifications = useMemo(() => Object.entries(component?.specifications || {}), [component]);
+  const affiliateDestinations = useMemo(
+    () => component?.retailerMappings?.filter((mapping) => mapping.relationshipType === "affiliate_link" && mapping.sourceUrl) || [],
+    [component]
+  );
+  const retailerMappings = useMemo(
+    () => component?.retailerMappings?.filter((mapping) => mapping.relationshipType !== "affiliate_link") || [],
+    [component]
+  );
+  const pricing = component?.pricing || {};
+  const pricingState = priceEvidence(component);
+
+  if (state === "loading") return (
+    <section className="component-detail-state component-detail-loading" aria-busy="true" aria-live="polite">
+      <span className="sr-only">Loading catalog evidence</span>
+      <div className="detail-skeleton-heading" aria-hidden="true" />
+      <div className="detail-skeleton-rule" aria-hidden="true" />
+      <div className="detail-skeleton-row" aria-hidden="true" />
+      <div className="detail-skeleton-row" aria-hidden="true" />
+      <div className="detail-skeleton-row short" aria-hidden="true" />
+    </section>
+  );
+  if (state === "error" || !component) return (
+    <section className="component-detail-state component-detail-error" role="alert">
+      <p className="ui-kicker">Catalog / request failed</p>
+      <h1>Component evidence is unavailable</h1>
+      <p>The catalog record could not be retrieved. No planning or retailer data is being shown.</p>
+      <div className="component-state-actions">
+        <button type="button" onClick={loadComponent}><FiRefreshCw aria-hidden="true" /> Retry</button>
+        <Link to="/build"><FiArrowLeft aria-hidden="true" /> Return to builder</Link>
+      </div>
+    </section>
+  );
 
   return (
     <div className="component-detail-page">
@@ -49,11 +88,11 @@ const ComponentDetail = () => {
           <h1>{component.name}</h1>
           <p>{component.manufacturer} · Canonical catalog record</p>
         </div>
-        <div className={`pricing-proof ${component.pricing.status}`}>
-          <span>{component.pricing.status === "live" ? "Live observed price" : component.pricing.status === "stale" ? "Stale observed price" : "Planning price"}</span>
+        <div className={`pricing-proof ${pricingState.key}`} aria-label={`Price evidence: ${pricingState.label}`}>
+          <span className={`evidence-label ${pricingState.key}`}>{pricingState.label}</span>
           <strong>{formatPrice(component.price)}</strong>
-          <small>{component.pricing.status === "sample" ? "Sample catalog value · No retailer observation" : `${component.pricing.source} · ${formatDate(component.pricing.observedAt)}`}</small>
-          {component.pricing.sourceUrl ? <a href={component.pricing.sourceUrl} target="_blank" rel="noreferrer">Open source <FiExternalLink aria-hidden="true" /></a> : null}
+          <small>{pricing.status === "sample" ? "Planning catalog value · No retailer observation" : pricingState.key === "unavailable" ? "No authorized retailer observation or planning value is recorded." : `${pricing.source || "Source unavailable"} · ${formatDate(pricing.observedAt)}`}</small>
+          {pricing.sourceUrl ? <a href={pricing.sourceUrl} target="_blank" rel="noreferrer">Open source <FiExternalLink aria-hidden="true" /></a> : null}
         </div>
       </header>
 
@@ -73,7 +112,7 @@ const ComponentDetail = () => {
           <p className="ui-kicker">Structured specifications</p>
           <h2>Facts used by compatibility rules.</h2>
           <dl className="component-specs">
-            {specifications.map(([key, value]) => <div key={key}><dt>{label(key)}</dt><dd>{Array.isArray(value) ? value.join(", ") : String(value)}</dd></div>)}
+            {specifications.length ? specifications.map(([key, value]) => <div key={key}><dt>{label(key)}</dt><dd>{Array.isArray(value) ? value.join(", ") : String(value)}</dd></div>) : <div><dt>Specification evidence</dt><dd><span className="evidence-label missing">Unavailable</span> No structured fields are recorded.</dd></div>}
           </dl>
         </section>
       </div>
@@ -81,10 +120,10 @@ const ComponentDetail = () => {
       <section className="component-history">
         <div className="component-section-heading"><div><p className="ui-kicker">Price history</p><h2>Recorded pricing trail.</h2><p>Authorized observations and clearly identified sample baselines.</p></div><span>{component.priceHistory?.length || 0} records</span></div>
         {component.priceHistory?.length ? (
-          <div className="component-table-wrap"><table><thead><tr><th>Observed</th><th>Source</th><th>Availability</th><th>Price</th></tr></thead><tbody>
+          <div className="component-table-wrap"><table><thead><tr><th scope="col">Observed</th><th scope="col">Source</th><th scope="col">Availability</th><th scope="col">Price</th></tr></thead><tbody>
             {component.priceHistory.map((entry, index) => {
               const isObserved = Boolean(entry.observedAt && entry.sourceUrl && entry.importChecksum);
-              return <tr key={`${entry.source}-${entry.observedAt}-${index}`}><td>{formatDate(entry.observedAt || entry.recordedAt)}</td><td>{isObserved ? <a href={entry.sourceUrl} target="_blank" rel="noreferrer">{entry.source} <FiExternalLink aria-hidden="true" /></a> : "Sample baseline"}</td><td>{isObserved ? label(entry.availability) : "Not observed"}</td><td>{formatPrice(entry.price)}</td></tr>;
+              return <tr key={`${entry.source}-${entry.observedAt}-${index}`}><td>{formatDate(entry.observedAt || entry.recordedAt)}</td><td>{isObserved ? <a href={entry.sourceUrl} target="_blank" rel="noreferrer">{entry.source} <FiExternalLink aria-hidden="true" /></a> : <span className="evidence-label planning">Sample baseline</span>}</td><td>{isObserved ? label(entry.availability) : "Not observed"}</td><td>{formatPrice(entry.price)}</td></tr>;
             })}
           </tbody></table></div>
         ) : <p className="component-empty">No historical observations have been recorded yet.</p>}
@@ -108,8 +147,34 @@ const ComponentDetail = () => {
       </section>
 
       <section className="component-history">
-        <div className="component-section-heading"><div><p className="ui-kicker">Retailer mappings</p><h2>Persistent product relationships.</h2></div><span>{component.retailerMappings?.length || 0} sources</span></div>
-        {component.retailerMappings?.length ? <div className="mapping-list">{component.retailerMappings.map((mapping) => <article key={`${mapping.source}-${mapping.sourceItemId}`}><strong>{mapping.source}</strong><span>{mapping.sourceTitle}</span><code>{mapping.sourceItemId}</code><small>{label(mapping.matchMethod)} · last seen {formatDate(mapping.lastSeenAt)}</small></article>)}</div> : <p className="component-empty">No retailer products are mapped to this catalog record yet.</p>}
+        <div className="component-section-heading">
+          <div>
+            <p className="ui-kicker">Retail destinations</p>
+            <h2>Reviewed places to continue.</h2>
+            <p>Paid links do not establish price or availability. Confirm both on the retailer&apos;s website.</p>
+          </div>
+          <span>{affiliateDestinations.length} paid link{affiliateDestinations.length === 1 ? "" : "s"}</span>
+        </div>
+        {affiliateDestinations.length ? (
+          <>
+            <div className="affiliate-destination-list">
+              {affiliateDestinations.map((mapping) => (
+                <article key={`${mapping.source}-${mapping.sourceItemId}`}>
+                  <div><strong>{mapping.sourceTitle || component.name}</strong><small>ASIN {mapping.sourceItemId}</small></div>
+                  <a href={mapping.sourceUrl} target="_blank" rel="noreferrer sponsored nofollow">
+                    View on Amazon.in <FiExternalLink aria-hidden="true" />
+                  </a>
+                </article>
+              ))}
+            </div>
+            <p className="affiliate-inline-disclosure">As an Amazon Associate I earn from qualifying purchases. <Link to="/affiliate-disclosure">Learn how affiliate links work.</Link></p>
+          </>
+        ) : <p className="component-empty">No reviewed retailer destination is mapped to this component yet.</p>}
+      </section>
+
+      <section className="component-history">
+        <div className="component-section-heading"><div><p className="ui-kicker">Retailer mappings</p><h2>Persistent product relationships.</h2></div><span>{retailerMappings.length} sources</span></div>
+        {retailerMappings.length ? <div className="mapping-list">{retailerMappings.map((mapping) => <article key={`${mapping.source}-${mapping.sourceItemId}`}><strong>{mapping.source}</strong><span>{mapping.sourceTitle}</span><code>{mapping.sourceItemId}</code><small>{label(mapping.matchMethod)} · last seen {formatDate(mapping.lastSeenAt)}</small></article>)}</div> : <p className="component-empty">No price-feed retailer products are mapped to this catalog record yet.</p>}
       </section>
     </div>
   );

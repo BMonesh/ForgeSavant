@@ -12,6 +12,7 @@ const { evaluateCompatibility } = require('../services/compatibility.service');
 const { estimatePerformance } = require('../services/analytics.service');
 const { isAdminEmail } = require('../services/admin-access.service');
 const { presentCatalogItem } = require('../services/catalog-provenance.service');
+const { recordBuildOutcome } = require('../services/product-analytics.service');
 
 
 const Processor = require("../models/processor.model");
@@ -280,6 +281,10 @@ router.post("/saves", authenticate, async (req, res) => {
       verifiedAt: compatibility.engine.evaluatedAt,
     });
     await newSaves.save();
+    await recordBuildOutcome({
+      eventType: "build_saved", user: req.user, savedBuild: newSaves,
+      components, compatibility, analytics,
+    }).catch((error) => console.error("Unable to record consented build outcome", error));
     return res.status(201).json({ message: 'Save successful' });
   } catch (err) {
     if (!err.statusCode || err.statusCode >= 500) console.error('Error during saving details', err);
@@ -318,6 +323,10 @@ router.put("/saves/:id", authenticate, async (req, res) => {
       return res.status(404).json({ error: 'Saved build not found' });
     }
 
+    await recordBuildOutcome({
+      eventType: "build_updated", user: req.user, savedBuild,
+      components, compatibility, analytics,
+    }).catch((error) => console.error("Unable to record consented build outcome", error));
     return res.status(200).json(savedBuild);
   } catch (err) {
     if (!err.statusCode || err.statusCode >= 500) console.error('Error updating saved build', err);

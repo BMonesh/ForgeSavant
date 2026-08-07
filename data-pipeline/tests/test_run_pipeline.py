@@ -28,10 +28,17 @@ class RunPipelineTests(unittest.TestCase):
             self.assertEqual(status["status"], "succeeded")
             self.assertIn("audit_icecat.py", calls[0][1])
             self.assertEqual(calls[0][-2:], ["--limit", "5"])
-            self.assertIn("build_analytics.py", calls[1][1])
-            self.assertIn("analyze_model_readiness.py", calls[2][1])
+            self.assertIn("snapshot_retail_offers.py", calls[1][1])
+            self.assertIn("snapshot_build_outcomes.py", calls[2][1])
+            self.assertIn("ingest_blender_benchmarks.py", calls[3][1])
+            self.assertIn("build_analytics.py", calls[4][1])
+            self.assertIn("build_coverage_queue.py", calls[5][1])
+            self.assertIn("analyze_model_readiness.py", calls[6][1])
             saved = json.loads((pipeline_dir / "analytics" / "pipeline_status.json").read_text(encoding="utf-8"))
-            self.assertEqual([stage["status"] for stage in saved["stages"]], ["succeeded", "succeeded", "succeeded"])
+            self.assertEqual(
+                [stage["status"] for stage in saved["stages"]],
+                ["succeeded", "succeeded", "succeeded", "succeeded", "succeeded", "succeeded", "succeeded"],
+            )
             self.assertFalse((pipeline_dir / "runtime" / "pipeline.lock").exists())
 
     def test_stops_after_failure_and_redacts_output(self):

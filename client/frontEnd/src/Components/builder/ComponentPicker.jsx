@@ -163,17 +163,20 @@ const ComponentPicker = ({
         </label>
       </div>
 
-      <div className="picker-list" role="listbox" aria-label={title}>
+      <div className="picker-list" role="listbox" aria-label={title} aria-busy={loading}>
         {loading ? (
-          Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className="picker-skeleton" />
-          ))
+          <>
+            <span className="sr-only" role="status">Loading compatible {title.toLowerCase()} options</span>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className="picker-skeleton" aria-hidden="true" />
+            ))}
+          </>
         ) : filteredItems.length > 0 ? (
           filteredItems.map((item) => {
             const facts = getItemUtilityFacts(item, stepId).slice(0, 4);
             const isSelected = selectedId === item._id;
             const pricingStatus = item.pricing?.status || "sample";
-            const pricingLabel = pricingStatus === "live" ? "Live price" : pricingStatus === "stale" ? "Stale price" : "Sample price";
+            const pricingLabel = pricingStatus === "live" ? "Live price" : pricingStatus === "stale" ? "Stale price" : "Planning price";
             return (
               <button
                 key={item._id}
@@ -220,7 +223,7 @@ const ComponentPicker = ({
         )}
       </div>
 
-      <div className="picker-actions">
+      <div className="picker-actions" aria-live="polite">
         <span>{filteredItems.length} option{filteredItems.length === 1 ? "" : "s"}</span>
         <div className="picker-action-group">
           {stepId === "secondaryStorage" ? <button className="picker-skip" type="button" onClick={onSkip}>Continue without a secondary drive</button> : null}

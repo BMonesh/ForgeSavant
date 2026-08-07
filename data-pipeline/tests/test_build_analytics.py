@@ -42,12 +42,25 @@ class BuildAnalyticsTests(unittest.TestCase):
                 "manufacturer_part_number": "CPU-1-CORRECTED",
                 "ingested_at": "2026-07-22T00:02:00+00:00",
             }
+            offer = {
+                "observation_id": "d" * 64, "schema_version": "1.0",
+                "observation_kind": "retail_offer", "source": "example_store",
+                "source_tier": "authorized_retailer", "source_product_id": "sku-1",
+                "catalog_category": "processors", "catalog_name": "Example CPU",
+                "manufacturer": "Example", "manufacturer_part_number": "CPU-1",
+                "specifications": {}, "price": 19999, "currency": "INR",
+                "availability": "in_stock", "source_record_url": "https://store.example/sku-1",
+                "observed_at": "2026-07-22T00:00:00+00:00",
+                "ingested_at": "2026-07-22T00:03:00+00:00", "raw_sha256": "e" * 64,
+                "import_checksum": "f" * 64,
+            }
             (normalized / "observations.jsonl").write_text(
-                json.dumps(record) + "\n" + json.dumps(corrected) + "\n", encoding="utf-8"
+                json.dumps(record) + "\n" + json.dumps(corrected) + "\n" + json.dumps(offer) + "\n",
+                encoding="utf-8",
             )
             manifest = {
                 "run_id": run_id, "source": "open_icecat", "received_at": "2026-07-22T00:01:00+00:00",
-                "counts": {"received": 2, "accepted": 2, "duplicates": 0, "quarantined": 0},
+                "counts": {"received": 3, "accepted": 3, "duplicates": 0, "quarantined": 0},
                 "checksums": {"raw": "1", "normalized": "2", "quarantine": "3"},
             }
             (manifests / f"{run_id}.json").write_text(json.dumps(manifest), encoding="utf-8")
@@ -66,14 +79,19 @@ class BuildAnalyticsTests(unittest.TestCase):
             analytics = root / "analytics"
             summary = build_analytics(lake, analytics, coverage, identities)
             self.assertEqual(summary["catalog"]["verifiedProducts"], 1)
-            self.assertEqual(summary["pipeline"]["accepted"], 2)
+            self.assertEqual(summary["pipeline"]["accepted"], 3)
             self.assertEqual(summary["catalog"]["observedProducts"], 1)
+            self.assertEqual(summary["retail"]["priceObservations"], 1)
+            self.assertEqual(summary["retail"]["productsWithCurrentOffers"], 1)
             self.assertEqual(summary["quality"]["identityCompletenessRate"], 1.0)
             self.assertTrue((analytics / "parquet" / "catalog_observations.parquet").exists())
+            self.assertTrue((analytics / "benchmark_catalog_summary.json").exists())
 
             connection = duckdb.connect(str(analytics / "forgesavant.duckdb"), read_only=True)
-            self.assertEqual(connection.execute("SELECT count(*) FROM catalog_observations").fetchone()[0], 2)
+            self.assertEqual(connection.execute("SELECT count(*) FROM catalog_observations").fetchone()[0], 3)
             self.assertEqual(connection.execute("SELECT count(*) FROM current_catalog_observations").fetchone()[0], 1)
+            self.assertEqual(connection.execute("SELECT count(*) FROM retail_price_history").fetchone()[0], 1)
+            self.assertEqual(connection.execute("SELECT count(*) FROM current_benchmark_observations").fetchone()[0], 0)
             self.assertEqual(
                 connection.execute("SELECT manufacturer_part_number FROM current_catalog_observations").fetchone()[0],
                 "CPU-1-CORRECTED",

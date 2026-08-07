@@ -10,9 +10,9 @@ vi.mock("../services/api", () => ({ default: { post: vi.fn() } }));
 
 const renderLogin = () => render(
   <SessionProvider>
-    <MemoryRouter initialEntries={["/loginAuthentication"]}>
+    <MemoryRouter initialEntries={["/login"]}>
       <Routes>
-        <Route path="/loginAuthentication" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/build" element={<h1>Builder route</h1>} />
       </Routes>
     </MemoryRouter>

@@ -11,11 +11,18 @@ const retailerProductMappingSchema = new mongoose.Schema({
   componentId: { type: mongoose.Schema.Types.ObjectId, required: true },
   componentName: { type: String, required: true },
   sourceTitle: { type: String, required: true },
+  sourceUrl: { type: String, default: "" },
+  relationshipType: {
+    type: String,
+    enum: ["offer", "affiliate_link"],
+    default: "offer",
+  },
   matchMethod: { type: String, enum: ["automatic", "manual"], required: true },
   confidence: { type: Number, min: 0, max: 1, required: true },
   active: { type: Boolean, default: true },
   createdBy: { type: String, required: true },
   lastSeenAt: { type: Date },
+  verifiedAt: { type: Date },
 }, { timestamps: true });
 
 retailerProductMappingSchema.index({ source: 1, sourceItemId: 1 }, { unique: true });

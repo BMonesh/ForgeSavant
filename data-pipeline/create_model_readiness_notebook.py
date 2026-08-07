@@ -80,14 +80,24 @@ display(check_results)"""),
         nbformat.v4.new_code_cell("""display(Markdown("### Evidence required next\\n" + "\\n".join(f"- {item}" for item in readiness["requiredNextEvidence"])))
 connection.close()"""),
     ]
+    for index, cell in enumerate(notebook["cells"]):
+        cell["id"] = f"forgesavant-{index:02d}"
     return notebook
+
+
+def normalize_execution_metadata(notebook):
+    for cell in notebook["cells"]:
+        cell.get("metadata", {}).pop("execution", None)
+    notebook["metadata"]["kernelspec"] = {"display_name": "Python 3", "language": "python", "name": "python3"}
+    notebook["metadata"]["language_info"] = {"name": "python", "version": "3"}
 
 
 def main() -> int:
     NOTEBOOK_PATH.parent.mkdir(parents=True, exist_ok=True)
     notebook = build_notebook()
     NotebookClient(notebook, timeout=120, kernel_name="python3", resources={"metadata": {"path": str(PROJECT_DIR)}}).execute()
-    nbformat.write(notebook, NOTEBOOK_PATH)
+    normalize_execution_metadata(notebook)
+    NOTEBOOK_PATH.write_text(nbformat.writes(notebook), encoding="utf-8", newline="\n")
     print(NOTEBOOK_PATH)
     return 0
 

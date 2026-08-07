@@ -70,7 +70,7 @@ const BuildSummary = ({ selection, estimate, compatibility, compatibilityStatus,
         </div>
       </div>
 
-      {message ? <p className="build-message-inline" role="alert">{message}</p> : null}
+      {message ? <p className="build-message-inline" role={saveState === "error" ? "alert" : "status"}>{message}</p> : null}
 
       <div className="summary-actions">
         <button type="button" className="builder-secondary" onClick={onBack}>
@@ -86,7 +86,7 @@ const BuildSummary = ({ selection, estimate, compatibility, compatibilityStatus,
             {saveState === "saving" ? "Saving" : sourceSaveId ? "Update build" : "Save build"}
           </button>
         ) : (
-          <Link to="/loginAuthentication" state={{ returnTo: "/build" }} className="builder-primary">
+          <Link to="/login" state={{ returnTo: "/build" }} className="builder-primary">
             Sign in to save
           </Link>
         )}

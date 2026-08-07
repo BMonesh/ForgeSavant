@@ -22,6 +22,11 @@ const summary = {
     openIcecatUnavailable: 13,
   },
   pipeline: { runs: 1, received: 14, accepted: 14, duplicates: 0, quarantined: 0, validationPassRate: 1 },
+  retail: { priceObservations: 8, productsWithPriceHistory: 4, currentOffers: 4, productsWithCurrentOffers: 4, retailers: 1 },
+  retailSnapshot: { scannedComponents: 58, scannedPriceHistoryEntries: 59, eligibleOffers: 0, skippedEntries: 59 },
+  coverageQueue: { verified: 58, covered: 14, manufacturerReady: 44, sourceMissing: 0 },
+  outcomes: { observations: 3, pseudonymousSubjects: 2, builds: 3 },
+  benchmarks: { observations: 6, currentObservations: 3, products: 3, metrics: 2, sources: 1, observationDates: 2 },
   quality: { identityCompletenessRate: 1, gtinCoverageRate: 13 / 14, imageCoverageRate: 1, quarantineRate: 0 },
   categories: {
     gpus: { sourceCoverage: 6, verifiedCatalogProducts: 11 },
@@ -49,6 +54,12 @@ describe("AdminDataQuality", () => {
     expect(screen.getByText("Graphics cards")).toBeInTheDocument();
     expect(screen.getByText("Open Icecat is not a retailer price source.")).toBeInTheDocument();
     expect(screen.getByText("Model readiness")).toBeInTheDocument();
+    expect(screen.getByText("Evidence work queue")).toBeInTheDocument();
+    expect(screen.getByText("Manufacturer-ready gaps")).toBeInTheDocument();
+    expect(screen.getByText("Planning price rows excluded")).toBeInTheDocument();
+    expect(screen.getByText("Benchmarked products")).toBeInTheDocument();
+    expect(screen.getByText("Benchmark snapshots")).toBeInTheDocument();
+    expect(screen.getByText("Current benchmark records")).toBeInTheDocument();
     expect(screen.getByText("India price prediction or forecasting")).toBeInTheDocument();
     expect(api.get).toHaveBeenCalledWith("/api/v1/admin/analytics/data-quality");
   });

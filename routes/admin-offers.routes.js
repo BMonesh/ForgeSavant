@@ -167,6 +167,8 @@ router.post("/apply", async (req, res, next) => {
               componentId: row.match.id,
               componentName: row.match.name,
               sourceTitle: row.offer.name,
+              sourceUrl: row.offer.source_url,
+              relationshipType: "offer",
               matchMethod: row.matchMethod === "manual" ? "manual" : "automatic",
               confidence: row.score,
               active: true,

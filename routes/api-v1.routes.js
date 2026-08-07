@@ -11,15 +11,32 @@ const RetailerProductMapping = require("../models/retailerProductMapping.model")
 const { evaluateCompatibility } = require("../services/compatibility.service");
 const { estimatePerformance } = require("../services/analytics.service");
 const { presentCatalogItem, summarizePricing } = require("../services/catalog-provenance.service");
+const { readBenchmarkCatalog } = require("../services/benchmark-catalog.service");
 const adminOfferRoutes = require("./admin-offers.routes");
 const adminAnalyticsRoutes = require("./admin-analytics.routes");
 const adminContentRoutes = require("./admin-content.routes");
+const adminAffiliateLinksRoutes = require("./admin-affiliate-links.routes");
+const privacyRoutes = require("./privacy.routes");
 
 const router = express.Router();
 
 router.use("/admin/offers", adminOfferRoutes);
 router.use("/admin/analytics", adminAnalyticsRoutes);
 router.use("/admin/content", adminContentRoutes);
+router.use("/admin/affiliate-links", adminAffiliateLinksRoutes);
+router.use("/privacy", privacyRoutes);
+
+router.get("/analytics/benchmarks", async (req, res, next) => {
+  try {
+    return res.json({ data: await readBenchmarkCatalog({ category: req.query.category }) });
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      error.statusCode = 503;
+      error.message = "Benchmark summary is unavailable; run npm run analytics:build";
+    }
+    return next(error);
+  }
+});
 
 const catalogModels = {
   processors: Processor,
@@ -86,7 +103,7 @@ router.get("/catalog/:category/:id", async (req, res, next) => {
         category: req.params.category,
         componentId: req.params.id,
         active: true,
-      }).select("source sourceItemId sourceTitle matchMethod confidence lastSeenAt -_id").lean(),
+      }).select("source sourceItemId sourceTitle sourceUrl relationshipType matchMethod confidence lastSeenAt verifiedAt -_id").lean(),
     ]);
     if (!item) return res.status(404).json({ error: "Component not found" });
 

@@ -25,6 +25,7 @@ const models = {
 
 const backupArg = process.argv[2];
 const confirmed = process.argv.includes('--confirm');
+const catalogOnly = process.argv.includes('--catalog-only');
 const mongoUri = process.env.URI || 'mongodb://127.0.0.1:27017/forgesavant';
 const isLocal = /mongodb:\/\/(127\.0\.0\.1|localhost)(:\d+)?\//i.test(mongoUri);
 
@@ -50,7 +51,7 @@ const run = async () => {
   if (!fs.existsSync(backupPath)) return fail(`Backup not found: ${backupPath}`);
   const backup = JSON.parse(fs.readFileSync(backupPath, 'utf8'));
   const missing = Object.keys(models).filter((category) => !Array.isArray(backup.collections?.[category]));
-  if (missing.length || !Array.isArray(backup.saves) || !Array.isArray(backup.mappings)) {
+  if (missing.length || (!catalogOnly && (!Array.isArray(backup.saves) || !Array.isArray(backup.mappings)))) {
     return fail(`Invalid backup structure${missing.length ? `; missing ${missing.join(', ')}` : ''}`);
   }
 
@@ -65,10 +66,19 @@ const run = async () => {
   for (const [category, Model] of Object.entries(models)) {
     await restoreDocuments(Model, backup.collections[category]);
   }
-  await restoreDocuments(Saves, backup.saves);
-  await restoreDocuments(RetailerProductMapping, backup.mappings);
+  if (!catalogOnly) {
+    await restoreDocuments(Saves, backup.saves);
+    await restoreDocuments(RetailerProductMapping, backup.mappings);
+  }
 
-  console.log(JSON.stringify({ restoredFrom: backupPath, recoveryPath, catalogRecords: Object.values(backup.collections).reduce((sum, records) => sum + records.length, 0), saves: backup.saves.length, mappings: backup.mappings.length }, null, 2));
+  console.log(JSON.stringify({
+    restoredFrom: backupPath,
+    recoveryPath,
+    mode: catalogOnly ? 'catalog-only' : 'full',
+    catalogRecords: Object.values(backup.collections).reduce((sum, records) => sum + records.length, 0),
+    saves: catalogOnly ? 'preserved' : backup.saves.length,
+    mappings: catalogOnly ? 'preserved' : backup.mappings.length,
+  }, null, 2));
 };
 
 run()

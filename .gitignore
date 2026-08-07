@@ -1,5 +1,4 @@
 node_modules
-package-lock.json
 .env
 *.log
 __pycache__/
@@ -7,6 +6,8 @@ __pycache__/
 data-pipeline/retailer_sync_report.json
 data-pipeline/authorized_offer_feed.json
 data-pipeline/authorized_product_content_feed.json
+data-pipeline/manufacturer_evidence_feed.json
+data-pipeline/benchmark_evidence_feed.json
 data-pipeline/icecat_coverage_report.json
 data-pipeline/raw_data/icecat/
 data-pipeline/lake/
@@ -14,3 +15,5 @@ data-pipeline/analytics/
 data-pipeline/runtime/
 data-pipeline/backups/
 .ulpi/
+.stitch/
+data-pipeline/icecat_coverage_smoke_report.json

@@ -22,6 +22,7 @@ import ramImg from "../assets/RAM-Memory-Transparent.webp";
 import storageImg from "../assets/pngwing.com.webp";
 import psuImg from "../assets/SMPS-image.webp";
 import api from "../services/api";
+import BrandLogo from "./ui/BrandLogo";
 
 const categories = [
   { key: "processors", name: "Processors", noun: "in catalog", image: processorImg, icon: FiCpu },
@@ -54,7 +55,7 @@ const faqs = [
 const Home = () => {
   const location = useLocation();
   const [openFaq, setOpenFaq] = useState(0);
-  const [catalogMeta, setCatalogMeta] = useState({ total: 58, counts: {} });
+  const [catalogMeta, setCatalogMeta] = useState({ total: null, counts: {} });
 
   useEffect(() => {
     let active = true;
@@ -67,7 +68,8 @@ const Home = () => {
   useEffect(() => {
     if (!location.hash) return;
     const target = document.querySelector(location.hash);
-    requestAnimationFrame(() => target?.scrollIntoView({ behavior: "smooth" }));
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    requestAnimationFrame(() => target?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" }));
   }, [location.hash]);
 
   return (
@@ -87,9 +89,9 @@ const Home = () => {
             <a href="#how-it-works" className="home-button home-button-light">See how it works</a>
           </div>
           <dl className="home-proof">
-            <div><dt>{catalogMeta.total}</dt><dd>catalog parts</dd></div>
+            <div><dt>{catalogMeta.total ?? "—"}</dt><dd>catalog parts</dd></div>
             <div><dt>4</dt><dd>core rule families</dd></div>
-            <div><dt>₹</dt><dd>India-first pricing</dd></div>
+            <div><dt>₹</dt><dd>price provenance</dd></div>
           </dl>
         </div>
 
@@ -115,8 +117,8 @@ const Home = () => {
 
       <section className="featured-build" id="recommended" aria-labelledby="featured-title">
         <div className="featured-copy">
-          <p className="home-eyebrow home-eyebrow-dark">Reference configuration / 01</p>
-          <h2 id="featured-title">A balanced 1440p starting point.</h2>
+          <p className="home-eyebrow">Compatibility evidence / 01</p>
+          <h2 id="featured-title">Every choice leaves evidence.</h2>
           <ul>
             <li><FiCheck aria-hidden="true" /> AM5 upgrade path</li>
             <li><FiCheck aria-hidden="true" /> 32 GB DDR5 memory</li>
@@ -124,12 +126,12 @@ const Home = () => {
             <li><FiCheck aria-hidden="true" /> Airflow-first ATX case</li>
           </ul>
           <div className="featured-price">
-            <span>Indicative catalog total</span>
-            <strong>₹1.18L</strong>
-            <small>Planning estimate · not a retailer quote</small>
+            <span>Current catalog scope</span>
+            <strong>{catalogMeta.total ?? "—"} parts</strong>
+            <small>Availability and price provenance are shown per item.</small>
           </div>
           <Link to="/build" state={{ newBuild: true }} className="featured-link">
-            Configure your version <FiArrowRight aria-hidden="true" />
+            Review the builder <FiArrowRight aria-hidden="true" />
           </Link>
         </div>
 
@@ -138,10 +140,10 @@ const Home = () => {
         </div>
 
         <dl className="featured-specs">
-          <div><dt>Processor</dt><dd>Ryzen 5 class<br />6 cores / 12 threads</dd></div>
-          <div><dt>Graphics</dt><dd>12 GB class<br />1440p target</dd></div>
-          <div><dt>Memory</dt><dd>32 GB DDR5<br />dual channel</dd></div>
-          <div><dt>Power</dt><dd>650 W target<br />20% headroom</dd></div>
+          <div><dt>Source</dt><dd>Catalog API<br />current application data</dd></div>
+          <div><dt>Compatibility</dt><dd>Explicit rules<br />visible before advancing</dd></div>
+          <div><dt>Pricing</dt><dd>Live, stale, estimated<br />or unavailable</dd></div>
+          <div><dt>Saving</dt><dd>Private builds<br />account required</dd></div>
         </dl>
       </section>
 
@@ -189,10 +191,15 @@ const Home = () => {
             const isOpen = openFaq === index;
             return (
               <div className={`faq-item ${isOpen ? "open" : ""}`} key={faq.question}>
-                <button type="button" onClick={() => setOpenFaq(isOpen ? -1 : index)} aria-expanded={isOpen}>
+                <button
+                  type="button"
+                  onClick={() => setOpenFaq(isOpen ? -1 : index)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${index}`}
+                >
                   <span>{faq.question}</span><FiChevronDown aria-hidden="true" />
                 </button>
-                {isOpen ? <p>{faq.answer}</p> : null}
+                {isOpen ? <p id={`faq-answer-${index}`}>{faq.answer}</p> : null}
               </div>
             );
           })}
@@ -206,10 +213,13 @@ const Home = () => {
       </section>
 
       <footer className="home-footer">
-        <div><strong>FORGE<br />SAVANT</strong><p>Compatibility-led PC planning.</p></div>
+        <div className="home-footer-brand">
+          <BrandLogo title="ForgeSavant" />
+          <p>Compatibility-led PC planning.</p>
+        </div>
         <div><span>Product</span><Link to="/build">Builder</Link><a href="#recommended">Reference build</a><a href="#components">Catalog</a></div>
-        <div><span>Method</span><a href="#how-it-works">How it works</a><a href="#faq-title">FAQ</a><Link to="/about">About</Link></div>
-        <p>Catalog values are planning data until retailer provenance is shown.</p>
+        <div><span>Method</span><a href="#how-it-works">How it works</a><a href="#faq-title">FAQ</a><Link to="/about">About</Link><Link to="/affiliate-disclosure">Affiliate disclosure</Link></div>
+        <p>Catalog values are planning data until retailer provenance is shown. As an Amazon Associate I earn from qualifying purchases.</p>
       </footer>
     </div>
   );

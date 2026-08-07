@@ -10,6 +10,7 @@ const RAM = require("../models/ram.model");
 const Storage = require("../models/storage.model");
 const SMPS = require("../models/smps.model");
 const Cabinet = require("../models/cabinet.model");
+const { normalizedIdentityName } = require("../services/catalog-identity.service");
 
 const mongoUri = process.env.URI || "mongodb://127.0.0.1:27017/forgesavant";
 const cleanedDir = path.join(__dirname, "..", "data-pipeline", "cleaned_data");
@@ -31,8 +32,28 @@ const parseCsv = (filePath) => {
 const toNumber = (value) => Number(value || 0);
 
 const upsertMany = async (Model, documents) => {
+  const existing = await Model.find({}, { name: 1 }).lean();
+  const preserveExisting = process.env.SEED_PRESERVE_EXISTING === "1" && existing.length > 0;
+  const identities = new Map();
+
+  for (const record of existing) {
+    const identity = normalizedIdentityName(record.name);
+    if (identity && !identities.has(identity)) identities.set(identity, record._id);
+  }
+
   for (const doc of documents) {
-    await Model.updateOne({ name: doc.name }, { $set: doc }, { upsert: true });
+    const identity = normalizedIdentityName(doc.name);
+    const existingId = identities.get(identity);
+
+    if (existingId) {
+      await Model.updateOne({ _id: existingId }, { $set: doc });
+      continue;
+    }
+
+    if (preserveExisting) continue;
+
+    const created = await Model.create({ _id: new mongoose.Types.ObjectId(), ...doc });
+    if (identity) identities.set(identity, created._id);
   }
 
   return documents.length;
@@ -257,8 +278,12 @@ const main = async () => {
   await mongoose.connection.close();
 };
 
-main().catch(async (err) => {
-  console.error("Seed failed:", err);
-  await mongoose.connection.close();
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch(async (err) => {
+    console.error("Seed failed:", err);
+    await mongoose.connection.close();
+    process.exit(1);
+  });
+}
+
+module.exports = { upsertMany };

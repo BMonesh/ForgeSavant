@@ -9,15 +9,17 @@ import json
 from pathlib import Path
 import re
 from typing import Iterable
+from urllib.parse import urlparse
 from uuid import uuid4
 
 
 SCHEMA_VERSION = "1.0"
-OBSERVATION_KINDS = {"product_content", "retail_offer", "benchmark"}
+OBSERVATION_KINDS = {"product_content", "retail_offer", "benchmark", "build_outcome"}
 CATALOG_CATEGORIES = {
-    "processors", "gpus", "motherboards", "ram", "storage", "power_supplies", "cabinets"
+    "processors", "gpus", "motherboards", "ram", "storage", "power_supplies", "cabinets", "builds"
 }
 SENSITIVE_KEYS = {"password", "token", "secret", "authorization", "api_key", "apikey"}
+RETAIL_AVAILABILITY = {"in_stock", "out_of_stock", "preorder", "unknown"}
 
 
 @dataclass(frozen=True)
@@ -34,6 +36,14 @@ def _utc(value: str) -> bool:
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
         return parsed.tzinfo is not None
+    except (AttributeError, TypeError, ValueError):
+        return False
+
+
+def _https(value: str) -> bool:
+    try:
+        parsed = urlparse(value)
+        return parsed.scheme == "https" and bool(parsed.netloc)
     except (AttributeError, TypeError, ValueError):
         return False
 
@@ -72,6 +82,51 @@ def validate_observation(record: dict) -> list[str]:
             errors.append("manufacturer is required for product content")
         if not str(record.get("manufacturer_part_number", "")).strip():
             errors.append("manufacturer_part_number is required for product content")
+    if record.get("observation_kind") == "retail_offer":
+        if not str(record.get("catalog_name", "")).strip():
+            errors.append("catalog_name is required for retail offers")
+        if not str(record.get("manufacturer", "")).strip():
+            errors.append("manufacturer is required for retail offers")
+        if not str(record.get("manufacturer_part_number", "")).strip():
+            errors.append("manufacturer_part_number is required for retail offers")
+        price = record.get("price")
+        if isinstance(price, bool) or not isinstance(price, (int, float)) or price <= 0:
+            errors.append("price must be a positive number for retail offers")
+        if not re.fullmatch(r"[A-Z]{3}", str(record.get("currency", ""))):
+            errors.append("currency must be a three-letter uppercase code for retail offers")
+        if record.get("availability") not in RETAIL_AVAILABILITY:
+            errors.append("availability is invalid for retail offers")
+        if not _https(record.get("source_record_url")):
+            errors.append("source_record_url must be an HTTPS URL for retail offers")
+    if record.get("observation_kind") == "build_outcome":
+        if record.get("catalog_category") != "builds":
+            errors.append("catalog_category must be builds for build outcomes")
+        if record.get("event_type") not in {"build_saved", "build_updated"}:
+            errors.append("event_type is invalid for build outcomes")
+        for field in ("subject_hash", "build_hash"):
+            if not re.fullmatch(r"[a-f0-9]{64}", str(record.get(field, ""))):
+                errors.append(f"{field} must be a lowercase SHA-256 digest")
+        if not isinstance(record.get("component_ids"), dict) or not record.get("component_ids"):
+            errors.append("component_ids must be a non-empty object for build outcomes")
+        build_total = record.get("build_total")
+        if isinstance(build_total, bool) or not isinstance(build_total, (int, float)) or build_total < 0:
+            errors.append("build_total must be a non-negative number for build outcomes")
+        if record.get("currency") != "INR":
+            errors.append("currency must be INR for build outcomes")
+    if record.get("observation_kind") == "benchmark":
+        for field in ("manufacturer", "manufacturer_part_number", "benchmark_name", "metric_name", "unit", "workload"):
+            if not str(record.get(field, "")).strip():
+                errors.append(f"{field} is required for benchmarks")
+        metric_value = record.get("metric_value")
+        if isinstance(metric_value, bool) or not isinstance(metric_value, (int, float)):
+            errors.append("metric_value must be numeric for benchmarks")
+        sample_count = record.get("sample_count")
+        if isinstance(sample_count, bool) or not isinstance(sample_count, int) or sample_count < 1:
+            errors.append("sample_count must be a positive integer for benchmarks")
+        if not _https(record.get("source_record_url")):
+            errors.append("source_record_url must be an HTTPS URL for benchmarks")
+        if record.get("usage_basis") not in {"owner_provided", "licensed", "public_domain", "api_terms"}:
+            errors.append("usage_basis is invalid for benchmarks")
     return errors
 
 

@@ -77,7 +77,11 @@ def run_pipeline(
 
     commands = [
         ("open_icecat_ingestion", [sys.executable, str(pipeline_dir / "audit_icecat.py"), "--component", "all", "--ingest"]),
+        ("retail_offer_snapshot", [sys.executable, str(pipeline_dir / "snapshot_retail_offers.py")]),
+        ("build_outcome_snapshot", [sys.executable, str(pipeline_dir / "snapshot_build_outcomes.py")]),
+        ("blender_open_data_benchmarks", [sys.executable, str(pipeline_dir / "ingest_blender_benchmarks.py")]),
         ("analytics_build", [sys.executable, str(pipeline_dir / "build_analytics.py")]),
+        ("coverage_queue", [sys.executable, str(pipeline_dir / "build_coverage_queue.py")]),
         ("model_readiness", [sys.executable, str(pipeline_dir / "analyze_model_readiness.py")]),
     ]
     if limit > 0:
@@ -123,7 +127,7 @@ def run_pipeline(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run ingestion and analytics with locking and health reporting")
+    parser = argparse.ArgumentParser(description="Run catalog, retail-offer, and analytics stages with locking and health reporting")
     parser.add_argument("--limit", type=int, default=0, help="Limit Open Icecat lookups; zero runs the full catalog")
     args = parser.parse_args()
     status = run_pipeline(limit=args.limit)

@@ -19,6 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
 IDENTITY_DIR = BASE_DIR / "verified_identity"
 REPORT_PATH = BASE_DIR / "icecat_coverage_report.json"
+SMOKE_REPORT_PATH = BASE_DIR / "icecat_coverage_smoke_report.json"
 SNAPSHOT_DIR = BASE_DIR / "raw_data" / "icecat"
 LAKE_DIR = BASE_DIR / "lake"
 COMPONENT_FILES = {
@@ -52,7 +53,12 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=0, help="Maximum products to check; zero checks all selected products")
     parser.add_argument("--snapshot", action="store_true", help="Save immutable raw XML for accessible products")
     parser.add_argument("--ingest", action="store_true", help="Land available observations in the immutable analytics store")
+    parser.add_argument("--report-path", type=Path, help="Optional report destination; bounded runs otherwise use the smoke report")
     args = parser.parse_args()
+
+    report_path = args.report_path or (SMOKE_REPORT_PATH if args.limit > 0 else REPORT_PATH)
+    if not report_path.is_absolute():
+        report_path = PROJECT_DIR / report_path
 
     load_dotenv(PROJECT_DIR / ".env")
     username = os.getenv("ICECAT_USERNAME", "").strip()
@@ -125,8 +131,9 @@ def main() -> int:
             "quarantined": ingestion.quarantined,
             "manifest_path": ingestion.manifest_path,
         }
-    REPORT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(json.dumps({**{key: value for key, value in report.items() if key != "records"}, "report_path": str(REPORT_PATH)}, indent=2))
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(json.dumps({**{key: value for key, value in report.items() if key != "records"}, "report_path": str(report_path)}, indent=2))
     return 0
 
 

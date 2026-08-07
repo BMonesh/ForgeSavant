@@ -9,13 +9,30 @@
   "scripts": {
     "start": "node server.js",
     "seed": "node scripts/seed-local-data.js",
-    "test": "node --test test/compatibility.service.test.js test/analytics.service.test.js test/catalog-provenance.service.test.js test/catalog-detail.routes.test.js test/offer-import.service.test.js test/runtime-config.service.test.js test/app.security.test.js test/auth-ownership.routes.test.js test/admin-offers.routes.test.js test/admin-analytics.routes.test.js test/admin-content.routes.test.js",
+    "db:local:start": "docker compose up -d --wait mongodb",
+    "db:local:stop": "docker compose stop mongodb",
+    "db:local:status": "docker compose ps mongodb",
+    "seed:local": "cross-env URI=mongodb://127.0.0.1:27018/forgesavant SEED_ALLOW_EXISTING=1 SEED_PRESERVE_EXISTING=1 node scripts/seed-local-data.js",
+    "catalog:migrate:local": "cross-env URI=mongodb://127.0.0.1:27018/forgesavant node scripts/migrate-catalog-identity.js --apply",
+    "catalog:identity:apply:local": "cross-env URI=mongodb://127.0.0.1:27018/forgesavant node scripts/enrich-catalog-identities.js --apply",
+    "catalog:quality:local": "cross-env URI=mongodb://127.0.0.1:27018/forgesavant node scripts/audit-catalog-quality.js --strict",
+    "setup:local": "npm run db:local:start && npm run seed:local && npm run catalog:migrate:local && npm run catalog:identity:apply:local && npm run catalog:quality:local",
+    "test": "node --test test/compatibility.service.test.js test/analytics.service.test.js test/catalog-provenance.service.test.js test/catalog-detail.routes.test.js test/offer-import.service.test.js test/affiliate-link.service.test.js test/product-analytics.service.test.js test/benchmark-catalog.service.test.js test/privacy.routes.test.js test/runtime-config.service.test.js test/app.security.test.js test/auth-ownership.routes.test.js test/admin-access.service.test.js test/admin-offers.routes.test.js test/admin-affiliate-links.routes.test.js test/admin-analytics.routes.test.js test/admin-content.routes.test.js test/seed-local-data.test.js",
     "pipeline:validate": "python data-pipeline/import_to_mongo.py --dry-run --all",
     "pipeline:test": "python -m unittest discover -s data-pipeline/tests -v",
     "pipeline:sync:dry": "python data-pipeline/sync_retailer.py --component all",
     "pipeline:sync": "python data-pipeline/sync_retailer.py --component all --apply",
     "catalog:icecat:audit": "python data-pipeline/audit_icecat.py --component all",
     "catalog:icecat:ingest": "python data-pipeline/audit_icecat.py --component all --ingest",
+    "catalog:coverage": "python data-pipeline/build_coverage_queue.py",
+    "catalog:manufacturer:ingest": "python data-pipeline/ingest_manufacturer_evidence.py --input data-pipeline/manufacturer_evidence_feed.json",
+    "benchmarks:ingest": "python data-pipeline/ingest_benchmark_evidence.py --input data-pipeline/benchmark_evidence_feed.json",
+    "benchmarks:blender": "python data-pipeline/ingest_blender_benchmarks.py",
+    "retail:snapshot": "python data-pipeline/snapshot_retail_offers.py",
+    "db:migrate:atlas": "node scripts/migrate-atlas-database.js",
+    "retail:snapshot:local": "python data-pipeline/snapshot_retail_offers.py --uri mongodb://127.0.0.1:27018/forgesavant",
+    "outcomes:snapshot": "python data-pipeline/snapshot_build_outcomes.py",
+    "outcomes:snapshot:local": "python data-pipeline/snapshot_build_outcomes.py --uri mongodb://127.0.0.1:27018/forgesavant",
     "pipeline:run": "python data-pipeline/run_pipeline.py",
     "pipeline:run:smoke": "python data-pipeline/run_pipeline.py --limit 5",
     "analytics:build": "python data-pipeline/build_analytics.py",
@@ -32,11 +49,14 @@
     "catalog:identity:apply": "node scripts/enrich-catalog-identities.js --apply",
     "catalog:restore": "node scripts/restore-catalog-backup.js",
     "dev": "nodemon server.js",
-    "verify": "npm test && npm run pipeline:test && npm run pipeline:validate && npm run catalog:identity:audit && npm run catalog:quality:strict && npm --prefix client/frontEnd test && npm --prefix client/frontEnd run lint && npm --prefix client/frontEnd run build"
+    "dev:local:api": "cross-env URI=mongodb://127.0.0.1:27018/forgesavant nodemon server.js",
+    "dev:local": "npm run db:local:start && concurrently --kill-others-on-fail --names api,web \"npm run dev:local:api\" \"npm --prefix client/frontEnd run dev -- --host 127.0.0.1\"",
+    "verify": "npm test && npm run pipeline:test && npm run pipeline:validate && npm run catalog:identity:audit && npm run catalog:quality:strict && npm --prefix client/frontEnd test && npm --prefix client/frontEnd run lint && npm --prefix client/frontEnd run build",
+    "verify:local": "cross-env URI=mongodb://127.0.0.1:27018/forgesavant npm run verify"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -52,6 +72,8 @@
     "nodemon": "^3.1.0"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
     "supertest": "^7.2.2"
   }
 }

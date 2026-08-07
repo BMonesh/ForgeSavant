@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0",
+  "records": [
+    {
+      "source": "licensed_benchmark_lab",
+      "sourceRecordId": "example-run-001",
+      "category": "processors",
+      "catalogName": "AMD Ryzen 5 5600X",
+      "manufacturer": "AMD",
+      "manufacturerPartNumber": "100-100000065BOX",
+      "benchmarkName": "Example reproducible CPU workload",
+      "metricName": "completion_time",
+      "metricValue": 42.5,
+      "unit": "seconds",
+      "workload": "Declared benchmark workload and version",
+      "resolution": "",
+      "settings": {
+        "preset": "documented"
+      },
+      "sampleCount": 3,
+      "hardwareContext": {
+        "memory": "32 GB DDR4",
+        "operatingSystem": "Declared OS and version"
+      },
+      "sourceRecordUrl": "https://benchmark.example/results/example-run-001",
+      "usageBasis": "licensed",
+      "sourceLicense": "Replace with the applicable license or permission record",
+      "observedAt": "2026-07-23T00:00:00+00:00"
+    }
+  ]
+}

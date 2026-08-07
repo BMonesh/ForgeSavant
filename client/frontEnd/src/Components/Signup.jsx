@@ -70,26 +70,14 @@ function Signup() {
 
   return (
     <div className="Signup">
-      <section className="auth-context" aria-label="ForgeSavant account benefits">
-        <Link to="/" className="auth-brand" aria-label="ForgeSavant builder">
-          <BrandLogo className="brand-logo-auth" />
-        </Link>
-        <div className="auth-copy">
-          <p className="ui-kicker">New builder profile</p>
-          <h1>Start with a clean parts record.</h1>
-          <p>Store each verified selection against one account and return to the complete build later.</p>
-        </div>
-        <dl className="auth-proof">
-          <div><dt>Verified flow</dt><dd>Selections unlock when upstream rules match.</dd></div>
-          <div><dt>Private history</dt><dd>Saved builds are protected by your session.</dd></div>
-        </dl>
-      </section>
-
-      <main className="auth-form-panel">
+      <section className="auth-form-panel" aria-labelledby="signup-title">
         <div className="auth-form-shell">
+          <Link to="/" className="auth-brand" aria-label="ForgeSavant home">
+            <BrandLogo className="brand-logo-auth" />
+          </Link>
           <header className="head">
-            <p className="ui-kicker">Create account</p>
-            <h2>Builder profile</h2>
+            <p className="ui-kicker">Create account / saved work</p>
+            <h1 id="signup-title">Builder profile</h1>
             <p className="signup-text">Save compatible configurations and revisit them from any session.</p>
           </header>
           <form onSubmit={handleFormSubmit} className="form">
@@ -104,12 +92,14 @@ function Signup() {
             <button type="submit" className="register" disabled={isSubmitting}>
               {isSubmitting ? "Creating account..." : "Create account"}
             </button>
-            {isGoogleAuthEnabled ? <GoogleLogin onSuccess={handleGoogleSignUp} onError={() => setMessage("Google account creation failed. Try again.")} /> : null}
-            <Link to="/loginAuthentication" state={location.state} className="auth-link">Sign in instead</Link>
+            {isGoogleAuthEnabled ? <div className="auth-provider"><span>Or continue with</span><GoogleLogin onSuccess={handleGoogleSignUp} onError={() => setMessage("Google account creation failed. Try again.")} /></div> : null}
+            <Link to="/login" state={location.state} className="auth-link">Sign in instead</Link>
           </form>
-          {message ? <p className="error-message" role="alert">{message}</p> : null}
+          <div className="auth-status" aria-live="polite">
+            {message ? <p className="error-message" role="alert">{message}</p> : null}
+          </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 }

@@ -52,6 +52,32 @@ class ObservationStoreTests(unittest.TestCase):
         corrected = observation_id(observation(manufacturer_part_number="CORRECTED-MPN"))
         self.assertNotEqual(first, corrected)
 
+    def test_validates_retail_offer_contract(self):
+        offer = observation(
+            observation_kind="retail_offer",
+            source="authorized_retailer",
+            source_product_id="sku-123",
+            catalog_name="Example GPU",
+            manufacturer="Example",
+            manufacturer_part_number="GPU-123",
+            price=24999,
+            currency="INR",
+            availability="in_stock",
+            source_record_url="https://retailer.example/products/sku-123",
+        )
+        self.assertEqual(validate_observation(offer), [])
+
+        errors = validate_observation(offer | {
+            "price": 0,
+            "currency": "inr",
+            "availability": "available",
+            "source_record_url": "http://retailer.example/products/sku-123",
+        })
+        self.assertIn("price must be a positive number for retail offers", errors)
+        self.assertIn("currency must be a three-letter uppercase code for retail offers", errors)
+        self.assertIn("availability is invalid for retail offers", errors)
+        self.assertIn("source_record_url must be an HTTPS URL for retail offers", errors)
+
     def test_writes_immutable_manifest_and_deduplicates_across_runs(self):
         with tempfile.TemporaryDirectory() as directory:
             store = ObservationStore(Path(directory))

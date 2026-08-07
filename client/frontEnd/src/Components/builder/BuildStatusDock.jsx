@@ -20,7 +20,7 @@ const BuildStatusDock = ({
   ];
 
   return (
-    <footer className="build-status-dock" aria-label="Build status">
+    <footer className="build-status-dock" aria-label="Build status" aria-live="polite">
       <div className="dock-checks">
         <span className="dock-label">Compatibility checks</span>
         <div>
@@ -48,7 +48,7 @@ const BuildStatusDock = ({
         >
           Continue <FiChevronRight aria-hidden="true" />
         </button>
-      ) : <span className="dock-review-ready">Ready to review</span>}
+      ) : <span className="dock-review-ready" role="status">Ready to review</span>}
     </footer>
   );
 };

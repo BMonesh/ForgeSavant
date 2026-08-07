@@ -49,6 +49,9 @@ The catalog now contains 58 canonical records across seven hardware categories. 
 - Stable canonical identity, aliases, lifecycle state, and price-history fields on all component types.
 - Verified manufacturer part numbers are stored with their manufacturer evidence URL and verification time; partner-feed matching prioritizes exact MPNs over title similarity.
 - Persistent `(source, source_item_id)` retailer mapping with automatic/manual provenance.
+- Reviewed Amazon.in ASIN destinations are stored as `affiliate_link`
+  relationships, disclosed to users, and excluded from retailer-price coverage,
+  offer freshness, and price-history metrics.
 - Signed 15-minute feed previews; changed resolutions invalidate the previous preview.
 - Only accepted matches can update price, availability, image, and provenance; compatibility specifications remain curated.
 - Idempotent import batches and per-record checksum guards prevent the same reviewed feed from being applied twice, including concurrent retries.

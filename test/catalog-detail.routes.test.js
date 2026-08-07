@@ -22,13 +22,20 @@ test("catalog detail exposes identity and evidence without operator identity", a
     }),
   }));
   t.mock.method(RetailerProductMapping, "find", () => ({
-    select: () => ({ lean: async () => [{ source: "partner", sourceItemId: "SKU-1", matchMethod: "manual" }] }),
+    select: () => ({ lean: async () => [{
+      source: "amazon.in",
+      sourceItemId: "B09V2W32QX",
+      sourceUrl: "https://www.amazon.in/dp/B09V2W32QX?tag=forgesavantpc-21",
+      relationshipType: "affiliate_link",
+      matchMethod: "manual",
+    }] }),
   }));
 
   const response = await request(app).get(`/api/v1/catalog/processors/${componentId}`).expect(200);
   assert.equal(response.body.data.identity.canonicalKey, "processors:amd-ryzen-5-5600x");
   assert.equal(response.body.data.priceHistory.length, 1);
   assert.equal(response.body.data.retailerMappings.length, 1);
+  assert.equal(response.body.data.retailerMappings[0].relationshipType, "affiliate_link");
   assert.equal(response.body.data.provenance.imported_by, undefined);
   assert.equal(response.body.data.productContentEvidence[0].importedBy, undefined);
   assert.equal(response.body.data.productContentEvidence[0].importChecksum, undefined);

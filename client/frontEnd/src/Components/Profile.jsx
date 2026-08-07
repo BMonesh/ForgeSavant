@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiCpu, FiEdit3, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiArrowRight, FiEdit3, FiPlus, FiTrash2 } from "react-icons/fi";
 import "../Styles/Profile.css";
 import api from "../services/api";
 import ConfirmDialog from "./ui/ConfirmDialog";
 import { useSession } from "../auth/SessionContext";
-import fallbackCase from "../assets/custom-gaming-pc.png";
 
 const buildRows = [
   ["CPU", "cpu"],
@@ -24,6 +23,9 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [pendingDelete, setPendingDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [analyticsConsent, setAnalyticsConsent] = useState(null);
+  const [consentSaving, setConsentSaving] = useState(false);
+  const [consentMessage, setConsentMessage] = useState("");
   const { user } = useSession();
 
   const loadBuilds = useCallback(async () => {
@@ -43,6 +45,29 @@ const Profile = () => {
   useEffect(() => {
     loadBuilds();
   }, [loadBuilds]);
+
+  useEffect(() => {
+    api.get("/api/v1/privacy/analytics")
+      .then((response) => setAnalyticsConsent(Boolean(response.data.data.enabled)))
+      .catch(() => setConsentMessage("Privacy preference is temporarily unavailable."));
+  }, []);
+
+  const handleConsentChange = async (event) => {
+    const enabled = event.target.checked;
+    setConsentSaving(true);
+    setConsentMessage("");
+    try {
+      const response = await api.patch("/api/v1/privacy/analytics", { enabled });
+      setAnalyticsConsent(Boolean(response.data.data.enabled));
+      setConsentMessage(enabled
+        ? "Anonymous build-outcome learning is enabled."
+        : "Learning is disabled and existing anonymous outcome events were removed.");
+    } catch (requestError) {
+      setConsentMessage(requestError.response?.data?.error || "Unable to update the privacy preference.");
+    } finally {
+      setConsentSaving(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!pendingDelete) return;
@@ -73,13 +98,33 @@ const Profile = () => {
         <Link to="/build" state={{ newBuild: true }} className="profile-action"><FiPlus aria-hidden="true" /> New build</Link>
       </header>
 
+      <section className="profile-privacy" aria-labelledby="analytics-consent-title">
+        <div>
+          <p className="ui-kicker">Privacy / optional research</p>
+          <h2 id="analytics-consent-title">Help improve build recommendations</h2>
+          <p>If enabled, saving or updating a build records its component IDs, total, compatibility engine version, and planning-model version under a one-way pseudonym. ForgeSavant does not include your name, email, searches, or page views.</p>
+        </div>
+        <label className="privacy-switch">
+          <input
+            type="checkbox"
+            checked={Boolean(analyticsConsent)}
+            onChange={handleConsentChange}
+            disabled={analyticsConsent == null || consentSaving}
+          />
+          <span aria-hidden="true" />
+          <strong>{analyticsConsent ? "Enabled" : analyticsConsent == null ? "Loading" : "Disabled"}</strong>
+        </label>
+        {consentMessage ? <p className="privacy-message" role="status">{consentMessage}</p> : null}
+      </section>
+
       {error && status !== "error" ? <p className="profile-inline-error" role="alert">{error}</p> : null}
 
       {status === "loading" ? (
-        <section className="profile-state" aria-live="polite">
-          <span className="profile-loader" aria-hidden="true" />
-          <strong>Loading saved builds</strong>
-          <p>Retrieving your private build records.</p>
+        <section className="profile-state profile-loading" aria-live="polite" aria-busy="true">
+          <span className="sr-only">Loading saved builds</span>
+          <div className="profile-skeleton-row" aria-hidden="true" />
+          <div className="profile-skeleton-row" aria-hidden="true" />
+          <div className="profile-skeleton-row short" aria-hidden="true" />
         </section>
       ) : status === "error" ? (
         <section className="profile-state" role="alert">
@@ -89,16 +134,18 @@ const Profile = () => {
         </section>
       ) : builds.length > 0 ? (
         <section className="saved-build-list" aria-label="Saved builds">
+          <div className="saved-build-list-head" aria-hidden="true">
+            <span>Record</span><span>Configuration evidence</span><span>Actions</span>
+          </div>
           {builds.map((item, index) => (
             <article key={item._id} className="saved-build">
-              <div className="saved-build-visual">
-                <span>Build {String(index + 1).padStart(2, "0")}</span>
-                <img src={item.image || fallbackCase} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = fallbackCase; }} alt={item.cabinet || "Saved PC build"} />
+              <div className="saved-build-index" aria-label={`Build ${index + 1}`}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <small>Saved</small>
               </div>
               <div className="saved-build-content">
                 <div className="saved-build-title">
-                  <div><span>Compatible configuration</span><h2>{item.cpu || "Saved build"}</h2></div>
-                  <FiCpu aria-hidden="true" />
+                  <div><span>Saved configuration · Review on reopen</span><h2>{item.cpu || "Unnamed saved build"}</h2></div>
                 </div>
                 <dl className="saved-parts">
                   {buildRows.map(([label, key]) => <div key={key}><dt>{label}</dt><dd>{item[key] || "Not recorded"}</dd></div>)}
@@ -107,11 +154,11 @@ const Profile = () => {
                   <div className="saved-metrics">
                     {item.analytics?.performance ? (
                       <>
-                        <span>CPU planning index <strong>{item.analytics.performance.cpuParallelismIndex}</strong></span>
-                        <span>GPU memory <strong>{item.analytics.performance.gpuMemoryGB} GB</strong></span>
+                        <span><em>Planning</em> CPU index <strong>{item.analytics.performance.cpuParallelismIndex ?? "Unavailable"}</strong></span>
+                        <span><em>Recorded</em> GPU memory <strong>{item.analytics.performance.gpuMemoryGB != null ? `${item.analytics.performance.gpuMemoryGB} GB` : "Unavailable"}</strong></span>
                       </>
                     ) : (
-                      <span>Legacy estimate <strong>Reopen to recalculate</strong></span>
+                      <span><em>Stale</em> Legacy estimate <strong>Reopen to recalculate</strong></span>
                     )}
                   </div>
                   <div className="saved-actions">

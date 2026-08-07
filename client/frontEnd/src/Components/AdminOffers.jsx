@@ -96,7 +96,7 @@ const AdminOffers = () => {
   const acceptedRows = useMemo(() => preview?.rows?.filter((row) => row.status === "accepted") || [], [preview]);
 
   return (
-    <div className="offer-admin-page">
+    <div className="offer-admin-page" aria-busy={state === "previewing" || state === "applying"}>
       <header className="offer-admin-hero">
         <div>
           <p className="ui-kicker">Catalog operations</p>
@@ -129,7 +129,7 @@ const AdminOffers = () => {
           <button className="offer-primary" type="submit" disabled={!source || !offers.length || state === "previewing" || state === "applying"}>
             {state === "previewing" ? "Reviewing…" : "Preview matches"}
           </button>
-          {message ? <p className={`offer-message ${state === "error" ? "error" : "success"}`} role="status">{message}</p> : null}
+          <div aria-live="polite">{message ? <p className={`offer-message ${state === "error" ? "error" : "success"}`} role={state === "error" ? "alert" : "status"}>{message}</p> : null}</div>
         </form>
 
         <section className="offer-review-panel" aria-labelledby="offer-review-title">

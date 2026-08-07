@@ -55,26 +55,14 @@ function Login() {
 
   return (
     <div className="Login">
-      <section className="auth-context" aria-label="ForgeSavant account benefits">
-        <Link to="/" className="auth-brand" aria-label="ForgeSavant builder">
-          <BrandLogo className="brand-logo-auth" />
-        </Link>
-        <div className="auth-copy">
-          <p className="ui-kicker">Compatibility workbench</p>
-          <h1>Keep every build decision traceable.</h1>
-          <p>Save component lists, revisit compatibility choices, and keep estimates tied to your account.</p>
-        </div>
-        <dl className="auth-proof">
-          <div><dt>Rule filters</dt><dd>Socket, memory, power, and case constraints.</dd></div>
-          <div><dt>Saved builds</dt><dd>Private records scoped to your account.</dd></div>
-        </dl>
-      </section>
-
-      <main className="auth-form-panel">
+      <section className="auth-form-panel" aria-labelledby="login-title">
         <div className="auth-form-shell">
+          <Link to="/" className="auth-brand" aria-label="ForgeSavant home">
+            <BrandLogo className="brand-logo-auth" />
+          </Link>
           <header className="head-login">
-            <p className="ui-kicker">Account access</p>
-            <h2>Sign in</h2>
+            <p className="ui-kicker">Account access / saved work</p>
+            <h1 id="login-title">Sign in</h1>
             <p className="login-text">Continue to your saved builds and active workbench.</p>
           </header>
           <form onSubmit={handleFormSubmit} className="form-login">
@@ -85,12 +73,14 @@ function Login() {
             <button type="submit" className="login-button" disabled={isSubmitting}>
               {isSubmitting ? "Signing in..." : "Sign in"}
             </button>
-            {isGoogleAuthEnabled ? <GoogleLogin onSuccess={handleGoogleLogin} onError={() => setMessage("Google sign in failed. Try again.")} /> : null}
+            {isGoogleAuthEnabled ? <div className="auth-provider"><span>Or continue with</span><GoogleLogin onSuccess={handleGoogleLogin} onError={() => setMessage("Google sign in failed. Try again.")} /></div> : null}
             <Link to="/signup" state={location.state} className="auth-link">Create an account</Link>
           </form>
-          {message ? <p className="error-message-login" role="alert">{message}</p> : null}
+          <div className="auth-status" aria-live="polite">
+            {message ? <p className="error-message-login" role="alert">{message}</p> : null}
+          </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 }

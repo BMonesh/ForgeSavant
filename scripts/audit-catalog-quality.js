@@ -53,7 +53,11 @@ const audit = async () => {
   }
 
   const mappings = await RetailerProductMapping.find().lean();
-  const orphanMappings = mappings.filter((mapping) => !collections[mapping.category]?.some((item) => String(item._id) === String(mapping.componentId)));
+  const offerMappings = mappings.filter((mapping) => mapping.relationshipType !== "affiliate_link");
+  const affiliateDestinations = mappings.filter((mapping) => mapping.relationshipType === "affiliate_link");
+  const isOrphan = (mapping) => !collections[mapping.category]?.some((item) => String(item._id) === String(mapping.componentId));
+  const orphanMappings = offerMappings.filter(isOrphan);
+  const orphanAffiliateDestinations = affiliateDestinations.filter(isOrphan);
   const saves = await Saves.find().lean();
   const orphanBuildReferences = [];
   for (const savedBuild of saves) {
@@ -86,7 +90,15 @@ const audit = async () => {
       sample: all.filter((item) => item.provenance?.data_status !== "live").length,
     },
     duplicateGroups,
-    retailerMappings: { total: mappings.length, manual: mappings.filter((mapping) => mapping.matchMethod === "manual").length, orphaned: orphanMappings },
+    retailerMappings: {
+      total: offerMappings.length,
+      manual: offerMappings.filter((mapping) => mapping.matchMethod === "manual").length,
+      orphaned: orphanMappings,
+    },
+    affiliateDestinations: {
+      total: affiliateDestinations.length,
+      orphaned: orphanAffiliateDestinations,
+    },
     savedBuilds: { total: saves.length, orphanedReferences: orphanBuildReferences },
   };
   console.log(JSON.stringify(report, null, 2));
@@ -97,6 +109,7 @@ const audit = async () => {
     }
     if (report.duplicateGroups.length) failures.push(`${report.duplicateGroups.length} duplicate identity groups`);
     if (report.retailerMappings.orphaned.length) failures.push(`${report.retailerMappings.orphaned.length} orphaned retailer mappings`);
+    if (report.affiliateDestinations.orphaned.length) failures.push(`${report.affiliateDestinations.orphaned.length} orphaned affiliate destinations`);
     if (report.savedBuilds.orphanedReferences.length) failures.push(`${report.savedBuilds.orphanedReferences.length} orphaned saved-build references`);
     if (process.env.REQUIRE_LIVE_PRICING === "1" && report.pricingStatus.live === 0) failures.push("no live retailer pricing observations");
     if (failures.length) throw new Error(`Catalog release gate failed: ${failures.join("; ")}`);
