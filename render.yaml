@@ -4,11 +4,13 @@ services:
     runtime: node
     plan: free
     branch: codex/application-data-platform-overhaul
-    buildCommand: npm ci && npm ci --prefix client/frontEnd && npm --prefix client/frontEnd run build
+    buildCommand: npm ci && npm ci --include=dev --prefix client/frontEnd && npm --prefix client/frontEnd run build
     startCommand: npm start
     healthCheckPath: /ready
     autoDeployTrigger: checksPass
     envVars:
+      - key: NODE_VERSION
+        value: 22.20.0
       - key: NODE_ENV
         value: production
       - key: URI
