@@ -36,10 +36,16 @@ const summary = {
   },
   caveats: ["Open Icecat is not a retailer price source."],
   definitions: { catalogCoverage: "Observed products divided by verified products." },
-  modelReadiness: { uses: [
-    { use: "Descriptive data-quality monitoring", status: "ready", reason: "Validated evidence exists." },
-    { use: "India price prediction or forecasting", status: "blocked", reason: "No price history exists." },
-  ] },
+  modelReadiness: {
+    uses: [
+      { use: "Descriptive data-quality monitoring", status: "ready", reason: "Validated evidence exists." },
+      { use: "India price prediction or forecasting", status: "blocked", reason: "No price history exists." },
+    ],
+    requiredNextEvidence: [
+      "Authorized retailer offer snapshots with product identity and observation time.",
+      "Repeated collection dates before temporal evaluation.",
+    ],
+  },
 };
 
 describe("AdminDataQuality", () => {
@@ -70,6 +76,9 @@ describe("AdminDataQuality", () => {
     expect(screen.getByText("Example CPU")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Review source/ })).toHaveAttribute("href", "https://example.test/cpu-1");
     expect(screen.getByText("India price prediction or forecasting")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Next evidence to collect" })).toBeInTheDocument();
+    expect(screen.getByText("Authorized retailer offer snapshots with product identity and observation time.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Review retailer offers" })).toHaveAttribute("href", "/admin/offers");
     expect(api.get).toHaveBeenCalledWith("/api/v1/admin/analytics/data-quality");
   });
 

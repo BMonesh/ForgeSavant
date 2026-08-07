@@ -170,6 +170,25 @@ const AdminDataQuality = () => {
                 </article>
               ))}
             </div>
+            {summary.modelReadiness.requiredNextEvidence?.length ? (
+              <div className="quality-evidence-plan">
+                <div>
+                  <span>Collection plan</span>
+                  <h3>Next evidence to collect</h3>
+                  <p>These are measured prerequisites for the blocked analytical uses above. Completing one item does not automatically make a model production-ready.</p>
+                </div>
+                <ol>
+                  {summary.modelReadiness.requiredNextEvidence.map((requirement, index) => (
+                    <li key={requirement}><span>{String(index + 1).padStart(2, "0")}</span><p>{requirement}</p></li>
+                  ))}
+                </ol>
+                <nav aria-label="Evidence collection destinations">
+                  <Link to="/admin/offers">Review retailer offers</Link>
+                  <Link to="/benchmarks">Inspect benchmark coverage</Link>
+                  <Link to="/profile">Review outcome consent</Link>
+                </nav>
+              </div>
+            ) : null}
           </section>
         ) : null}
 
