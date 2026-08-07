@@ -5,6 +5,7 @@ const defaultSummaryPath = path.join(__dirname, "..", "data-pipeline", "analytic
 const defaultStatusPath = path.join(__dirname, "..", "data-pipeline", "analytics", "pipeline_status.json");
 const defaultReadinessPath = path.join(__dirname, "..", "data-pipeline", "analytics", "model_readiness_summary.json");
 const defaultRetailSnapshotPath = path.join(__dirname, "..", "data-pipeline", "analytics", "retail_snapshot_report.json");
+const defaultCoverageQueuePath = path.join(__dirname, "..", "data-pipeline", "analytics", "catalog_coverage_queue.json");
 
 const ratio = (numerator, denominator) => denominator > 0 ? numerator / denominator : null;
 
@@ -71,6 +72,30 @@ const readRetailSnapshot = async (snapshotPath = process.env.RETAIL_SNAPSHOT_PAT
   }
 };
 
+const readCoverageWorkQueue = async (queuePath = process.env.COVERAGE_QUEUE_PATH || defaultCoverageQueuePath, limit = 12) => {
+  try {
+    const parsed = JSON.parse(await fs.readFile(queuePath, "utf8"));
+    if (parsed?.schemaVersion !== "1.0" || !Array.isArray(parsed.records)) return null;
+    const records = parsed.records
+      .filter((row) => row?.status !== "covered")
+      .slice(0, Math.max(1, Math.min(50, Number(limit) || 12)))
+      .map((row) => ({
+        priority: Number(row.priority) || 0,
+        status: row.status,
+        category: row.category,
+        catalogName: row.catalogName,
+        manufacturer: row.manufacturer,
+        manufacturerPartNumber: row.manufacturerPartNumber,
+        manufacturerSourceUrl: row.manufacturerSourceUrl,
+        latestIcecatStatus: row.latestIcecatStatus,
+        gapReason: row.gapReason,
+      }));
+    return { generatedAt: parsed.generatedAt || null, totalGaps: parsed.records.filter((row) => row?.status !== "covered").length, records };
+  } catch (_error) {
+    return null;
+  }
+};
+
 const readDataQualitySummary = async (summaryPath = process.env.DATA_QUALITY_SUMMARY_PATH || defaultSummaryPath) => {
   let parsed;
   try {
@@ -103,6 +128,7 @@ const readDataQualitySummary = async (summaryPath = process.env.DATA_QUALITY_SUM
   const operational = await readOperationalStatus();
   const modelReadiness = await readModelReadiness();
   const retailSnapshot = await readRetailSnapshot();
+  const coverageWorkQueue = await readCoverageWorkQueue();
   const status = operational?.status === "failed" || parsed.pipeline.quarantined > 0
     ? "attention"
     : ageHours > freshnessHours ? "stale" : "healthy";
@@ -144,6 +170,7 @@ const readDataQualitySummary = async (summaryPath = process.env.DATA_QUALITY_SUM
     operational,
     modelReadiness,
     retailSnapshot,
+    coverageWorkQueue,
     quality: parsed.quality,
     categories: parsed.categories,
     caveats: Array.isArray(parsed.caveats) ? parsed.caveats : [],
@@ -158,4 +185,4 @@ const readDataQualitySummary = async (summaryPath = process.env.DATA_QUALITY_SUM
   };
 };
 
-module.exports = { readDataQualitySummary, readOperationalStatus, readModelReadiness, readRetailSnapshot };
+module.exports = { readDataQualitySummary, readOperationalStatus, readModelReadiness, readRetailSnapshot, readCoverageWorkQueue };

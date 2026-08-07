@@ -48,15 +48,24 @@ test("admin receives reconciled metrics without filesystem paths", async (t) => 
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "forgesavant-quality-"));
   const summaryPath = path.join(directory, "summary.json");
   const retailSnapshotPath = path.join(directory, "retail-snapshot.json");
+  const coverageQueuePath = path.join(directory, "coverage-queue.json");
   fs.writeFileSync(summaryPath, JSON.stringify({ ...fixture, sourcePath: "C:/private/path" }));
   fs.writeFileSync(retailSnapshotPath, JSON.stringify({
     schemaVersion: "1.0", snapshotAt: new Date().toISOString(), scannedComponents: 58,
     scannedPriceHistoryEntries: 59, eligibleOffers: 0, accepted: 0, duplicates: 0,
     quarantined: 0, skipped: Array.from({ length: 59 }, () => ({ reason: "sourceItemId is required" })),
   }));
+  fs.writeFileSync(coverageQueuePath, JSON.stringify({
+    schemaVersion: "1.0", generatedAt: new Date().toISOString(), records: [{
+      priority: 100, status: "manufacturer_ready", category: "processors", catalogName: "Example CPU",
+      manufacturer: "Example", manufacturerPartNumber: "CPU-1", manufacturerSourceUrl: "https://example.test/cpu-1",
+      latestIcecatStatus: "restricted", gapReason: "Capture reviewed official evidence.",
+    }],
+  }));
   process.env.DATA_QUALITY_SUMMARY_PATH = summaryPath;
   process.env.RETAIL_SNAPSHOT_PATH = retailSnapshotPath;
-  t.after(() => { delete process.env.DATA_QUALITY_SUMMARY_PATH; delete process.env.RETAIL_SNAPSHOT_PATH; fs.rmSync(directory, { recursive: true, force: true }); });
+  process.env.COVERAGE_QUEUE_PATH = coverageQueuePath;
+  t.after(() => { delete process.env.DATA_QUALITY_SUMMARY_PATH; delete process.env.RETAIL_SNAPSHOT_PATH; delete process.env.COVERAGE_QUEUE_PATH; fs.rmSync(directory, { recursive: true, force: true }); });
 
   const response = await request(app)
     .get("/api/v1/admin/analytics/data-quality")
@@ -70,6 +79,8 @@ test("admin receives reconciled metrics without filesystem paths", async (t) => 
   assert.equal(response.body.data.coverageQueue.manufacturerReady, 44);
   assert.equal(response.body.data.retailSnapshot.scannedComponents, 58);
   assert.equal(response.body.data.retailSnapshot.skippedEntries, 59);
+  assert.equal(response.body.data.coverageWorkQueue.totalGaps, 1);
+  assert.equal(response.body.data.coverageWorkQueue.records[0].manufacturerPartNumber, "CPU-1");
   assert.equal(response.body.data.sourcePath, undefined);
   assert.match(response.body.data.definitions.catalogCoverage, /verified catalog products/i);
 });

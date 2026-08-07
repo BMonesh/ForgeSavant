@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import AdminDataQuality from "./AdminDataQuality";
 import api from "../services/api";
@@ -24,6 +25,7 @@ const summary = {
   pipeline: { runs: 1, received: 14, accepted: 14, duplicates: 0, quarantined: 0, validationPassRate: 1 },
   retail: { priceObservations: 8, productsWithPriceHistory: 4, currentOffers: 4, productsWithCurrentOffers: 4, retailers: 1 },
   retailSnapshot: { scannedComponents: 58, scannedPriceHistoryEntries: 59, eligibleOffers: 0, skippedEntries: 59 },
+  coverageWorkQueue: { totalGaps: 1, records: [{ priority: 100, category: "processors", catalogName: "Example CPU", manufacturer: "Example", manufacturerPartNumber: "CPU-1", manufacturerSourceUrl: "https://example.test/cpu-1", latestIcecatStatus: "restricted" }] },
   coverageQueue: { verified: 58, covered: 14, manufacturerReady: 44, sourceMissing: 0 },
   outcomes: { observations: 3, pseudonymousSubjects: 2, builds: 3 },
   benchmarks: { observations: 6, currentObservations: 3, products: 3, metrics: 2, sources: 1, observationDates: 2 },
@@ -46,7 +48,11 @@ describe("AdminDataQuality", () => {
   it("renders source-backed catalog and pipeline measures", async () => {
     api.get.mockResolvedValue({ data: { data: summary } });
 
-    render(<AdminDataQuality />);
+    render(
+      <MemoryRouter>
+        <AdminDataQuality />
+      </MemoryRouter>,
+    );
 
     expect(await screen.findByRole("heading", { name: "Know what the catalog can prove." })).toBeInTheDocument();
     expect(screen.getByText("24.1%")).toBeInTheDocument();
@@ -60,6 +66,9 @@ describe("AdminDataQuality", () => {
     expect(screen.getByText("Benchmarked products")).toBeInTheDocument();
     expect(screen.getByText("Benchmark snapshots")).toBeInTheDocument();
     expect(screen.getByText("Current benchmark records")).toBeInTheDocument();
+    expect(screen.getByText("Manufacturer evidence review")).toBeInTheDocument();
+    expect(screen.getByText("Example CPU")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Review source/ })).toHaveAttribute("href", "https://example.test/cpu-1");
     expect(screen.getByText("India price prediction or forecasting")).toBeInTheDocument();
     expect(api.get).toHaveBeenCalledWith("/api/v1/admin/analytics/data-quality");
   });
@@ -70,7 +79,11 @@ describe("AdminDataQuality", () => {
       .mockRejectedValueOnce({ response: { data: { error: "Analytics summary is unavailable" } } })
       .mockResolvedValueOnce({ data: { data: summary } });
 
-    render(<AdminDataQuality />);
+    render(
+      <MemoryRouter>
+        <AdminDataQuality />
+      </MemoryRouter>,
+    );
 
     expect(await screen.findByText("Analytics summary is unavailable")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Try again" }));

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FiActivity, FiAlertTriangle, FiCheckCircle, FiDatabase, FiRefreshCw } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { FiActivity, FiAlertTriangle, FiArrowUpRight, FiCheckCircle, FiDatabase, FiRefreshCw } from "react-icons/fi";
 import api from "../services/api";
 import "../Styles/AdminDataQuality.css";
 
@@ -52,6 +53,7 @@ const AdminDataQuality = () => {
   const outcomes = summary.outcomes || {};
   const benchmarks = summary.benchmarks || {};
   const retailSnapshot = summary.retailSnapshot || {};
+  const coverageWorkQueue = summary.coverageWorkQueue || { records: [] };
   const statusLabel = summary.status === "healthy" ? "Pipeline healthy" : summary.status === "stale" ? "Pipeline stale" : "Review required";
 
   return (
@@ -170,6 +172,26 @@ const AdminDataQuality = () => {
             </div>
           </section>
         ) : null}
+
+        <section className="quality-panel quality-gap-queue" aria-labelledby="gap-queue-title">
+          <div className="quality-panel-heading"><div><span>07</span><h2 id="gap-queue-title">Manufacturer evidence review</h2></div><small>{coverageWorkQueue.totalGaps ?? 0} uncovered identities</small></div>
+          {coverageWorkQueue.records?.length ? (
+            <div className="quality-gap-scroll">
+              <table>
+                <thead><tr><th scope="col">Priority</th><th scope="col">Component</th><th scope="col">Open Icecat</th><th scope="col">Official evidence</th></tr></thead>
+                <tbody>{coverageWorkQueue.records.map((row) => (
+                  <tr key={`${row.category}:${row.manufacturerPartNumber}`}>
+                    <td><strong>{Math.round(row.priority)}</strong></td>
+                    <td><strong>{row.catalogName}</strong><span>{row.manufacturer} · {row.manufacturerPartNumber}</span></td>
+                    <td><span className={`quality-evidence-state ${row.latestIcecatStatus}`}>{row.latestIcecatStatus}</span></td>
+                    <td><a href={row.manufacturerSourceUrl} target="_blank" rel="noreferrer">Review source <FiArrowUpRight aria-hidden="true" /></a></td>
+                  </tr>
+                ))}</tbody>
+              </table>
+            </div>
+          ) : <p>No uncovered verified identities are waiting for review.</p>}
+          <div className="quality-gap-action"><p>Only reviewed specifications with an exact manufacturer part number and verified URL can be promoted.</p><Link to="/admin/content">Open product-content import</Link></div>
+        </section>
       </div>
     </div>
   );
