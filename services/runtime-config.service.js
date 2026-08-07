@@ -14,7 +14,7 @@ const validateRuntimeConfig = (env = process.env, nodeVersion = process.versions
     errors.push('JWT_SECRET must be a non-placeholder secret of at least 32 characters');
   }
 
-  const origins = String(env.ALLOWED_ORIGINS || '').split(',').map((value) => value.trim()).filter(Boolean);
+  const origins = String(env.ALLOWED_ORIGINS || env.RENDER_EXTERNAL_URL || '').split(',').map((value) => value.trim()).filter(Boolean);
   if (!origins.length) {
     errors.push('ALLOWED_ORIGINS is required in production');
   } else if (origins.some((origin) => !origin.startsWith('https://'))) {

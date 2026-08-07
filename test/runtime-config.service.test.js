@@ -33,3 +33,12 @@ test('accepts an explicit production configuration', () => {
     ALLOWED_ORIGINS: 'https://app.forgesavant.example',
   }, '22.12.0'));
 });
+
+test('accepts the HTTPS origin supplied by a Render web service', () => {
+  assert.doesNotThrow(() => assertRuntimeConfig({
+    NODE_ENV: 'production',
+    URI: 'mongodb+srv://service.invalid/forgesavant',
+    JWT_SECRET: 'a-random-production-secret-with-32-characters',
+    RENDER_EXTERNAL_URL: 'https://forgesavant-preview.onrender.com',
+  }, '22.12.0'));
+});

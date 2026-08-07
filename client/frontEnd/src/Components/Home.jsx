@@ -218,7 +218,7 @@ const Home = () => {
           <p>Compatibility-led PC planning.</p>
         </div>
         <div><span>Product</span><Link to="/build">Builder</Link><a href="#recommended">Reference build</a><a href="#components">Catalog</a></div>
-        <div><span>Method</span><a href="#how-it-works">How it works</a><a href="#faq-title">FAQ</a><Link to="/about">About</Link><Link to="/affiliate-disclosure">Affiliate disclosure</Link></div>
+        <div><span>Method</span><a href="#how-it-works">How it works</a><a href="#faq-title">FAQ</a><Link to="/about">About</Link><Link to="/partners">Data partners</Link><Link to="/affiliate-disclosure">Affiliate disclosure</Link></div>
         <p>Catalog values are planning data until retailer provenance is shown. As an Amazon Associate I earn from qualifying purchases.</p>
       </footer>
     </div>

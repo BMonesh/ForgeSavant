@@ -274,6 +274,14 @@ The repository does not claim a production URL until a deployment passes
 pricing source. The frontend and API can be deployed separately; set the
 frontend API base URL and server `ALLOWED_ORIGINS` to their final HTTPS URLs.
 
+For a retailer-verification preview, the tracked `render.yaml` deploys the
+Express API and built React application as one free Render web service. Connect
+the repository as a Render Blueprint and provide only the Atlas `URI`; Render
+generates the application secrets and supplies its own HTTPS origin. The public
+`/partners` page documents the requested feed contract and links to the sample
+CSV. Free preview services can sleep after inactivity and are not the final
+production architecture.
+
 ## Contributing
 
 1. Fork the repository
