@@ -58,7 +58,11 @@ Consequences worth knowing before proposing a source:
 `observation_store.py` holds two interchangeable stores behind one contract (`ingest`, `read_observations`, `read_runs`). Both share `partition_batch()` for validation and `jsonl_checksum()` for manifest digests, so accept/duplicate/quarantine counts and checksums are identical either way — `BackendEquivalenceTests` pins that.
 
 - `ObservationStore` — one immutable directory per run under `lake/`. Dedupes by scanning every prior `observations.jsonl`.
-- `MongoObservationStore` — collections `observation_records` / `_raw` / `_quarantine` / `_manifests`. Insert-only, with a unique index on `observation_id` enforcing immutability in the database. A concurrent insert losing that race is counted as a duplicate, not an error.
+- `MongoObservationStore` — collections `observation_records` / `_raw` / `_quarantine` / `_manifests`. Insert-only, with a unique index on `observation_id` enforcing immutability in the database. A concurrent insert losing that race is counted as a duplicate, not an error. `insert_many` is given **copies**: pymongo stamps `_id` in place, and the manifest checksum is taken over that same list afterwards.
+
+**Identity has one superseded version.** Product-content ids were originally derived from the source payload alone; `manufacturer_part_number` was later added so a re-identified product could supersede an earlier reading of the same payload. 14 observations in the lake still carry the old id. `known_identities(record)` therefore matches a stored observation on **both** its landed id and its id recomputed under the current rule. Never dedupe by reimplementing the old rule for *incoming* records — that would treat a corrected part number as a duplicate and silently discard the correction. `LegacyIdentityTests` pins both halves.
+
+`MongoObservationStore._existing_ids` takes candidate **records**, not ids, and queries `(source, source_product_id, raw_sha256)` — the fields every id is derived from — so the lookup stays targeted rather than scanning. `stored_observation_ids()` returns landed ids only and exists for the migration, which copies records verbatim and must not treat a recomputed id as evidence that a record already landed.
 
 Moving to Atlas is a two-step, both idempotent and dry-run by default:
 

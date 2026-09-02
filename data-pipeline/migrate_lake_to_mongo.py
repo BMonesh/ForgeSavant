@@ -52,7 +52,9 @@ def migrate_lake(lake_dir: Path, store: MongoObservationStore, *, apply: bool = 
     raw = _side_records(lake_dir, "raw")
     quarantine = _side_records(lake_dir, "quarantine")
 
-    existing_observations = store._known_ids()
+    # Stored ids only: the migration copies records verbatim, so recomputed
+    # identities would make an uncopied record look as though it had landed.
+    existing_observations = store.stored_observation_ids()
     existing_runs = {run.get("run_id") for run in store.read_runs()}
 
     pending_observations = [

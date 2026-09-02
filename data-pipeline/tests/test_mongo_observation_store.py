@@ -13,6 +13,8 @@ from observation_store import (  # noqa: E402
     MongoObservationStore,
     ObservationStore,
     jsonl_checksum,
+    known_identities,
+    observation_id,
     open_store,
 )
 
@@ -56,6 +58,10 @@ class FakeCollection:
 
     def _matches(self, document, query):
         for field, condition in query.items():
+            if field == "$or":
+                if not any(self._matches(document, clause) for clause in condition):
+                    return False
+                continue
             value = document.get(field)
             if isinstance(condition, dict) and "$in" in condition:
                 if value not in condition["$in"]:
@@ -218,6 +224,76 @@ class MongoObservationStoreTests(unittest.TestCase):
         _, store = build_store()
         with self.assertRaisesRegex(ValueError, "unsupported characters"):
             store.ingest("test_source", [observation()], run_id="../escape")
+
+
+def legacy_observation_id(record):
+    """The superseded identity: the source payload alone, with no part number.
+
+    Observations landed under this rule still exist in the lake, so both stores
+    have to recognise them without reimplementing the rule for new records.
+    """
+    identity = {
+        "schema_version": record.get("schema_version"),
+        "observation_kind": record.get("observation_kind"),
+        "source": record.get("source"),
+        "source_product_id": record.get("source_product_id"),
+        "raw_sha256": record.get("raw_sha256"),
+    }
+    canonical = json.dumps(identity, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+class LegacyIdentityTests(unittest.TestCase):
+    """Observations landed under the superseded id must not be re-accepted."""
+
+    def setUp(self):
+        module = type(sys)("pymongo.errors")
+        module.BulkWriteError = FakeBulkWriteError
+        sys.modules["pymongo.errors"] = module
+
+    def tearDown(self):
+        sys.modules.pop("pymongo.errors", None)
+
+    def test_known_identities_covers_both_the_stored_and_current_id(self):
+        record = observation()
+        landed = {**record, "observation_id": legacy_observation_id(record)}
+        identities = known_identities(landed)
+        self.assertIn(legacy_observation_id(record), identities)
+        self.assertIn(observation_id(record), identities)
+
+    def test_mongo_treats_a_legacy_landed_observation_as_a_duplicate(self):
+        database, store = build_store()
+        record = observation()
+        database["observation_records"].insert_one(
+            {**record, "observation_id": legacy_observation_id(record)}
+        )
+        result = store.ingest("test_source", [record])
+        self.assertEqual((result.accepted, result.duplicates), (0, 1))
+
+    def test_filesystem_store_agrees(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            store = ObservationStore(root)
+            store.ingest("test_source", [observation()])
+            landed = root / "normalized"
+            path = next(landed.rglob("observations.jsonl"))
+            record = json.loads(path.read_text(encoding="utf-8").strip())
+            rewritten = {**record, "observation_id": legacy_observation_id(record)}
+            path.write_text(json.dumps(rewritten, sort_keys=True) + "\n", encoding="utf-8")
+
+            result = ObservationStore(root).ingest("test_source", [observation()])
+            self.assertEqual((result.accepted, result.duplicates), (0, 1))
+
+    def test_a_corrected_part_number_is_still_a_new_observation(self):
+        """The correction the identity change exists for must not regress."""
+        database, store = build_store()
+        original = observation(manufacturer_part_number="OLD-MPN")
+        database["observation_records"].insert_one(
+            {**original, "observation_id": legacy_observation_id(original)}
+        )
+        corrected = observation(manufacturer_part_number="VERIFIED-MPN")
+        result = store.ingest("test_source", [corrected])
+        self.assertEqual((result.accepted, result.duplicates), (1, 0))
 
 
 class BackendEquivalenceTests(unittest.TestCase):

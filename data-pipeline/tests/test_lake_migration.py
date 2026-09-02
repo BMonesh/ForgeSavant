@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from observation_store import MongoObservationStore, ObservationStore  # noqa: E402
 from migrate_lake_to_mongo import migrate_lake  # noqa: E402
 from publish_reports import collect_reports, publish_reports  # noqa: E402
-from test_mongo_observation_store import FakeDatabase, observation  # noqa: E402
+from test_mongo_observation_store import FakeBulkWriteError, FakeDatabase, observation  # noqa: E402
 
 
 def seeded_lake(root: Path, count: int = 3) -> ObservationStore:
@@ -25,7 +25,20 @@ def seeded_lake(root: Path, count: int = 3) -> ObservationStore:
     return store
 
 
+def install_fake_pymongo_errors():
+    """The store imports BulkWriteError lazily; point it at the fake."""
+    module = type(sys)("pymongo.errors")
+    module.BulkWriteError = FakeBulkWriteError
+    sys.modules["pymongo.errors"] = module
+
+
 class LakeMigrationTests(unittest.TestCase):
+    def setUp(self):
+        install_fake_pymongo_errors()
+
+    def tearDown(self):
+        sys.modules.pop("pymongo.errors", None)
+
     def test_dry_run_reports_pending_work_without_writing(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

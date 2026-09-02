@@ -149,6 +149,28 @@ def observation_id(record: dict) -> str:
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
+def known_identities(record: dict) -> set[str]:
+    """Every id under which an already-stored observation may be recognised.
+
+    The identity algorithm has changed once: product-content ids used to be
+    derived from the source payload alone, before the manufacturer part number
+    was added so a corrected identity could supersede an earlier reading of the
+    same payload. Observations landed under the old rule carry an id that today's
+    code will never produce, so matching only on the stored value would re-accept
+    them on every run.
+
+    Recomputing under the current rule fixes that without rewriting landed
+    evidence, and without reimplementing the superseded rule for incoming
+    records -- which would undo the correction the change was made for, by
+    treating a re-identified product as a duplicate.
+    """
+    identities = {observation_id(record)}
+    stored = record.get("observation_id")
+    if stored:
+        identities.add(stored)
+    return identities
+
+
 def jsonl_checksum(rows: Iterable[dict]) -> str:
     """Digest of the canonical JSONL encoding, independent of the storage backend."""
     content = "".join(json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n" for row in rows)
@@ -169,10 +191,10 @@ class ObservationStore:
         self.root = Path(root)
 
     def _known_ids(self) -> set[str]:
-        return {
-            value for record in self.read_observations()
-            if (value := record.get("observation_id"))
-        }
+        known: set[str] = set()
+        for record in self.read_observations():
+            known |= known_identities(record)
+        return known
 
     def read_observations(self, *, observation_kind: str | None = None) -> Iterator[dict]:
         """Yield every accepted observation. Readers use this instead of globbing."""
@@ -329,16 +351,35 @@ class MongoObservationStore:
         )
 
     def _known_ids(self) -> set[str]:
+        known: set[str] = set()
+        for document in self.read_observations():
+            known |= known_identities(document)
+        return known
+
+    def stored_observation_ids(self) -> set[str]:
+        """Only the ids as landed, with no recomputation. Used by the migration."""
         cursor = self._collection("normalized").find({}, {"_id": 0, "observation_id": 1})
         return {doc["observation_id"] for doc in cursor if doc.get("observation_id")}
 
-    def _existing_ids(self, candidate_ids: list[str]) -> set[str]:
-        if not candidate_ids:
+    def _existing_ids(self, candidates: list[dict]) -> set[str]:
+        if not candidates:
             return set()
-        cursor = self._collection("normalized").find(
-            {"observation_id": {"$in": candidate_ids}}, {"_id": 0, "observation_id": 1}
-        )
-        return {doc["observation_id"] for doc in cursor}
+        # An id is derived from these three fields plus the schema version, the
+        # kind, and either the part number or the observation time. Anything that
+        # could collide therefore shares one of these triples, so this stays a
+        # targeted lookup rather than a collection scan.
+        clauses = {
+            (record.get("source"), record.get("source_product_id"), record.get("raw_sha256"))
+            for record in candidates
+        }
+        query = {"$or": [
+            {"source": source, "source_product_id": product_id, "raw_sha256": digest}
+            for source, product_id, digest in sorted(clauses)
+        ]}
+        known: set[str] = set()
+        for document in self._collection("normalized").find(query, {"_id": 0}):
+            known |= known_identities(document)
+        return known
 
     def ingest(self, source: str, observations: Iterable[dict], *, run_id: str | None = None) -> IngestionResult:
         from pymongo.errors import BulkWriteError
@@ -351,7 +392,7 @@ class MongoObservationStore:
         raw_records = [redact(dict(record)) for record in observations]
         candidates, quarantined = partition_batch(source, raw_records)
 
-        known = self._existing_ids([record["observation_id"] for record in candidates])
+        known = self._existing_ids(candidates)
         accepted = []
         batch_ids = set()
         duplicates = 0
