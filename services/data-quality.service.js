@@ -1,5 +1,49 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
+const mongoose = require("mongoose");
+const db = require("../db");
+
+const REPORT_COLLECTION = "pipeline_reports";
+
+/**
+ * Read a report that a pipeline run published to the shared database.
+ *
+ * A run on a scheduled runner or a developer machine cannot write to the API
+ * server's disk, so publish_reports.py upserts these summaries into MongoDB.
+ * Returns null whenever the database is unreachable or the report has never
+ * been published, which keeps this strictly a fallback.
+ */
+const readPublishedReport = async (name) => {
+  if (!db.isConnected()) return null;
+  try {
+    const document = await mongoose.connection.db
+      .collection(REPORT_COLLECTION)
+      .findOne({ name }, { projection: { _id: 0, payload: 1 } });
+    return document?.payload ?? null;
+  } catch (_error) {
+    return null;
+  }
+};
+
+/**
+ * Prefer a local analytics file, falling back to the published copy.
+ *
+ * File first keeps a developer's own pipeline run authoritative on their
+ * machine. The deployed API has no analytics directory at all, so it always
+ * falls through to whatever the last run published.
+ */
+const loadReport = async (name, filePath) => {
+  try {
+    return JSON.parse(await fs.readFile(filePath, "utf8"));
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+    const published = await readPublishedReport(name);
+    if (published) return published;
+    const unavailable = new Error(`${name} is unavailable locally and has not been published`);
+    unavailable.code = "ENOENT";
+    throw unavailable;
+  }
+};
 
 const defaultSummaryPath = path.join(__dirname, "..", "data-pipeline", "analytics", "data_quality_summary.json");
 const defaultStatusPath = path.join(__dirname, "..", "data-pipeline", "analytics", "pipeline_status.json");
@@ -11,7 +55,7 @@ const ratio = (numerator, denominator) => denominator > 0 ? numerator / denomina
 
 const readOperationalStatus = async (statusPath = process.env.PIPELINE_STATUS_PATH || defaultStatusPath) => {
   try {
-    const status = JSON.parse(await fs.readFile(statusPath, "utf8"));
+    const status = await loadReport("pipeline_status", statusPath);
     if (status?.schemaVersion !== "1.0" || !["running", "succeeded", "failed"].includes(status.status)) return null;
     return {
       status: status.status,
@@ -33,7 +77,7 @@ const readOperationalStatus = async (statusPath = process.env.PIPELINE_STATUS_PA
 
 const readModelReadiness = async (readinessPath = process.env.MODEL_READINESS_PATH || defaultReadinessPath) => {
   try {
-    const parsed = JSON.parse(await fs.readFile(readinessPath, "utf8"));
+    const parsed = await loadReport("model_readiness_summary", readinessPath);
     if (parsed?.schemaVersion !== "1.0" || !parsed.dataset || !Array.isArray(parsed.uses)) return null;
     return {
       generatedAt: parsed.generatedAt,
@@ -49,7 +93,7 @@ const readModelReadiness = async (readinessPath = process.env.MODEL_READINESS_PA
 
 const readRetailSnapshot = async (snapshotPath = process.env.RETAIL_SNAPSHOT_PATH || defaultRetailSnapshotPath) => {
   try {
-    const parsed = JSON.parse(await fs.readFile(snapshotPath, "utf8"));
+    const parsed = await loadReport("retail_snapshot_report", snapshotPath);
     if (parsed?.schemaVersion !== "1.0") return null;
     const skipReasons = (Array.isArray(parsed.skipped) ? parsed.skipped : []).reduce((counts, row) => {
       const reason = row?.reason || "Unspecified validation failure";
@@ -74,7 +118,7 @@ const readRetailSnapshot = async (snapshotPath = process.env.RETAIL_SNAPSHOT_PAT
 
 const readCoverageWorkQueue = async (queuePath = process.env.COVERAGE_QUEUE_PATH || defaultCoverageQueuePath, limit = 12) => {
   try {
-    const parsed = JSON.parse(await fs.readFile(queuePath, "utf8"));
+    const parsed = await loadReport("catalog_coverage_queue", queuePath);
     if (parsed?.schemaVersion !== "1.0" || !Array.isArray(parsed.records)) return null;
     const records = parsed.records
       .filter((row) => row?.status !== "covered")
@@ -99,7 +143,7 @@ const readCoverageWorkQueue = async (queuePath = process.env.COVERAGE_QUEUE_PATH
 const readDataQualitySummary = async (summaryPath = process.env.DATA_QUALITY_SUMMARY_PATH || defaultSummaryPath) => {
   let parsed;
   try {
-    parsed = JSON.parse(await fs.readFile(summaryPath, "utf8"));
+    parsed = await loadReport("data_quality_summary", summaryPath);
   } catch (error) {
     if (error.code === "ENOENT") {
       const unavailable = new Error("Analytics summary is unavailable; run npm run analytics:build");
@@ -185,4 +229,13 @@ const readDataQualitySummary = async (summaryPath = process.env.DATA_QUALITY_SUM
   };
 };
 
-module.exports = { readDataQualitySummary, readOperationalStatus, readModelReadiness, readRetailSnapshot, readCoverageWorkQueue };
+module.exports = {
+  readDataQualitySummary,
+  readOperationalStatus,
+  readModelReadiness,
+  readRetailSnapshot,
+  readCoverageWorkQueue,
+  readPublishedReport,
+  loadReport,
+  REPORT_COLLECTION,
+};

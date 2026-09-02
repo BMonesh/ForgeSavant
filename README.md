@@ -158,9 +158,13 @@ npm run lake:migrate:apply   # append-only; the local files are left in place
 
 `.github/workflows/pipeline.yml` then runs the full pipeline daily and refuses
 to start without `OBSERVATION_STORE_URI`. It expects the repository secrets
-`OBSERVATION_STORE_URI`, `URI`, `ICECAT_USERNAME`, and `ICECAT_PASSWORD`, and
-publishes its analytics summaries with `npm run reports:publish:apply` so a run
-on one host can update the data-health console on another.
+`OBSERVATION_STORE_URI`, `URI`, `ICECAT_USERNAME`, and `ICECAT_PASSWORD`.
+
+Each run also publishes its analytics summaries with
+`npm run reports:publish:apply`. The administrator data-health console reads a
+local analytics file when one exists and otherwise falls back to the published
+copy, so a deployed API with no `data-pipeline/analytics/` directory still
+shows the results of a run that happened elsewhere.
 
 **What it handles:**
 - Normalizes inconsistent formats across vendors (`3.7 ghz` -> `3.7 GHz`, `amd` -> `AMD`, `LGA1700` -> `LGA 1700`)

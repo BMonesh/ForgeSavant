@@ -69,7 +69,9 @@ npm run lake:migrate:apply   # append-only; local files are left in place
 
 `.github/workflows/pipeline.yml` runs `pipeline:run` on a daily cron and **fails closed if `OBSERVATION_STORE_URI` is absent**. It needs secrets `OBSERVATION_STORE_URI`, `URI`, `ICECAT_USERNAME`, `ICECAT_PASSWORD`.
 
-Because the admin Data Health console reads five JSON files from the API server's local disk (`services/data-quality.service.js`), a run on any other host must also `publish_reports.py --apply`, which upserts them into `pipeline_reports`. `run_pipeline.py` appends that stage automatically when a URI is configured. **The Node service does not yet read `pipeline_reports`** — until it does, the deployed console still reads local files it does not have.
+The admin Data Health console reads five analytics summaries through `loadReport(name, filePath)` in `services/data-quality.service.js`, which tries the **local file first and falls back to the `pipeline_reports` collection**. File-first keeps a developer's own run authoritative locally; the deployed API has no `analytics/` directory, so it always falls through to whatever a run last published via `publish_reports.py --apply`. `run_pipeline.py` appends that publish stage automatically when a URI is configured.
+
+The service calls `db.isConnected()` through the module rather than destructuring it, so tests can stub the database seam. Keep it that way — destructuring captures the original reference and silently defeats the stub.
 
 ## Architecture
 
