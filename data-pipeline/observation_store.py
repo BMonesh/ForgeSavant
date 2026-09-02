@@ -366,7 +366,12 @@ class MongoObservationStore:
 
         if accepted:
             try:
-                self._collection("normalized").insert_many(accepted, ordered=False)
+                # Insert copies: pymongo stamps _id onto the dicts it is given,
+                # and these are still needed for the manifest checksum, which
+                # must match the digest the filesystem backend would produce.
+                self._collection("normalized").insert_many(
+                    [dict(record) for record in accepted], ordered=False
+                )
             except BulkWriteError as error:
                 # A concurrent run inserted the same observation first. The unique
                 # index is the arbiter; count the loser as a duplicate, not a failure.

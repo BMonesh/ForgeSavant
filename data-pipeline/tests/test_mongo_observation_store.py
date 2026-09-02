@@ -23,8 +23,26 @@ class FakeBulkWriteError(Exception):
         self.details = details
 
 
+class FakeObjectId:
+    """Stands in for bson.ObjectId, which is not JSON serializable."""
+
+    _counter = 0
+
+    def __init__(self):
+        FakeObjectId._counter += 1
+        self.value = f"fake-object-id-{FakeObjectId._counter}"
+
+    def __repr__(self):
+        return f"FakeObjectId({self.value})"
+
+
 class FakeCollection:
-    """Minimal stand-in that enforces the unique indexes the store relies on."""
+    """Minimal stand-in that enforces the unique indexes the store relies on.
+
+    Like pymongo, this stamps _id onto the caller's dicts in place. That
+    mutation is load-bearing: reusing an inserted document for the manifest
+    checksum would otherwise silently diverge from the filesystem backend.
+    """
 
     def __init__(self):
         self.documents = []
@@ -47,16 +65,22 @@ class FakeCollection:
         return True
 
     def find(self, query=None, projection=None):
+        """Honour both inclusion and exclusion projections, as pymongo does."""
         for document in self.documents:
             if not self._matches(document, query or {}):
                 continue
-            if projection:
-                included = {key for key, value in projection.items() if value and key != "_id"}
-                yield {key: value for key, value in document.items() if not included or key in included}
-            else:
+            if not projection:
                 yield dict(document)
+                continue
+            included = {key for key, value in projection.items() if value}
+            excluded = {key for key, value in projection.items() if not value}
+            yield {
+                key: value for key, value in document.items()
+                if (key in included if included else key not in excluded)
+            }
 
     def insert_one(self, document):
+        document.setdefault("_id", FakeObjectId())
         self.documents.append(dict(document))
 
     def replace_one(self, query, document, upsert=False):
@@ -74,6 +98,7 @@ class FakeCollection:
                 key in document and any(existing.get(key) == document[key] for existing in self.documents)
                 for key in self.unique_keys
             )
+            document.setdefault("_id", FakeObjectId())
             if conflict:
                 write_errors.append({"index": index, "code": 11000, "errmsg": "duplicate key"})
                 continue
