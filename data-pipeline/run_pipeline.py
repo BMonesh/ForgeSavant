@@ -64,7 +64,12 @@ def run_pipeline(
     pipeline_dir: Path = BASE_DIR,
     limit: int = 0,
     command_runner: Callable[..., subprocess.CompletedProcess] = subprocess.run,
+    publish_reports: bool | None = None,
 ) -> dict:
+    # Resolved once, here, so the stage list is a function of the arguments
+    # rather than of whatever happens to be in the environment.
+    if publish_reports is None:
+        publish_reports = bool(os.getenv("OBSERVATION_STORE_URI") or os.getenv("URI"))
     status_path = pipeline_dir / "analytics" / "pipeline_status.json"
     lock_path = pipeline_dir / "runtime" / "pipeline.lock"
     status = {
@@ -89,7 +94,7 @@ def run_pipeline(
 
     # Only meaningful once a shared database is configured. A run on a host that
     # keeps its lake locally has nothing to publish to other hosts.
-    if os.getenv("OBSERVATION_STORE_URI") or os.getenv("URI"):
+    if publish_reports:
         commands.append(
             ("publish_reports", [sys.executable, str(pipeline_dir / "publish_reports.py"), "--apply"])
         )
