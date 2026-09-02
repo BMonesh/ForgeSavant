@@ -87,6 +87,13 @@ def run_pipeline(
     if limit > 0:
         commands[0][1].extend(["--limit", str(limit)])
 
+    # Only meaningful once a shared database is configured. A run on a host that
+    # keeps its lake locally has nothing to publish to other hosts.
+    if os.getenv("OBSERVATION_STORE_URI") or os.getenv("URI"):
+        commands.append(
+            ("publish_reports", [sys.executable, str(pipeline_dir / "publish_reports.py"), "--apply"])
+        )
+
     with PipelineLock(lock_path):
         write_json_atomic(status_path, status)
         try:

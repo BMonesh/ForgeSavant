@@ -13,7 +13,7 @@ from connectors.blender_open_data import (
     match_verified_device,
 )
 from ingest_benchmark_evidence import build_benchmark_observation
-from observation_store import ObservationStore
+from observation_store import open_store
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -91,7 +91,7 @@ def ingest_blender(version: str, identity_dir: Path, lake_dir: Path, connector=N
                 "sampleCount": match.benchmark_count,
             })
 
-    result = ObservationStore(lake_dir).ingest("blender_open_data", observations) if observations else None
+    result = open_store(lake_dir).ingest("blender_open_data", observations) if observations else None
     return {
         "schemaVersion": "1.0",
         "blenderVersion": version,

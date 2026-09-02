@@ -13,7 +13,7 @@ import re
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
-from observation_store import ObservationStore, SCHEMA_VERSION, validate_observation
+from observation_store import open_store, SCHEMA_VERSION, validate_observation
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -119,7 +119,7 @@ def snapshot_database(database, lake_dir: Path) -> dict:
                         "reason": str(error),
                     })
 
-    store = ObservationStore(lake_dir)
+    store = open_store(lake_dir)
     ingestions = []
     for source, observations in sorted(grouped.items()):
         result = store.ingest(source, observations)

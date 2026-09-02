@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 from urllib.parse import urlparse
 
+from observation_store import open_store
+
 
 BASE_DIR = Path(__file__).resolve().parent
 IDENTITY_FILES = {
@@ -46,17 +48,10 @@ def _manufacturers(cleaned_dir: Path) -> dict[tuple[str, str], str]:
 
 def _observed_content(lake_dir: Path) -> dict[tuple[str, str], set[str]]:
     observed: dict[tuple[str, str], set[str]] = {}
-    normalized = lake_dir / "normalized"
-    for path in sorted(normalized.rglob("observations.jsonl")) if normalized.exists() else []:
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if not line.strip():
-                continue
-            row = json.loads(line)
-            if row.get("observation_kind") != "product_content":
-                continue
-            key = (str(row.get("catalog_category", "")), _key(row.get("manufacturer_part_number")))
-            if key[0] and key[1]:
-                observed.setdefault(key, set()).add(str(row.get("source", "")))
+    for row in open_store(lake_dir).read_observations(observation_kind="product_content"):
+        key = (str(row.get("catalog_category", "")), _key(row.get("manufacturer_part_number")))
+        if key[0] and key[1]:
+            observed.setdefault(key, set()).add(str(row.get("source", "")))
     return observed
 
 

@@ -6,9 +6,10 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
-from typing import Iterable
+from typing import Iterable, Iterator
 from urllib.parse import urlparse
 from uuid import uuid4
 
@@ -148,6 +149,12 @@ def observation_id(record: dict) -> str:
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
+def jsonl_checksum(rows: Iterable[dict]) -> str:
+    """Digest of the canonical JSONL encoding, independent of the storage backend."""
+    content = "".join(json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n" for row in rows)
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+
 def _write_jsonl(path: Path, rows: Iterable[dict]) -> str:
     content = "".join(json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n" for row in rows)
     with path.open("x", encoding="utf-8", newline="\n") as output:
@@ -162,17 +169,33 @@ class ObservationStore:
         self.root = Path(root)
 
     def _known_ids(self) -> set[str]:
-        known = set()
+        return {
+            value for record in self.read_observations()
+            if (value := record.get("observation_id"))
+        }
+
+    def read_observations(self, *, observation_kind: str | None = None) -> Iterator[dict]:
+        """Yield every accepted observation. Readers use this instead of globbing."""
         normalized = self.root / "normalized"
         if not normalized.exists():
-            return known
-        for path in normalized.rglob("observations.jsonl"):
+            return
+        for path in sorted(normalized.rglob("observations.jsonl")):
             for line in path.read_text(encoding="utf-8").splitlines():
-                if line.strip():
-                    value = json.loads(line).get("observation_id")
-                    if value:
-                        known.add(value)
-        return known
+                if not line.strip():
+                    continue
+                record = json.loads(line)
+                if observation_kind is None or record.get("observation_kind") == observation_kind:
+                    yield record
+
+    def read_runs(self) -> list[dict]:
+        """Return every ingestion manifest, oldest first."""
+        manifests = self.root / "manifests"
+        if not manifests.exists():
+            return []
+        return [
+            json.loads(path.read_text(encoding="utf-8"))
+            for path in sorted(manifests.glob("*.json"))
+        ]
 
     def ingest(self, source: str, observations: Iterable[dict], *, run_id: str | None = None) -> IngestionResult:
         received_at = datetime.now(timezone.utc)
@@ -181,25 +204,19 @@ class ObservationStore:
             raise ValueError("run_id contains unsupported characters")
 
         raw_records = [redact(dict(record)) for record in observations]
+        candidates, quarantined = partition_batch(source, raw_records)
         accepted = []
-        quarantined = []
         duplicates = 0
         known_ids = self._known_ids()
         batch_ids = set()
 
-        for index, record in enumerate(raw_records):
-            errors = validate_observation(record)
-            if record.get("source") != source:
-                errors.append("record source does not match ingestion source")
-            if errors:
-                quarantined.append({"index": index, "errors": errors, "record": record})
-                continue
-            record_id = observation_id(record)
+        for record in candidates:
+            record_id = record["observation_id"]
             if record_id in known_ids or record_id in batch_ids:
                 duplicates += 1
                 continue
             batch_ids.add(record_id)
-            accepted.append({**record, "observation_id": record_id, "ingested_at": received_at.isoformat()})
+            accepted.append({**record, "ingested_at": received_at.isoformat()})
 
         day = received_at.strftime("%Y-%m-%d")
         raw_dir = self.root / "raw" / source / day / run_id
@@ -244,3 +261,186 @@ class ObservationStore:
             quarantined=len(quarantined),
             manifest_path=str(manifest_path),
         )
+
+
+MONGO_COLLECTIONS = {
+    "normalized": "observation_records",
+    "raw": "observation_raw",
+    "quarantine": "observation_quarantine",
+    "manifests": "observation_manifests",
+}
+
+
+def new_run_id(received_at: datetime) -> str:
+    return f"{received_at.strftime('%Y%m%dT%H%M%S%fZ')}-{uuid4().hex[:8]}"
+
+
+def partition_batch(source: str, raw_records: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Split a redacted batch into (candidates with ids, quarantined)."""
+    candidates = []
+    quarantined = []
+    for index, record in enumerate(raw_records):
+        errors = validate_observation(record)
+        if record.get("source") != source:
+            errors.append("record source does not match ingestion source")
+        if errors:
+            quarantined.append({"index": index, "errors": errors, "record": record})
+            continue
+        candidates.append({**record, "observation_id": observation_id(record)})
+    return candidates, quarantined
+
+
+class MongoObservationStore:
+    """Append-only observation store backed by MongoDB.
+
+    Mirrors ObservationStore so a scheduled run on a host without the local lake
+    still deduplicates against every prior ingestion. Writes are insert-only and
+    a unique index on observation_id enforces that in the database rather than
+    trusting the caller to behave.
+    """
+
+    def __init__(self, database, *, collections: dict | None = None):
+        self.db = database
+        self.collections = {**MONGO_COLLECTIONS, **(collections or {})}
+
+    def _collection(self, key: str):
+        return self.db[self.collections[key]]
+
+    def ensure_indexes(self) -> None:
+        self._collection("normalized").create_index(
+            "observation_id", unique=True, name="observation_id_unique"
+        )
+        self._collection("normalized").create_index(
+            [("observation_kind", 1), ("catalog_category", 1)], name="kind_category"
+        )
+        self._collection("normalized").create_index("run_id", name="normalized_run")
+        self._collection("raw").create_index("run_id", name="raw_run")
+        self._collection("quarantine").create_index("run_id", name="quarantine_run")
+        self._collection("manifests").create_index("run_id", unique=True, name="manifest_run_unique")
+
+    def read_observations(self, *, observation_kind: str | None = None) -> Iterator[dict]:
+        query = {} if observation_kind is None else {"observation_kind": observation_kind}
+        yield from self._collection("normalized").find(query, {"_id": 0})
+
+    def read_runs(self) -> list[dict]:
+        return sorted(
+            self._collection("manifests").find({}, {"_id": 0}),
+            key=lambda run: (run.get("received_at", ""), run.get("run_id", "")),
+        )
+
+    def _known_ids(self) -> set[str]:
+        cursor = self._collection("normalized").find({}, {"_id": 0, "observation_id": 1})
+        return {doc["observation_id"] for doc in cursor if doc.get("observation_id")}
+
+    def _existing_ids(self, candidate_ids: list[str]) -> set[str]:
+        if not candidate_ids:
+            return set()
+        cursor = self._collection("normalized").find(
+            {"observation_id": {"$in": candidate_ids}}, {"_id": 0, "observation_id": 1}
+        )
+        return {doc["observation_id"] for doc in cursor}
+
+    def ingest(self, source: str, observations: Iterable[dict], *, run_id: str | None = None) -> IngestionResult:
+        from pymongo.errors import BulkWriteError
+
+        received_at = datetime.now(timezone.utc)
+        run_id = run_id or new_run_id(received_at)
+        if not re.fullmatch(r"[A-Za-z0-9._-]{8,96}", run_id):
+            raise ValueError("run_id contains unsupported characters")
+
+        raw_records = [redact(dict(record)) for record in observations]
+        candidates, quarantined = partition_batch(source, raw_records)
+
+        known = self._existing_ids([record["observation_id"] for record in candidates])
+        accepted = []
+        batch_ids = set()
+        duplicates = 0
+        ingested_at = received_at.isoformat()
+        for record in candidates:
+            record_id = record["observation_id"]
+            if record_id in known or record_id in batch_ids:
+                duplicates += 1
+                continue
+            batch_ids.add(record_id)
+            accepted.append({**record, "ingested_at": ingested_at, "run_id": run_id, "source": source})
+
+        if accepted:
+            try:
+                self._collection("normalized").insert_many(accepted, ordered=False)
+            except BulkWriteError as error:
+                # A concurrent run inserted the same observation first. The unique
+                # index is the arbiter; count the loser as a duplicate, not a failure.
+                write_errors = error.details.get("writeErrors", [])
+                if any(item.get("code") != 11000 for item in write_errors):
+                    raise
+                duplicates += len(write_errors)
+                accepted = [
+                    record for index, record in enumerate(accepted)
+                    if index not in {item.get("index") for item in write_errors}
+                ]
+
+        stamp = {"run_id": run_id, "source": source, "received_at": ingested_at}
+        if raw_records:
+            self._collection("raw").insert_many(
+                [{**stamp, "index": index, "record": record} for index, record in enumerate(raw_records)],
+                ordered=False,
+            )
+        if quarantined:
+            self._collection("quarantine").insert_many(
+                [{**stamp, **entry} for entry in quarantined], ordered=False
+            )
+
+        manifest = {
+            "schema_version": SCHEMA_VERSION,
+            "run_id": run_id,
+            "source": source,
+            "received_at": ingested_at,
+            "counts": {
+                "received": len(raw_records),
+                "accepted": len(accepted),
+                "duplicates": duplicates,
+                "quarantined": len(quarantined),
+            },
+            # Same canonical digests the filesystem lake records, so downstream
+            # integrity checks do not need to know which backend wrote the run.
+            "checksums": {
+                "raw": jsonl_checksum(raw_records),
+                "normalized": jsonl_checksum(accepted),
+                "quarantine": jsonl_checksum(quarantined),
+            },
+            "storage": "mongodb",
+            "collections": dict(self.collections),
+        }
+        self._collection("manifests").insert_one(dict(manifest))
+
+        return IngestionResult(
+            run_id=run_id,
+            received=len(raw_records),
+            accepted=len(accepted),
+            duplicates=duplicates,
+            quarantined=len(quarantined),
+            manifest_path=f"{self.collections['manifests']}/{run_id}",
+        )
+
+
+def open_store(lake_dir: Path, uri: str | None = None, *, client_factory=None):
+    """Return the Mongo-backed store when a URI is configured, else the local lake.
+
+    Scheduled runs must pass a URI; without durable shared state they would
+    re-accept every prior observation as new on each run.
+    """
+    uri = uri or os.getenv("OBSERVATION_STORE_URI") or ""
+    if not uri:
+        return ObservationStore(lake_dir)
+    if client_factory is None:
+        from pymongo import MongoClient
+
+        def client_factory(value):
+            return MongoClient(value, serverSelectionTimeoutMS=10000)
+
+    database = client_factory(uri).get_default_database()
+    if database is None:
+        raise ValueError("OBSERVATION_STORE_URI must include a database name")
+    store = MongoObservationStore(database)
+    store.ensure_indexes()
+    return store

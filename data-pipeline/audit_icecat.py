@@ -12,7 +12,7 @@ import re
 from dotenv import load_dotenv
 
 from connectors import IcecatAuthenticationError, OpenIcecatConnector
-from observation_store import ObservationStore
+from observation_store import open_store
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -122,7 +122,7 @@ def main() -> int:
                 "catalog_name": record["catalog_name"],
             })
             observations.append(observation)
-        ingestion = ObservationStore(LAKE_DIR).ingest("open_icecat", observations)
+        ingestion = open_store(LAKE_DIR).ingest("open_icecat", observations)
         report["ingestion"] = {
             "run_id": ingestion.run_id,
             "received": ingestion.received,

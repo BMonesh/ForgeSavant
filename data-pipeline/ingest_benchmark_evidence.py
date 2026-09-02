@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 from ingest_manufacturer_evidence import load_verified_identities
-from observation_store import ObservationStore, SCHEMA_VERSION, validate_observation
+from observation_store import open_store, SCHEMA_VERSION, validate_observation
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -99,7 +99,7 @@ def ingest_benchmarks(input_path: Path, identity_dir: Path, lake_dir: Path) -> d
         except ValueError as error:
             rejected.append({"index": index, "error": str(error)})
     ingestions = []
-    store = ObservationStore(lake_dir)
+    store = open_store(lake_dir)
     for source, records in sorted(grouped.items()):
         result = store.ingest(source, records)
         ingestions.append({

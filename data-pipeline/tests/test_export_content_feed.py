@@ -15,8 +15,9 @@ class ExportContentFeedTests(unittest.TestCase):
     def test_latest_logical_observation_supersedes_an_identity_correction(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            older = root / "2026-07-21" / "run-old" / "observations.jsonl"
-            newer = root / "2026-07-22" / "run-new" / "observations.jsonl"
+            # Mirror the real lake layout: <root>/normalized/<day>/<run>/observations.jsonl
+            older = root / "normalized" / "2026-07-21" / "run-old" / "observations.jsonl"
+            newer = root / "normalized" / "2026-07-22" / "run-new" / "observations.jsonl"
             older.parent.mkdir(parents=True)
             newer.parent.mkdir(parents=True)
             base = {

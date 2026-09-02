@@ -12,7 +12,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
-from observation_store import ObservationStore, SCHEMA_VERSION
+from observation_store import open_store, SCHEMA_VERSION
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -74,7 +74,7 @@ def snapshot_database(database, lake_dir: Path) -> dict:
             records.append(build_outcome_observation(event))
         except (TypeError, ValueError) as error:
             rejected.append({"eventId": str(event.get("_id", "")), "reason": str(error)})
-    result = ObservationStore(lake_dir).ingest("forgesavant_app", records) if records else None
+    result = open_store(lake_dir).ingest("forgesavant_app", records) if records else None
     return {
         "schemaVersion": "1.0",
         "snapshotAt": datetime.now(timezone.utc).isoformat(),
