@@ -2,9 +2,25 @@
 
 from .flipkart_affiliate import FlipkartAffiliateConnector, RetailOffer, RetailerAuthenticationError
 from .icecat import CatalogObservation, IcecatAuthenticationError, IcecatLookupResult, OpenIcecatConnector
+from .retailer_scraper import (
+    ADAPTERS,
+    AmazonIndiaAdapter,
+    CatalogTarget,
+    MDComputersAdapter,
+    RetailerPageUnavailable,
+    RobotsDisallowed,
+    ScraperSession,
+)
 
 __all__ = [
+    "ADAPTERS",
+    "AmazonIndiaAdapter",
     "CatalogObservation",
+    "CatalogTarget",
+    "MDComputersAdapter",
+    "RetailerPageUnavailable",
+    "RobotsDisallowed",
+    "ScraperSession",
     "FlipkartAffiliateConnector",
     "IcecatAuthenticationError",
     "IcecatLookupResult",

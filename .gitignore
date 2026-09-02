@@ -17,3 +17,4 @@ data-pipeline/backups/
 .ulpi/
 .stitch/
 data-pipeline/icecat_coverage_smoke_report.json
+data-pipeline/retailer_scrape_report.json

@@ -23,6 +23,7 @@ It is not a retailer and does not claim real-time prices or measured benchmark r
 - Reproducible DuckDB/Parquet warehouse, executed model-readiness notebook, monitored pipeline runs, and a protected administrator data-health console.
 - Ranked 58-product coverage queue with 44 uncovered products ready for reviewed official-manufacturer evidence and no missing official identity URLs.
 - Immutable authorized-retailer offer snapshots; seed prices without retailer item IDs are rejected from price analytics.
+- Retailer price collection from public product pages (added 2026-09-02, after the affiliate and licensed-feed routes were exhausted). Exact manufacturer-part-number matching against a published sitemap, schema.org offer parsing, robots.txt compliance, and ambiguity reported rather than guessed. Collected prices are an offer feed for signed administrator review; they cannot reach the catalog unreviewed.
 - Explicitly opt-in product analytics that records only pseudonymous saved/updated build outcomes and deletes prior events when consent is revoked.
 - Licensed benchmark ingestion contract with exact MPN matching, traceable HTTPS evidence, workload/settings context, sample count, and usage-basis validation.
 - Liveness, readiness, health, CORS, Helmet, rate limiting, request-size limits, centralized errors, and production configuration validation.
@@ -53,7 +54,7 @@ It is not a retailer and does not claim real-time prices or measured benchmark r
 
 ## External input still required
 
-1. An authorized retailer/partner CSV or JSON offer feed (or working affiliate credentials) is needed to populate live prices. Flipkart registration being unavailable does not block the rest of the product.
+1. Live prices now have a working collection route: `npm run retail:scrape:apply` currently matches 30 of 58 catalog products at mdcomputers.in with 8 reported ambiguous and 20 not listed there. Those prices remain sample until an operator reviews and applies the feed through the signed admin import, so the 0/58 live figure above is unchanged until that review happens. An authorized partner feed or affiliate credentials would still be preferable, and additional retailers are needed for full coverage.
 2. A second independent, licensed or otherwise authorized benchmark family is required before validating broader performance estimates; Blender Open Data is now the first.
 3. Production hosting accounts, final HTTPS domains, MongoDB credentials, OAuth client configuration, and deployment authorization are required before publishing.
 

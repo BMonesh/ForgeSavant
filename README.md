@@ -86,10 +86,81 @@ npm run analytics:model-readiness
 ```
 
 Start manufacturer review from the tracked
-`data-pipeline/manufacturer_evidence_template.json`; the populated
-`manufacturer_evidence_feed.json` is ignored. Retail snapshots include only
+`data-pipeline/manufacturer_evidence_template.json`, or generate a capture sheet
+for every product still missing content:
+
+```bash
+npm run catalog:coverage             # rebuild the ranked gap queue
+npm run catalog:manufacturer:scaffold  # write a ready-to-transcribe feed
+```
+
+The scaffold fills in the category, verified name, manufacturer part number, and
+the exact official URL from the identity manifest, then leaves every
+specification `null` and `observedAt` empty. It does not crawl manufacturer
+sites and never copies values from the seed catalog; a reviewer transcribes each
+value from the official page. Ingestion rejects any record whose specifications
+are still blank. Pass `--component gpus` or `--limit 5` to work in batches, and
+`--force` to regenerate over an existing sheet. The populated
+`manufacturer_evidence_feed.json` is ignored by git. Retail snapshots include only
 offers previously approved through the signed admin import flow, so seed prices
 cannot accidentally become training data.
+
+### Retailer price collection
+
+When no affiliate API or partner feed is available, prices can be read directly
+from public retailer product pages:
+
+```bash
+npm run retail:scrape          # report only; visits pages but exports nothing
+npm run retail:scrape:apply    # export the matched offers for signed admin review
+```
+
+The collector is deliberately narrow:
+
+- **Exact matching only.** A price is attached to a catalog product only when a
+  verified manufacturer part number resolves to exactly one retailer URL.
+  Matching compares whole token runs, never substrings, because `BX8071513600K`
+  is a prefix of `BX8071513600KF` and those are different processors. Products
+  listed under several URLs are reported as `ambiguous` for a human to resolve,
+  never guessed.
+- **Bounded requests.** Discovery reads one published sitemap and is matched
+  offline, so a full run costs one feed request plus one page per matched
+  product — currently 30 of 58 at mdcomputers.in — not a site crawl.
+- **robots.txt is fetched and honoured** per host, including `Crawl-delay`,
+  with a 1.5–3s delay between requests.
+- **Structured data, not selectors.** Offers are read from schema.org `Product`
+  JSON-LD that retailers publish for machines, so a theme change does not
+  silently produce wrong prices. A page without that markup is an error, never
+  a zero price.
+- **Review is still required.** Output is an offer feed for the existing signed
+  administrator preview/apply workflow. The collector never writes to MongoDB
+  and never edits compatibility specifications, so only a reviewed import can
+  mark a price live.
+
+`amazon.in` is supported only through operator-supplied ASINs via
+`--identifiers`; that adapter performs no search, browse, or crawl. Amazon's
+Conditions of Use prohibit automated data gathering regardless of what
+`robots.txt` permits, so enabling it is an explicit operator decision.
+Honouring `robots.txt` is not the same as having permission under a site's
+terms of service, and that judgement rests with the operator per site.
+
+### Shared pipeline state and scheduled runs
+
+The observation lake is gitignored, so by default it exists only on the machine
+that created it. A scheduled or deployed run starting from an empty lake would
+re-accept every prior observation as new, so set `OBSERVATION_STORE_URI` to move
+the store into MongoDB. Both steps are idempotent and dry-run by default:
+
+```bash
+npm run lake:migrate         # report what would copy
+npm run lake:migrate:apply   # append-only; the local files are left in place
+```
+
+`.github/workflows/pipeline.yml` then runs the full pipeline daily and refuses
+to start without `OBSERVATION_STORE_URI`. It expects the repository secrets
+`OBSERVATION_STORE_URI`, `URI`, `ICECAT_USERNAME`, and `ICECAT_PASSWORD`, and
+publishes its analytics summaries with `npm run reports:publish:apply` so a run
+on one host can update the data-health console on another.
 
 **What it handles:**
 - Normalizes inconsistent formats across vendors (`3.7 ghz` -> `3.7 GHz`, `amd` -> `AMD`, `LGA1700` -> `LGA 1700`)
@@ -212,7 +283,11 @@ Amazon affiliate destinations are intentionally separate from retailer price
 observations. They store only an exact catalog relationship, ASIN, and a
 generated Amazon.in URL containing the configured public Associate tag. They do
 not import Amazon titles, images, prices, availability, reviews, or
-specifications, and the application does not scrape Amazon pages.
+specifications.
+
+Price collection from retailer product pages is a separate, opt-in tool
+described under [Retailer price collection](#retailer-price-collection). It is
+not part of the affiliate feature and does not run automatically.
 
 Configure the public tag locally:
 
