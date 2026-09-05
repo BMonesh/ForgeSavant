@@ -32,11 +32,11 @@ It is not a retailer and does not claim real-time prices or measured benchmark r
 
 - 58/58 records have canonical identity keys, exact manufacturer part numbers, manufacturer evidence, and baseline price history.
 - Zero normalized duplicates, orphaned retailer mappings, or orphaned saved-build references.
-- 0/58 prices are live and 58/58 are sample values. This is intentional until an authorized retailer feed is supplied.
+- 32/58 prices are live and 26/58 remain sample values, following the first collected retailer import on 2026-09-05. The 26 are products neither retailer lists; they stay labelled as planning data.
 - 14/58 products currently have accepted Open Icecat content evidence: 6 GPUs, 3 motherboards, 3 RAM products, and 2 storage products.
 - The warehouse retains 28 immutable observation versions while its current-product view resolves them to 14 latest logical observations; correction history no longer inflates coverage.
 - The direct seed importer refuses to label data as live; only the signed partner-feed path may establish live price provenance.
-- The local price snapshot scanned 59 baseline history entries and correctly admitted zero as retailer evidence because all lack an authorized retailer item ID.
+- The price snapshot now admits 76 of 135 price-history entries as retailer evidence. The remainder are seed rows with no retailer item id and are still correctly refused.
 
 ## Data-science state
 
@@ -45,7 +45,7 @@ It is not a retailer and does not claim real-time prices or measured benchmark r
 - The warehouse now has separate product-content, retailer-price, benchmark, and consented-outcome views and Parquet extracts.
 - The warehouse contains 24 public-domain Blender Open Data aggregate observations: exact matches for all 13 processors and 11 GPUs, with source version, median score, sample count, and query evidence retained.
 - Supervised recommendations remain deliberately blocked because no user has opted in and a single benchmark family is not sufficient training evidence.
-- India price forecasting remains deliberately blocked because no authorized retailer price time series exists.
+- India price forecasting is limited rather than blocked: the warehouse now holds 76 authorized price observations across 2 retailers, but only 2 collection dates. Temporal validation needs repeated, denser histories, so no forecast is published.
 - Model-readiness gates now measure distinct retailer dates, independent benchmark sources, consented outcome dates, product coverage, and label availability before changing a modeling use from blocked.
 
 ## Release gate
