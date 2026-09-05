@@ -73,11 +73,15 @@ def load_identifier_map(path: Path | None) -> dict[str, list[str]]:
     return mapping
 
 
-def feed_row(target: CatalogTarget, offer) -> dict:
+def feed_row(target: CatalogTarget, offer, *, permits_ai_training: bool = True) -> dict:
     return {
         "name": offer.name,
         "category": target.category,
         "source": offer.source,
+        # Some retailers permit their content to be shown but not used as model
+        # training data. Recording that alongside the price keeps the two
+        # permissions from being conflated once the offer leaves this tool.
+        "ai_training_permitted": bool(permits_ai_training),
         "source_item_id": offer.source_item_id,
         # Carried so the administrator import matches on an exact identity
         # rather than on a product title.
@@ -89,6 +93,37 @@ def feed_row(target: CatalogTarget, offer) -> dict:
         "image_url": offer.image_url,
         "observed_at": offer.collected_at,
     }
+
+
+def price_disagreements(offers: list[dict], tolerance: float = 0.25) -> list[dict]:
+    """Products whose retailers disagree by more than `tolerance` of the lower price.
+
+    Two independent sources quoting the same part number is the cheapest
+    correctness check available. A wide spread usually means one side is a stale
+    out-of-stock listing or a mis-identified page, and a reviewer should see that
+    before either price is applied.
+    """
+    by_part: dict[str, list[dict]] = {}
+    for offer in offers:
+        by_part.setdefault(offer["manufacturer_part_number"], []).append(offer)
+
+    flagged = []
+    for part_number, rows in sorted(by_part.items()):
+        prices = [row["price"] for row in rows if row.get("price")]
+        if len(prices) < 2:
+            continue
+        low, high = min(prices), max(prices)
+        if low > 0 and (high - low) / low > tolerance:
+            flagged.append({
+                "manufacturerPartNumber": part_number,
+                "spread": round((high - low) / low, 3),
+                "quotes": sorted(
+                    ({"source": row["source"], "price": row["price"], "availability": row["availability"]}
+                     for row in rows),
+                    key=lambda quote: quote["price"],
+                ),
+            })
+    return sorted(flagged, key=lambda row: -row["spread"])
 
 
 def scrape_source(source: str, targets: list[CatalogTarget], session: ScraperSession) -> dict:
@@ -115,7 +150,7 @@ def scrape_source(source: str, targets: list[CatalogTarget], session: ScraperSes
         target = by_mpn[mpn]
         try:
             offer = adapter.fetch_offer(url, target, collected_at=collected_at)
-            offers.append(feed_row(target, offer))
+            offers.append(feed_row(target, offer, permits_ai_training=adapter.permits_ai_training))
         except (RobotsDisallowed, RetailerPageUnavailable) as error:
             failures.append({"manufacturerPartNumber": mpn, "url": url, "error": f"{type(error).__name__}: {error}"})
 
@@ -135,7 +170,7 @@ def scrape_source(source: str, targets: list[CatalogTarget], session: ScraperSes
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Collect live retailer prices for signed administrator review")
-    parser.add_argument("--source", action="append", default=[], choices=sorted(ADAPTERS), help="Repeatable; defaults to mdcomputers_in")
+    parser.add_argument("--source", action="append", default=[], choices=sorted(ADAPTERS), help="Repeatable; defaults to the two sitemap-discoverable retailers")
     parser.add_argument("--component", action="append", default=[], choices=sorted(IDENTITY_FILES), help="Repeatable category filter")
     parser.add_argument("--limit", type=int, default=0, help="Only attempt the first N catalog products")
     parser.add_argument("--identifiers", type=Path, help="JSON map of part numbers to retailer identifiers (ASINs)")
@@ -146,7 +181,7 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true", help="Write the offer feed; omit to report without exporting")
     args = parser.parse_args()
 
-    sources = args.source or ["mdcomputers_in"]
+    sources = args.source or ["mdcomputers_in", "primeabgb_com"]
     targets = load_targets(BASE_DIR / "verified_identity", load_identifier_map(args.identifiers))
     if args.component:
         targets = [target for target in targets if target.category in set(args.component)]
@@ -166,6 +201,10 @@ def main() -> int:
             for result in results
         ],
         "totalOffers": len(offers),
+        "productsCovered": len({row["manufacturer_part_number"] for row in offers}),
+        # Reviewer-facing: two sources disagreeing on the same part number means
+        # at least one of them should not be applied.
+        "priceDisagreements": price_disagreements(offers),
         "exported": bool(args.apply),
     }
     args.report.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

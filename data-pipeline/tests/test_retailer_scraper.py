@@ -11,6 +11,9 @@ from connectors.retailer_scraper import (  # noqa: E402
     AmazonIndiaAdapter,
     CatalogTarget,
     MDComputersAdapter,
+    PrimeABGBAdapter,
+    conflicting_identifier,
+    offer_price,
     RetailerPageUnavailable,
     RobotsDisallowed,
     ScraperSession,
@@ -20,7 +23,12 @@ from connectors.retailer_scraper import (  # noqa: E402
     parse_price,
     slug_identifiers,
 )
-from scrape_retailers import feed_row, load_identifier_map, load_targets  # noqa: E402
+from scrape_retailers import (  # noqa: E402
+    feed_row,
+    load_identifier_map,
+    load_targets,
+    price_disagreements,
+)
 
 
 def product_page(price="15100.00", availability="https://schema.org/InStock", sku="MD-SKU-1"):
@@ -296,6 +304,130 @@ class FeedTests(unittest.TestCase):
         self.assertTrue(all(target.manufacturer_part_number for target in targets))
         self.assertEqual(len(targets), 58)
 
+
+
+class PriceSpecificationTests(unittest.TestCase):
+    """A list price sitting beside the selling price must never win."""
+
+    def test_prefers_the_selling_price_over_the_list_price(self):
+        offer = {"priceSpecification": [
+            {"@type": "UnitPriceSpecification", "price": "4494", "priceCurrency": "INR"},
+            {"@type": "UnitPriceSpecification", "price": "6444", "priceCurrency": "INR",
+             "priceType": "https://schema.org/ListPrice"},
+        ]}
+        self.assertEqual(offer_price(offer), (4494.0, "INR"))
+
+    def test_ignores_list_price_ordering(self):
+        offer = {"priceSpecification": [
+            {"price": "6444", "priceCurrency": "INR", "priceType": "https://schema.org/ListPrice"},
+            {"price": "4494", "priceCurrency": "INR"},
+        ]}
+        self.assertEqual(offer_price(offer)[0], 4494.0)
+
+    def test_a_direct_price_still_wins(self):
+        self.assertEqual(offer_price({"price": "999", "priceCurrency": "INR"}), (999.0, "INR"))
+
+    def test_a_single_specification_object_is_accepted(self):
+        self.assertEqual(offer_price({"priceSpecification": {"price": "150", "priceCurrency": "INR"}})[0], 150.0)
+
+    def test_an_offer_with_only_a_list_price_yields_nothing(self):
+        offer = {"priceSpecification": [{"price": "6444", "priceType": "https://schema.org/ListPrice"}]}
+        self.assertEqual(offer_price(offer), (None, ""))
+
+
+class ConflictingIdentifierTests(unittest.TestCase):
+    """The page's own data is a second opinion on what the slug claims."""
+
+    def test_flags_a_sibling_part_number(self):
+        product = {"name": "Seagate 2TB Barracuda ST2000DM004 256MB", "sku": "ST2000DM004", "mpn": ""}
+        self.assertEqual(conflicting_identifier("ST2000DM008", product), "st2000dm004")
+
+    def test_flags_a_suffixed_variant(self):
+        product = {"name": "Intel Core i5-13600KF", "sku": "BX8071513600KF", "mpn": ""}
+        self.assertEqual(conflicting_identifier("BX8071513600K", product), "bx8071513600kf")
+
+    def test_a_page_confirming_the_part_number_is_not_a_conflict(self):
+        product = {"name": "AMD Ryzen 5 5600X", "sku": "100-100000065BOX", "mpn": ""}
+        self.assertIsNone(conflicting_identifier("100-100000065BOX", product))
+
+    def test_a_descriptive_sku_is_not_treated_as_a_conflict(self):
+        """Absence of confirmation must not discard an otherwise good offer."""
+        product = {"name": "Seagate Barracuda 2TB 7200 RPM Hard Drive", "sku": "SEAGATE-BARRACUDA-2TB-7200", "mpn": ""}
+        self.assertIsNone(conflicting_identifier("ST2000DM008", product))
+
+    def test_a_model_name_part_number_is_confirmed_by_the_title(self):
+        product = {"name": "Gigabyte B450M S2H Motherboard", "sku": "B450M S2H", "mpn": ""}
+        self.assertIsNone(conflicting_identifier("B450M-S2H", product))
+
+    def test_fetch_offer_refuses_a_page_that_identifies_itself_differently(self):
+        url = "https://www.primeabgb.com/online-price-reviews-india/seagate-st2000dm008/"
+        page = (
+            '<script type="application/ld+json">'
+            + json.dumps({"@type": "Product", "name": "Seagate 2TB Barracuda ST2000DM004",
+                          "sku": "ST2000DM004",
+                          "offers": {"price": "5399", "priceCurrency": "INR"}})
+            + "</script>"
+        )
+        _, session = build_session({url: page})
+        target = CatalogTarget("storage", "Seagate Barracuda 2TB", "ST2000DM008")
+        with self.assertRaisesRegex(RetailerPageUnavailable, "identifies itself as st2000dm004"):
+            PrimeABGBAdapter(session).fetch_offer(url, target, collected_at="2026-09-02T00:00:00+00:00")
+
+
+class PrimeABGBAdapterTests(unittest.TestCase):
+    INDEX = "https://www.primeabgb.com/sitemap_index.xml"
+
+    def _index(self, *sitemaps):
+        return "<sitemapindex>" + "".join(f"<sitemap><loc>{s}</loc></sitemap>" for s in sitemaps) + "</sitemapindex>"
+
+    def _sitemap(self, *slugs):
+        base = "https://www.primeabgb.com/online-price-reviews-india"
+        return "<urlset>" + "".join(f"<url><loc>{base}/{s}/</loc></url>" for s in slugs) + "</urlset>"
+
+    def test_follows_the_sitemap_index_to_the_product_sitemaps(self):
+        one = "https://www.primeabgb.com/product-sitemap.xml"
+        pages = {
+            self.INDEX: self._index(one, "https://www.primeabgb.com/post-sitemap.xml"),
+            one: self._sitemap("msi-mpg-z790-edge-wifi-ddr5-intel-motherboard"),
+        }
+        http, session = build_session(pages)
+        discovery = PrimeABGBAdapter(session).discover(
+            [CatalogTarget("motherboards", "MSI MPG Z790 EDGE WIFI", "MPG-Z790-EDGE-WIFI")]
+        )
+        self.assertIn("MPG-Z790-EDGE-WIFI", discovery.matches)
+        # The post sitemap is not a product sitemap and must not be fetched.
+        self.assertNotIn("https://www.primeabgb.com/post-sitemap.xml", http.requested)
+
+    def test_declares_that_its_content_may_not_train_a_model(self):
+        """robots.txt carries Content-Signal: ai-train=no."""
+        self.assertFalse(PrimeABGBAdapter.permits_ai_training)
+        self.assertTrue(MDComputersAdapter.permits_ai_training)
+
+
+class PriceDisagreementTests(unittest.TestCase):
+    def _offer(self, source, price, part="ST2000DM008"):
+        return {"manufacturer_part_number": part, "source": source, "price": price, "availability": "in_stock"}
+
+    def test_flags_a_wide_spread_between_retailers(self):
+        flagged = price_disagreements([self._offer("a", 13770.0), self._offer("b", 5399.0)])
+        self.assertEqual(len(flagged), 1)
+        self.assertEqual(flagged[0]["quotes"][0]["price"], 5399.0)
+
+    def test_ignores_ordinary_variation(self):
+        self.assertEqual(price_disagreements([self._offer("a", 15999.0), self._offer("b", 17524.0)]), [])
+
+    def test_ignores_a_product_only_one_retailer_lists(self):
+        self.assertEqual(price_disagreements([self._offer("a", 100.0)]), [])
+
+    def test_carries_the_training_permission_into_the_feed(self):
+        from connectors.retailer_scraper import RetailOffer
+
+        offer = RetailOffer(
+            source_item_id="X", name="X", price=1.0, currency="INR", availability="in_stock",
+            source="primeabgb_com", source_url="https://x", image_url="", collected_at="2026-09-02T00:00:00+00:00",
+        )
+        row = feed_row(CatalogTarget("storage", "X", "X-1"), offer, permits_ai_training=False)
+        self.assertIs(row["ai_training_permitted"], False)
 
 if __name__ == "__main__":
     unittest.main()

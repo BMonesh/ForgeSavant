@@ -45,7 +45,7 @@ ForgeSavant/
 ├── data-pipeline/          # Python data processing pipeline
 │   ├── raw_data/           # Scraped CSVs from vendor sources
 │   ├── cleaned_data/       # Normalized, deduplicated CSVs
-│   ├── scraper.py          # Web scraper with rate limiting
+│   ├── scrape_retailers.py # Retailer price collection (exact-match, robots-aware)
 │   ├── data_cleaner.py     # Pandas-based cleaning & normalization
 │   ├── compatibility_engine.py  # Rule-based hardware validation
 │   └── import_to_mongo.py  # CSV -> MongoDB document importer
@@ -123,15 +123,28 @@ The collector is deliberately narrow:
   is a prefix of `BX8071513600KF` and those are different processors. Products
   listed under several URLs are reported as `ambiguous` for a human to resolve,
   never guessed.
-- **Bounded requests.** Discovery reads one published sitemap and is matched
-  offline, so a full run costs one feed request plus one page per matched
-  product — currently 30 of 58 at mdcomputers.in — not a site crawl.
+- **Bounded requests.** Discovery reads published sitemaps and is matched
+  offline, so a full run costs a few feed requests plus one page per matched
+  product — currently 32 of 58 products across mdcomputers.in and
+  primeabgb.com — not a site crawl.
 - **robots.txt is fetched and honoured** per host, including `Crawl-delay`,
   with a 1.5–3s delay between requests.
 - **Structured data, not selectors.** Offers are read from schema.org `Product`
   JSON-LD that retailers publish for machines, so a theme change does not
   silently produce wrong prices. A page without that markup is an error, never
-  a zero price.
+  a zero price. Where an offer carries several `priceSpecification` entries the
+  selling price is taken and the list price discarded.
+- **The page must agree with its own URL.** A slug is the retailer's claim about
+  which product a page is; the page's structured data is a second, independent
+  claim. When they conflict the offer is rejected — primeabgb.com publishes a
+  Seagate ST2000DM004 under a slug ending `st2000dm008`, and trusting the slug
+  would have attached that price to the wrong drive.
+- **Retailers are cross-checked.** Where two sources quote the same part number,
+  a spread wider than 25% is reported for review rather than silently applied.
+- **Display and training are separate permissions.** primeabgb.com's robots.txt
+  declares `Content-Signal: ai-train=no`, so its offers are exported with
+  `ai_training_permitted: false`. Those prices may be shown but must not become
+  model training data.
 - **Review is still required.** Output is an offer feed for the existing signed
   administrator preview/apply workflow. The collector never writes to MongoDB
   and never edits compatibility specifications, so only a reviewed import can

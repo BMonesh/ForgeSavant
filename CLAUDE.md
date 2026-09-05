@@ -41,11 +41,14 @@ The owner lifted the previous no-scraping rule on 2026-09-02, after the affiliat
 
 - **Manufacturer specifications are still never crawled.** `ingest_manufacturer_evidence.py` and `scaffold_manufacturer_evidence.py` say so in their docstrings and still mean it. Specs come from human transcription of official pages; the scraper only reads prices.
 - **Exact matching only.** Attribution requires a verified MPN resolving to exactly one URL, compared on whole token runs via `slug_identifiers()`. Never reintroduce substring matching — `BX8071513600K` is a prefix of `BX8071513600KF`, a different CPU. Multiple candidates go to `Discovery.ambiguous` for a human, never a guess.
-- **Prices come from schema.org JSON-LD**, not CSS selectors. A page without `Product` markup raises `RetailerPageUnavailable`; it must never degrade to a zero or partial price.
+- **Prices come from schema.org JSON-LD**, not CSS selectors. A page without `Product` markup raises `RetailerPageUnavailable`; it must never degrade to a zero or partial price. `offer_price()` discards `ListPrice`-typed `priceSpecification` entries — taking the wrong one would overstate every price from that retailer.
+- **The page must corroborate its own URL.** `conflicting_identifier()` rejects an offer whose structured data names a near-identical competing part number (sibling SKU or suffixed variant). Absence of confirmation is *not* a conflict — many pages carry a purely descriptive `sku`, and rejecting those would discard good offers. This caught primeabgb.com serving a Seagate ST2000DM004 under an `st2000dm008` slug.
+- **`price_disagreements()`** flags a >25% spread between retailers quoting the same MPN. Two independent sources are the cheapest correctness check available; don't remove it when adding a third retailer.
+- **Display and training are distinct permissions.** `RetailerAdapter.permits_ai_training` reflects the site's declared Content-Signal (primeabgb.com sends `ai-train=no`) and rides into the feed as `ai_training_permitted`. Anything feeding a price model must respect it.
 - **Review is still mandatory.** The scraper writes an offer feed for the signed admin preview/apply path. It never touches MongoDB and never edits compatibility specs. Do not add a path that lets collected prices reach the catalog unreviewed.
 - **`amazon.in` does no discovery.** `AmazonIndiaAdapter` only visits `/dp/{asin}` for operator-supplied ASINs. Amazon's Conditions of Use forbid automated data gathering regardless of robots.txt, so it must not gain search or crawl behaviour.
 - **robots.txt is honoured** per host including `Crawl-delay`. It is a floor, not proof of permission under a site's ToS.
-- `data-pipeline/scraper.py` is **dead legacy code** — a generic HTML scraper whose selectors target long-dead Flipkart class names. `retailer_scraper.py` supersedes it.
+- `data-pipeline/scraper.py` was deleted; `retailer_scraper.py` replaces it. `sync_retailer.py` (Flipkart affiliate) is vestigial — it has no credentials and the programme is closed to new registrations.
 
 Consequences worth knowing before proposing a source:
 
