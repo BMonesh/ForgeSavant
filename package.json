@@ -25,6 +25,7 @@
     "catalog:icecat:audit": "python data-pipeline/audit_icecat.py --component all",
     "catalog:icecat:ingest": "python data-pipeline/audit_icecat.py --component all --ingest",
     "catalog:coverage": "python data-pipeline/build_coverage_queue.py",
+    "catalog:candidates": "python data-pipeline/discover_catalog_candidates.py",
     "catalog:manufacturer:scaffold": "python data-pipeline/scaffold_manufacturer_evidence.py",
     "catalog:manufacturer:ingest": "python data-pipeline/ingest_manufacturer_evidence.py --input data-pipeline/manufacturer_evidence_feed.json",
     "benchmarks:ingest": "python data-pipeline/ingest_benchmark_evidence.py --input data-pipeline/benchmark_evidence_feed.json",

@@ -180,7 +180,13 @@ def extract_product_offer(html: str) -> dict | None:
             "name": str(node.get("name") or "").strip(),
             "sku": str(node.get("sku") or "").strip(),
             "mpn": str(node.get("mpn") or "").strip(),
-            "gtin": str(node.get("gtin13") or node.get("gtin") or node.get("gtin12") or "").strip(),
+            # gtin8 is included because mdcomputers.in publishes that variant.
+            "gtin": str(
+                node.get("gtin13") or node.get("gtin") or node.get("gtin12") or node.get("gtin8") or ""
+            ).strip(),
+            "brand": str(
+                (node.get("brand") or {}).get("name") if isinstance(node.get("brand"), dict) else (node.get("brand") or "")
+            ).strip(),
             "price": price,
             "currency": currency or str(offers.get("priceCurrency") or "INR").strip().upper(),
             "availability": normalize_availability(offers.get("availability")),
