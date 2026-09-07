@@ -10,6 +10,10 @@ const BuildStatusDock = ({
   canContinue,
   isReview,
   onContinue,
+  onSave,
+  saveState,
+  sourceSaveId,
+  message,
 }) => {
   const evidenceById = Object.fromEntries((compatibility?.checks || []).map((check) => [check.id, check]));
   const checks = [
@@ -48,7 +52,24 @@ const BuildStatusDock = ({
         >
           Continue <FiChevronRight aria-hidden="true" />
         </button>
-      ) : <span className="dock-review-ready" role="status">Ready to review</span>}
+      ) : (
+        // This slot held a status label styled exactly like the Continue
+        // button, so on the last step it invited a click and did nothing while
+        // the real Save control sat below the fold. It now carries the primary
+        // action, and the save message with it, because a dock pinned to the
+        // viewport is the one place feedback is guaranteed to be visible.
+        <button
+          type="button"
+          className="dock-continue"
+          onClick={onSave}
+          disabled={saveState === "saving" || compatibilityStatus !== "ready" || compatibility?.status !== "compatible"}
+        >
+          {saveState === "saving" ? "Saving" : sourceSaveId ? "Update build" : "Save build"}
+        </button>
+      )}
+      {isReview && message ? (
+        <p className="dock-message" role={saveState === "error" ? "alert" : "status"}>{message}</p>
+      ) : null}
     </footer>
   );
 };

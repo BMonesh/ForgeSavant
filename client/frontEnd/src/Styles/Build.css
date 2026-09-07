@@ -450,6 +450,17 @@
 
 .dock-continue:disabled { border-color: var(--color-border); background: var(--color-elevated); color: var(--color-subtle); cursor: not-allowed; }
 .dock-review-ready { border-color: var(--color-success); background: var(--color-success); }
+/* Save feedback belongs in the dock: it is the only region pinned to the
+   viewport, so a message rendered further up the review page is unreadable. */
+.dock-message {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 6px 14px 10px;
+  color: var(--color-muted);
+  font-family: var(--font-utility);
+  font-size: 0.72rem;
+}
+.dock-message[role="alert"] { color: var(--color-warning); }
 
 .rail-step:focus-visible,
 .component-row:focus-visible,
