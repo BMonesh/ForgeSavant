@@ -141,6 +141,21 @@ The collector is deliberately narrow:
   would have attached that price to the wrong drive.
 - **Retailers are cross-checked.** Where two sources quote the same part number,
   a spread wider than 25% is reported for review rather than silently applied.
+- **Ambiguity is settled by a person, not a heuristic.** A part number listed
+  under several URLs is usually a variant pair — a `B550M-A` beside a
+  `B550M-A WIFI II`. Run `--inspect-ambiguous` to fetch each candidate so the
+  report shows the retailer's own title and price next to the verified catalog
+  name, then record the choice in a file and pass it as `--resolutions`:
+
+  ```json
+  [{ "manufacturerPartNumber": "PRIME-B550M-A",
+     "url": "https://mdcomputers.in/product/asus-prime-b550m-a-motherboard" }]
+  ```
+
+  A part number can be ambiguous at more than one retailer, so list a URL for
+  each; a retailer resolves only when exactly one of its own candidates appears.
+  The chosen page still has to corroborate the part number before its price is
+  used, so a wrong choice is refused rather than trusted.
 - **Display and training are separate permissions.** primeabgb.com's robots.txt
   declares `Content-Signal: ai-train=no`, so its offers are exported with
   `ai_training_permitted: false`. Those prices may be shown but must not become

@@ -73,6 +73,75 @@ def load_identifier_map(path: Path | None) -> dict[str, list[str]]:
     return mapping
 
 
+def load_resolutions(path: Path | None) -> dict[str, set[str]]:
+    """Read the product URLs an operator chose, keyed by manufacturer part number.
+
+    A part number listed under several URLs is ambiguous by design and is never
+    guessed. This is how a human records the decision once so later runs can act
+    on it, mirroring how amazon.in takes operator-supplied ASINs. The chosen page
+    still has to corroborate the part number before its price is used.
+
+    A part number can be ambiguous at more than one retailer, so each maps to a
+    set of URLs; a retailer resolves only when exactly one of its own candidates
+    appears in that set, which keeps one retailer's choice from being applied to
+    another's listing.
+    """
+    if path is None:
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    rows = payload.get("records", payload) if isinstance(payload, dict) else payload
+    resolutions: dict[str, set[str]] = {}
+    for row in rows:
+        mpn = str(row.get("manufacturerPartNumber") or row.get("manufacturer_part_number") or "").strip()
+        url = str(row.get("url") or row.get("source_url") or "").strip()
+        if mpn and url.startswith("https://"):
+            resolutions.setdefault(mpn.upper(), set()).add(url)
+    return resolutions
+
+
+def inspect_candidates(
+    adapter,
+    ambiguous: dict[str, list[str]],
+    by_mpn: dict[str, CatalogTarget] | None = None,
+) -> dict[str, dict]:
+    """Fetch each ambiguous candidate so an operator can choose from real data.
+
+    Opt-in, because it costs one request per candidate. Reading the pages is the
+    only way to tell an i7-13700K listing from the KF sitting beside it when both
+    slugs carry the same part number.
+    """
+    from connectors.retailer_scraper import extract_product_offer
+
+    by_mpn = by_mpn or {}
+    inspected: dict[str, dict] = {}
+    for mpn, urls in sorted(ambiguous.items()):
+        rows = []
+        for url in urls:
+            entry = {"url": url}
+            try:
+                product = extract_product_offer(adapter.session.get(url))
+                if product:
+                    entry.update({
+                        "name": product["name"],
+                        "sku": product["sku"],
+                        "price": product["price"],
+                        "availability": product["availability"],
+                    })
+                else:
+                    entry["error"] = "no schema.org Product offer"
+            except (RobotsDisallowed, RetailerPageUnavailable) as error:
+                entry["error"] = f"{type(error).__name__}: {error}"
+            rows.append(entry)
+        target = by_mpn.get(mpn)
+        inspected[mpn] = {
+            # The verified catalog name is what the operator matches against;
+            # the variants differ by a WIFI or DDR4 suffix the slug does not carry.
+            "catalogName": target.name if target else "",
+            "candidates": rows,
+        }
+    return inspected
+
+
 def feed_row(target: CatalogTarget, offer, *, permits_ai_training: bool = True) -> dict:
     return {
         "name": offer.name,
@@ -126,9 +195,17 @@ def price_disagreements(offers: list[dict], tolerance: float = 0.25) -> list[dic
     return sorted(flagged, key=lambda row: -row["spread"])
 
 
-def scrape_source(source: str, targets: list[CatalogTarget], session: ScraperSession) -> dict:
+def scrape_source(
+    source: str,
+    targets: list[CatalogTarget],
+    session: ScraperSession,
+    *,
+    resolutions: dict[str, set[str]] | None = None,
+    inspect_ambiguous: bool = False,
+) -> dict:
     adapter = ADAPTERS[source](session)
     by_mpn = {target.manufacturer_part_number: target for target in targets}
+    resolutions = resolutions or {}
 
     try:
         discovery = adapter.discover(targets)
@@ -138,15 +215,31 @@ def scrape_source(source: str, targets: list[CatalogTarget], session: ScraperSes
             "status": "failed",
             "error": f"{type(error).__name__}: {error}",
             "offers": [],
+            "resolvedByOperator": [],
             "ambiguous": {},
             "notListed": sorted(by_mpn),
             "failures": [],
         }
 
+    # An operator's recorded choice settles an ambiguity; the chosen page must
+    # still corroborate the part number in fetch_offer before it is used.
+    matches = dict(discovery.matches)
+    ambiguous = dict(discovery.ambiguous)
+    resolved = []
+    for mpn in list(ambiguous):
+        chosen = resolutions.get(mpn.upper(), set()) & set(ambiguous[mpn])
+        # Exactly one of this retailer's candidates must be chosen. Two would be
+        # a contradictory instruction, and zero means the operator resolved this
+        # part number at a different retailer.
+        if len(chosen) == 1:
+            matches[mpn] = chosen.pop()
+            ambiguous.pop(mpn)
+            resolved.append(mpn)
+
     offers = []
     failures = []
     collected_at = utc_now()
-    for mpn, url in sorted(discovery.matches.items()):
+    for mpn, url in sorted(matches.items()):
         target = by_mpn[mpn]
         try:
             offer = adapter.fetch_offer(url, target, collected_at=collected_at)
@@ -154,18 +247,22 @@ def scrape_source(source: str, targets: list[CatalogTarget], session: ScraperSes
         except (RobotsDisallowed, RetailerPageUnavailable) as error:
             failures.append({"manufacturerPartNumber": mpn, "url": url, "error": f"{type(error).__name__}: {error}"})
 
-    resolved = set(discovery.matches) | set(discovery.ambiguous)
-    return {
+    seen = set(matches) | set(ambiguous)
+    result = {
         "source": source,
         "status": "succeeded",
         "offers": offers,
-        "discovered": len(discovery.matches),
+        "discovered": len(matches),
+        "resolvedByOperator": sorted(resolved),
         # Listed under several URLs: actionable, needs a human decision.
-        "ambiguous": discovery.ambiguous,
+        "ambiguous": ambiguous,
         # Not listed at this retailer at all: nothing to do.
-        "notListed": sorted(set(by_mpn) - resolved),
+        "notListed": sorted(set(by_mpn) - seen),
         "failures": failures,
     }
+    if inspect_ambiguous and ambiguous:
+        result["ambiguousCandidates"] = inspect_candidates(adapter, ambiguous, by_mpn)
+    return result
 
 
 def main() -> int:
@@ -174,6 +271,8 @@ def main() -> int:
     parser.add_argument("--component", action="append", default=[], choices=sorted(IDENTITY_FILES), help="Repeatable category filter")
     parser.add_argument("--limit", type=int, default=0, help="Only attempt the first N catalog products")
     parser.add_argument("--identifiers", type=Path, help="JSON map of part numbers to retailer identifiers (ASINs)")
+    parser.add_argument("--resolutions", type=Path, help="JSON map of part numbers to an operator-chosen product URL")
+    parser.add_argument("--inspect-ambiguous", action="store_true", help="Fetch each ambiguous candidate so the report shows what to choose between")
     parser.add_argument("--output", type=Path, default=FEED_PATH)
     parser.add_argument("--report", type=Path, default=REPORT_PATH)
     parser.add_argument("--min-delay", type=float, default=1.5)
@@ -189,7 +288,11 @@ def main() -> int:
         targets = targets[: args.limit]
 
     session = ScraperSession(min_delay=args.min_delay, max_delay=args.max_delay)
-    results = [scrape_source(source, targets, session) for source in sources]
+    resolutions = load_resolutions(args.resolutions)
+    results = [
+        scrape_source(source, targets, session, resolutions=resolutions, inspect_ambiguous=args.inspect_ambiguous)
+        for source in sources
+    ]
 
     offers = [row for result in results for row in result["offers"]]
     report = {

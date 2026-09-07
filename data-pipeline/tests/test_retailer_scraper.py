@@ -26,8 +26,10 @@ from connectors.retailer_scraper import (  # noqa: E402
 from scrape_retailers import (  # noqa: E402
     feed_row,
     load_identifier_map,
+    load_resolutions,
     load_targets,
     price_disagreements,
+    scrape_source,
 )
 
 
@@ -428,6 +430,102 @@ class PriceDisagreementTests(unittest.TestCase):
         )
         row = feed_row(CatalogTarget("storage", "X", "X-1"), offer, permits_ai_training=False)
         self.assertIs(row["ai_training_permitted"], False)
+
+
+class OperatorResolutionTests(unittest.TestCase):
+    """An ambiguous part number is settled by a recorded human choice, never a guess."""
+
+    SITEMAP = "https://mdcomputers.in/feed_products.xml"
+    PLAIN = "https://mdcomputers.in/product/asus-prime-b550m-a-motherboard"
+    WIFI = "https://mdcomputers.in/product/asus-prime-b550m-a-wifi-motherboard"
+
+    def _pages(self, offer_page=None):
+        locs = "".join(
+            f"<url><loc><![CDATA[{url}]]></loc></url>" for url in (self.PLAIN, self.WIFI)
+        )
+        pages = {self.SITEMAP: f"<urlset>{locs}</urlset>"}
+        if offer_page:
+            pages[self.PLAIN] = offer_page
+        return pages
+
+    def _targets(self):
+        return [CatalogTarget("motherboards", "ASUS PRIME B550M-A", "PRIME-B550M-A")]
+
+    def _resolution_file(self, *urls):
+        import tempfile
+
+        directory = tempfile.mkdtemp()
+        path = Path(directory) / "resolutions.json"
+        path.write_text(
+            json.dumps([{"manufacturerPartNumber": "PRIME-B550M-A", "url": url} for url in urls]),
+            encoding="utf-8",
+        )
+        return path
+
+    def test_loads_urls_grouped_by_part_number(self):
+        path = self._resolution_file(self.PLAIN, self.WIFI)
+        self.assertEqual(load_resolutions(path), {"PRIME-B550M-A": {self.PLAIN, self.WIFI}})
+
+    def test_without_a_resolution_the_product_stays_ambiguous(self):
+        _, session = build_session(self._pages())
+        result = scrape_source("mdcomputers_in", self._targets(), session)
+        self.assertIn("PRIME-B550M-A", result["ambiguous"])
+        self.assertEqual(result["offers"], [])
+
+    def test_a_recorded_choice_resolves_the_part_number(self):
+        page = (
+            '<script type="application/ld+json">'
+            + json.dumps({"@type": "Product", "name": "Asus Prime B550M-A Motherboard",
+                          "sku": "ASUS PRIME B550M-A",
+                          "offers": {"price": "9250", "priceCurrency": "INR",
+                                     "availability": "https://schema.org/InStock"}})
+            + "</script>"
+        )
+        _, session = build_session(self._pages(page))
+        result = scrape_source(
+            "mdcomputers_in", self._targets(), session,
+            resolutions={"PRIME-B550M-A": {self.PLAIN}},
+        )
+        self.assertEqual(result["resolvedByOperator"], ["PRIME-B550M-A"])
+        self.assertNotIn("PRIME-B550M-A", result["ambiguous"])
+        self.assertEqual(result["offers"][0]["price"], 9250.0)
+        self.assertEqual(result["offers"][0]["source_url"], self.PLAIN)
+
+    def test_choosing_both_candidates_is_contradictory_and_resolves_nothing(self):
+        _, session = build_session(self._pages())
+        result = scrape_source(
+            "mdcomputers_in", self._targets(), session,
+            resolutions={"PRIME-B550M-A": {self.PLAIN, self.WIFI}},
+        )
+        self.assertIn("PRIME-B550M-A", result["ambiguous"])
+        self.assertEqual(result["resolvedByOperator"], [])
+
+    def test_a_choice_made_at_another_retailer_does_not_resolve_this_one(self):
+        _, session = build_session(self._pages())
+        result = scrape_source(
+            "mdcomputers_in", self._targets(), session,
+            resolutions={"PRIME-B550M-A": {"https://www.primeabgb.com/online-price-reviews-india/asus-prime-b550m-a/"}},
+        )
+        self.assertIn("PRIME-B550M-A", result["ambiguous"])
+        self.assertEqual(result["resolvedByOperator"], [])
+
+    def test_a_resolved_page_that_names_another_product_is_still_refused(self):
+        """The recorded choice does not bypass the corroboration check."""
+        page = (
+            '<script type="application/ld+json">'
+            + json.dumps({"@type": "Product", "name": "Asus Prime B550M-E Motherboard",
+                          "sku": "PRIME-B550M-E",
+                          "offers": {"price": "9250", "priceCurrency": "INR"}})
+            + "</script>"
+        )
+        _, session = build_session(self._pages(page))
+        result = scrape_source(
+            "mdcomputers_in", self._targets(), session,
+            resolutions={"PRIME-B550M-A": {self.PLAIN}},
+        )
+        self.assertEqual(result["offers"], [])
+        self.assertEqual(len(result["failures"]), 1)
+        self.assertIn("identifies itself as", result["failures"][0]["error"])
 
 if __name__ == "__main__":
     unittest.main()
