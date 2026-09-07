@@ -5,18 +5,21 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import Login from "./Login";
 import api from "../services/api";
 import { SessionProvider } from "../auth/SessionContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 vi.mock("../services/api", () => ({ default: { post: vi.fn() } }));
 
 const renderLogin = () => render(
-  <SessionProvider>
+  <GoogleOAuthProvider clientId="test-client-id">
+    <SessionProvider>
     <MemoryRouter initialEntries={["/login"]}>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/build" element={<h1>Builder route</h1>} />
       </Routes>
     </MemoryRouter>
-  </SessionProvider>
+    </SessionProvider>
+  </GoogleOAuthProvider>
 );
 
 describe("Login", () => {
