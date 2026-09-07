@@ -469,12 +469,29 @@ class MongoObservationStore:
         )
 
 
+def load_project_env() -> None:
+    """Populate the environment from the project .env, as the CLI scripts expect.
+
+    Every entry point here is a script rather than a library import, and the
+    older ones each call load_dotenv in main(). Doing it at the point of use as
+    well means a caller cannot silently fall back to the local lake merely
+    because it forgot that line. Variables already set always win.
+    """
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        return
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
+
 def open_store(lake_dir: Path, uri: str | None = None, *, client_factory=None):
     """Return the Mongo-backed store when a URI is configured, else the local lake.
 
     Scheduled runs must pass a URI; without durable shared state they would
     re-accept every prior observation as new on each run.
     """
+    if not uri and not os.getenv("OBSERVATION_STORE_URI"):
+        load_project_env()
     uri = uri or os.getenv("OBSERVATION_STORE_URI") or ""
     if not uri:
         return ObservationStore(lake_dir)

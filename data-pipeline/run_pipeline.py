@@ -14,6 +14,8 @@ import time
 from typing import Callable
 
 
+from observation_store import load_project_env
+
 BASE_DIR = Path(__file__).resolve().parent
 SECRET_PATTERNS = (
     (re.compile(r"(mongodb(?:\+srv)?://[^:\s]+:)[^@\s]+", re.IGNORECASE), r"\1[REDACTED]"),
@@ -142,6 +144,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run catalog, retail-offer, and analytics stages with locking and health reporting")
     parser.add_argument("--limit", type=int, default=0, help="Limit Open Icecat lookups; zero runs the full catalog")
     args = parser.parse_args()
+    load_project_env()
     status = run_pipeline(limit=args.limit)
     print(json.dumps(status, indent=2, ensure_ascii=False))
     return 0 if status["status"] == "succeeded" else 1

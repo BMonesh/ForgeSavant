@@ -19,6 +19,9 @@ import os
 from pathlib import Path
 
 
+from observation_store import load_project_env
+
+
 BASE_DIR = Path(__file__).resolve().parent
 COLLECTION = "pipeline_reports"
 
@@ -78,6 +81,7 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true", help="Write the reports; omit for a dry run")
     args = parser.parse_args()
 
+    load_project_env()
     uri = args.uri or os.getenv("OBSERVATION_STORE_URI") or os.getenv("URI")
     if not uri:
         raise SystemExit("A MongoDB URI is required through --uri, OBSERVATION_STORE_URI, or URI")
