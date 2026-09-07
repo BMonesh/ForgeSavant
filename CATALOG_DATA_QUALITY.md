@@ -16,7 +16,7 @@ The catalog now contains 58 canonical records across seven hardware categories. 
 | Retailer mappings with orphan references | 0 | 0 | Passed |
 | Manufacturer part numbers | 0 / 59 | 58 / 58 | All exact retail products manufacturer-verified |
 | Records with source and observation timestamp | 0 / 59 | 0 / 58 | Missing upstream observation times |
-| Live retailer prices | 0 / 59 | 0 / 58 | No authorized feed imported yet |
+| Live retailer prices | 0 / 59 | 32 / 58 | Collected from mdcomputers.in and primeabgb.com, applied through the signed admin import on 2026-09-05 |
 | Products with reviewed content evidence | 0 / 59 | 14 / 58 | Exact-MPN Open Icecat promotion applied |
 | Current evidence with complete identity | — | 14 / 14 | Passed |
 | Current evidence with image | — | 14 / 14 | Passed |

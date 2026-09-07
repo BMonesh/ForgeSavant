@@ -392,6 +392,10 @@ const Build = () => {
         canContinue={isStepSelected(selection, currentStepId)}
         isReview={currentStepId === "review"}
         onContinue={handleContinue}
+        onSave={handleSave}
+        saveState={saveState}
+        sourceSaveId={sourceSaveId}
+        message={message}
       />
     </div>
   );

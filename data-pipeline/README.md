@@ -7,9 +7,9 @@ Python-based data processing pipeline that cleans, validates, and imports hardwa
 ```
 raw_data/ (scraped CSVs)
     │
+    ├── scrape_retailers.py → Collects live retailer prices for signed review
     ├── sync_retailer.py    → Exports approved API results for signed review
-    ├── connectors/         → Source-specific authenticated API clients
-    ├── scraper.py          → Legacy/local source inspection utilities
+    ├── connectors/         → Source-specific API clients and page collectors
     │
     ├── data_cleaner.py     → Cleans, normalizes, deduplicates
     │
@@ -61,10 +61,15 @@ python import_to_mongo.py --dry-run --all
 python import_to_mongo.py --all --uri mongodb://localhost:27017/forgesavant
 ```
 
-### 4. Generate Scrape Report
+### 4. Collect live retailer prices
 ```bash
-python scraper.py --report
+python scrape_retailers.py              # report only
+python scrape_retailers.py --apply      # export the feed for signed admin review
 ```
+
+Matching is exact on the manufacturer part number, robots.txt is honoured,
+and a page whose own structured data names a different part number is
+rejected rather than trusted. See the root README for the full contract.
 
 ### 5. Sync official retailer offers
 

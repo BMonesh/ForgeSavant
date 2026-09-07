@@ -10,6 +10,7 @@ from pathlib import Path
 import duckdb
 
 from build_coverage_queue import build_coverage_queue
+from observation_store import open_store
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -17,10 +18,6 @@ LAKE_DIR = BASE_DIR / "lake"
 ANALYTICS_DIR = BASE_DIR / "analytics"
 COVERAGE_REPORT = BASE_DIR / "icecat_coverage_report.json"
 IDENTITY_DIR = BASE_DIR / "verified_identity"
-
-
-def _jsonl(path: Path) -> list[dict]:
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
 def _identity_counts(identity_dir: Path) -> dict[str, int]:
@@ -40,17 +37,11 @@ def _identity_counts(identity_dir: Path) -> dict[str, int]:
 
 
 def _load_runs(lake_dir: Path) -> list[dict]:
-    manifests = lake_dir / "manifests"
-    return [json.loads(path.read_text(encoding="utf-8")) for path in sorted(manifests.glob("*.json"))] if manifests.exists() else []
+    return open_store(lake_dir).read_runs()
 
 
 def _load_observations(lake_dir: Path) -> list[dict]:
-    normalized = lake_dir / "normalized"
-    rows = []
-    if normalized.exists():
-        for path in sorted(normalized.rglob("observations.jsonl")):
-            rows.extend(_jsonl(path))
-    return rows
+    return list(open_store(lake_dir).read_observations())
 
 
 def build_analytics(lake_dir: Path, analytics_dir: Path, coverage_report: Path, identity_dir: Path) -> dict:

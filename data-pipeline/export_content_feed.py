@@ -6,29 +6,26 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 
+from observation_store import open_store
+
 
 BASE_DIR = Path(__file__).resolve().parent
-LAKE_DIR = BASE_DIR / "lake" / "normalized"
+# The lake root, not lake/normalized: the store owns its internal layout now.
+LAKE_DIR = BASE_DIR / "lake"
 OUTPUT_PATH = BASE_DIR / "authorized_product_content_feed.json"
 
 
 def export_feed(lake_dir: Path = LAKE_DIR, output_path: Path = OUTPUT_PATH) -> dict:
     observations = {}
-    for path in sorted(lake_dir.rglob("observations.jsonl")) if lake_dir.exists() else []:
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if not line.strip():
-                continue
-            record = json.loads(line)
-            if record.get("observation_kind") != "product_content":
-                continue
-            logical_key = (
-                record.get("source"),
-                record.get("catalog_category"),
-                record.get("source_product_id"),
-            )
-            previous = observations.get(logical_key)
-            if previous is None or record.get("ingested_at", "") > previous.get("ingested_at", ""):
-                observations[logical_key] = record
+    for record in open_store(lake_dir).read_observations(observation_kind="product_content"):
+        logical_key = (
+            record.get("source"),
+            record.get("catalog_category"),
+            record.get("source_product_id"),
+        )
+        previous = observations.get(logical_key)
+        if previous is None or record.get("ingested_at", "") > previous.get("ingested_at", ""):
+            observations[logical_key] = record
     payload = {
         "schema_version": "1.0",
         "source": "forgesavant_product_content",

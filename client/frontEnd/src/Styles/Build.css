@@ -285,6 +285,8 @@
 
 .price-provenance.live { border-color: var(--color-success); color: var(--color-success); }
 .price-provenance.stale { border-color: var(--color-warning); color: var(--color-warning); }
+/* Observed, but for stock the retailer cannot sell: never styled as a live price. */
+.price-provenance.unavailable { border-color: var(--color-muted); color: var(--color-muted); text-decoration: line-through; }
 .component-facts { display: flex; flex-wrap: wrap; gap: 5px; }
 .component-facts em { border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-muted); font-family: var(--font-utility); font-size: 0.64rem; font-style: normal; padding: 4px 6px; }
 .component-price { color: var(--color-text); font-family: var(--font-utility); font-size: 0.75rem; font-weight: 800; }
@@ -448,6 +450,17 @@
 
 .dock-continue:disabled { border-color: var(--color-border); background: var(--color-elevated); color: var(--color-subtle); cursor: not-allowed; }
 .dock-review-ready { border-color: var(--color-success); background: var(--color-success); }
+/* Save feedback belongs in the dock: it is the only region pinned to the
+   viewport, so a message rendered further up the review page is unreadable. */
+.dock-message {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 6px 14px 10px;
+  color: var(--color-muted);
+  font-family: var(--font-utility);
+  font-size: 0.72rem;
+}
+.dock-message[role="alert"] { color: var(--color-warning); }
 
 .rail-step:focus-visible,
 .component-row:focus-visible,

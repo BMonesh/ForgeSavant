@@ -15,7 +15,7 @@ from pathlib import Path
 import re
 from urllib.parse import urlparse
 
-from observation_store import ObservationStore, SCHEMA_VERSION
+from observation_store import open_store, SCHEMA_VERSION
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -67,6 +67,15 @@ def build_manufacturer_observation(evidence: dict, identity: dict) -> dict:
     specifications = evidence.get("specifications")
     if not isinstance(specifications, dict) or not specifications:
         raise ValueError("specifications must be a non-empty object")
+    # A scaffolded capture sheet ships every field as null. Landing those would
+    # record "the manufacturer states nothing" as reviewed evidence, so an
+    # untranscribed field must fail rather than quietly become an empty value.
+    untranscribed = sorted(key for key, value in specifications.items() if value is None or value == "")
+    if untranscribed:
+        raise ValueError(
+            "specifications contain untranscribed fields; supply a value or remove the key: "
+            + ", ".join(untranscribed)
+        )
     observed_at = str(evidence.get("observedAt", "")).strip()
     try:
         parsed_time = datetime.fromisoformat(observed_at.replace("Z", "+00:00"))
@@ -133,7 +142,7 @@ def ingest_evidence(input_path: Path, identity_dir: Path, lake_dir: Path) -> dic
             rejected.append({"index": index, "error": str(error)})
 
     results = []
-    store = ObservationStore(lake_dir)
+    store = open_store(lake_dir)
     for source, observations in sorted(grouped.items()):
         result = store.ingest(source, observations)
         results.append({
