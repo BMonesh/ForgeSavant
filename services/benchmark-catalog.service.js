@@ -7,6 +7,25 @@ const { loadReport } = require("./data-quality.service");
 const defaultPath = path.join(__dirname, "..", "data-pipeline", "analytics", "benchmark_catalog_summary.json");
 const allowedCategories = new Set(["processors", "gpus"]);
 
+/**
+ * A page a person can read for the query a score came from.
+ *
+ * sourceRecordUrl is kept untouched as provenance: it is the exact request the
+ * pipeline made, and for Blender Open Data that request asks for
+ * response_type=datatables, which returns raw JSON. Linking people there opened
+ * an unreadable data dump. The same query without that parameter renders
+ * Blender's own results table.
+ */
+const readableSourceUrl = (url) => {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === "opendata.blender.org") parsed.searchParams.delete("response_type");
+    return parsed.toString();
+  } catch {
+    return url || "";
+  }
+};
+
 const readBenchmarkCatalog = async ({ category } = {}, summaryPath = process.env.BENCHMARK_SUMMARY_PATH || defaultPath) => {
   if (category && !allowedCategories.has(category)) {
     const error = new Error("Benchmark category must be processors or gpus");
@@ -19,7 +38,8 @@ const readBenchmarkCatalog = async ({ category } = {}, summaryPath = process.env
     error.statusCode = 503;
     throw error;
   }
-  const records = category ? parsed.records.filter((row) => row.category === category) : parsed.records;
+  const records = (category ? parsed.records.filter((row) => row.category === category) : parsed.records)
+    .map((row) => ({ ...row, sourcePageUrl: readableSourceUrl(row.sourceRecordUrl) }));
   return {
     schemaVersion: parsed.schemaVersion,
     generatedAt: parsed.generatedAt,
@@ -34,4 +54,4 @@ const readBenchmarkCatalog = async ({ category } = {}, summaryPath = process.env
   };
 };
 
-module.exports = { readBenchmarkCatalog };
+module.exports = { readBenchmarkCatalog, readableSourceUrl };

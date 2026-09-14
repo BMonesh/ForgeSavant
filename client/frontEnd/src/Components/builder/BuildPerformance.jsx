@@ -122,7 +122,7 @@ const BuildPerformance = ({ selection }) => {
             {chart.selected ? (
               <footer className="performance-source">
                 <span>{chart.selected.benchmarkName} · {chart.selected.unit}</span>
-                <a href={chart.selected.sourceRecordUrl} target="_blank" rel="noreferrer">
+                <a href={chart.selected.sourcePageUrl || chart.selected.sourceRecordUrl} target="_blank" rel="noreferrer">
                   Source <FiArrowUpRight aria-hidden="true" />
                 </a>
               </footer>
