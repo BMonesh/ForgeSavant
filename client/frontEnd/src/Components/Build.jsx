@@ -357,6 +357,7 @@ const Build = () => {
             <BuildSummary
               selection={selection}
               estimate={estimate}
+              gaming={serverAnalytics?.gaming}
               saveState={saveState}
               message={message}
               sourceSaveId={sourceSaveId}

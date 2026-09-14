@@ -570,3 +570,22 @@
 @media (max-width: 900px) {
   .performance-grid { grid-template-columns: 1fr; }
 }
+
+/* Estimated gaming bands. Styled as an estimate throughout, never as a result. */
+.gaming-estimate { display: grid; gap: 14px; border-top: 1px solid var(--color-border); padding-top: 18px; }
+.gaming-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.gaming-heading h3 { margin: 4px 0 0; font-size: 1.15rem; letter-spacing: -0.02em; }
+.estimate-badge { border: 1px dashed var(--color-warning); color: var(--color-warning); font-family: var(--font-utility); font-size: 0.64rem; letter-spacing: 0.05em; padding: 4px 8px; text-transform: uppercase; }
+.gaming-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.gaming-tier { display: grid; gap: 8px; border: 1px dashed var(--color-border); background: var(--color-background); padding: 12px; }
+.tier-resolution { color: var(--color-muted); font-family: var(--font-utility); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.tier-meter { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+.tier-meter i { height: 5px; background: var(--color-elevated); }
+.tier-meter i.on { background: var(--color-accent); }
+.tier-band { font-family: var(--font-utility); font-size: 1rem; }
+.gaming-method { color: var(--color-muted); font-size: 0.74rem; line-height: 1.5; }
+.gaming-method summary { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.gaming-method p { margin: 8px 0 4px; }
+.gaming-method ul { margin: 0; padding-left: 16px; }
+.gaming-unavailable { margin: 0; border: 1px dashed var(--color-border); color: var(--color-muted); font-size: 0.8rem; line-height: 1.55; padding: 12px; }
+@media (max-width: 700px) { .gaming-tiers { grid-template-columns: 1fr; } }

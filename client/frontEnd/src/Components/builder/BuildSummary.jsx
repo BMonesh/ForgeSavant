@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { formatPrice, getBuildTotal, stepLabels } from "./buildUtils";
 import { useSession } from "../../auth/SessionContext";
 import BuildPerformance from "./BuildPerformance";
+import GamingEstimate from "./GamingEstimate";
 
 const summarySteps = [
   "processor",
@@ -15,7 +16,7 @@ const summarySteps = [
   "cabinet",
 ];
 
-const BuildSummary = ({ selection, estimate, compatibility, compatibilityStatus, saveState, message, sourceSaveId, onSave, onBack }) => {
+const BuildSummary = ({ selection, estimate, gaming, compatibility, compatibilityStatus, saveState, message, sourceSaveId, onSave, onBack }) => {
   const total = getBuildTotal(selection);
   const { isAuthenticated } = useSession();
 
@@ -70,6 +71,8 @@ const BuildSummary = ({ selection, estimate, compatibility, compatibilityStatus,
           <small>Dimensionless planning index; no benchmark or frame-rate claim.</small>
         </div>
       </div>
+
+      <GamingEstimate gaming={gaming} />
 
       <BuildPerformance selection={selection} />
 

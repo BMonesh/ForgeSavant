@@ -109,6 +109,18 @@ The service calls `db.isConnected()` through the module rather than destructurin
 
 **Frontend.** `client/frontEnd/src/services/api.js` is the single axios instance — it injects the `token` from localStorage and clears the session on any 401. `VITE_API_BASE_URL` overrides the base; in dev it defaults to `http://localhost:5000`, in production to the page origin (the Express server serves the built SPA from `client/frontEnd/dist` when `NODE_ENV=production`, with an `/api`-excluding catch-all for client routing). Builder state lives in `Components/builder/` (`buildDraft.js` for draft persistence, `buildUtils.js` for shared logic); session state in `src/auth/SessionContext.jsx`. Tests are colocated as `*.test.jsx` next to the component.
 
+## Performance evidence and gaming estimates
+
+The build review shows two different things, and they must stay distinguishable.
+
+- **`BuildPerformance.jsx`** ranks the chosen CPU and GPU against catalog benchmarks. These are Blender Open Data medians matched by exact MPN, so they are measured evidence. A part with no matching record shows a message, never a similar product's score. Links use `sourcePageUrl`; `sourceRecordUrl` stays as provenance, because it is the JSON request the pipeline made.
+- **`services/gaming-estimate.service.js`** projects frame-rate **bands**, returned as `gaming` from `/api/v1/analytics/estimate`. It is an estimate, the owner chose it knowing that, and every surface labels it "Estimated · not measured". Keep these limits:
+  - **Only GeForce RTX 40 series.** Blender ranks GPUs correctly for gaming only within one architecture. Here an RX 7800 XT scores below an RTX 4060, and the RTX 3060 sits 35% under the 4060. One scale across generations or vendors produces confidently wrong bands, so other cards get a stated reason. Widening the regex needs real calibration data, not a guess.
+  - **Bands, never numbers.** The API must not return a projected fps value; `projectedFrameRate` is exported only for tests.
+  - **The processor is not modelled.** Do not derive a CPU bottleneck from the CPU Blender score. It measures multithreaded rendering, and would rank the gaming-strong 5800X3D near the bottom.
+  - The anchor (score 3,000 ≈ 60 fps at 1080p High) and the 0.75 pixel exponent are judgements. Change them only with a new `GAMING_MODEL_VERSION`.
+- Measured game FPS or editing scores (PugetBench, PassMark) need licensed data. PassMark forbids reuse without a paid licence; PugetBench requires a licence for commercial use. Import any such data through the licensed-benchmark path with an explicit `usage_basis`.
+
 ## Constraints to preserve
 
 - Production startup fails closed: `assertRuntimeConfig()` requires Node ≥20.19, and in production an explicit `URI`, a non-placeholder 32+ char `JWT_SECRET`, and HTTPS-only `ALLOWED_ORIGINS`. Don't weaken these checks to make a deploy pass.

@@ -6,7 +6,7 @@ Date: 2026-07-23
 
 ForgeSavant is a guided custom-PC planning application. It lets users inspect an exact retail-product catalog, build a configuration in dependency order, review server-generated compatibility evidence, and save or revise compatible builds.
 
-It is not a retailer and does not claim real-time prices or measured benchmark results. Until an authorized offer feed is imported, prices are visibly labeled as sample planning values. CPU/GPU analytics are dimensionless or direct-spec planning indicators with low confidence, not benchmark scores or frame-rate forecasts.
+It is not a retailer and does not claim real-time prices or measured benchmark results. Until an authorized offer feed is imported, prices are visibly labeled as sample planning values. CPU/GPU analytics are dimensionless or direct-spec planning indicators with low confidence. The build review also shows public Blender Open Data benchmark rankings, and, for GeForce RTX 40 series cards only, estimated gaming frame-rate bands per resolution. Those bands are labelled "Estimated · not measured": they are projected from a rendering benchmark, no game was run, and other cards receive a stated reason instead of a band.
 
 ## Implemented application
 
