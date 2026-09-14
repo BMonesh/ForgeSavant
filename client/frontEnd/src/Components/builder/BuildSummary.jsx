@@ -2,6 +2,8 @@
 import { Link } from "react-router-dom";
 import { formatPrice, getBuildTotal, stepLabels } from "./buildUtils";
 import { useSession } from "../../auth/SessionContext";
+import BuildPerformance from "./BuildPerformance";
+import GamingEstimate from "./GamingEstimate";
 
 const summarySteps = [
   "processor",
@@ -14,7 +16,7 @@ const summarySteps = [
   "cabinet",
 ];
 
-const BuildSummary = ({ selection, estimate, compatibility, compatibilityStatus, saveState, message, sourceSaveId, onSave, onBack }) => {
+const BuildSummary = ({ selection, estimate, gaming, compatibility, compatibilityStatus, saveState, message, sourceSaveId, onSave, onBack }) => {
   const total = getBuildTotal(selection);
   const { isAuthenticated } = useSession();
 
@@ -27,13 +29,43 @@ const BuildSummary = ({ selection, estimate, compatibility, compatibilityStatus,
       </div>
 
       <div className="summary-checks" aria-label="Server compatibility evidence">
-        {(compatibility?.checks || []).map((check) => (
-          <div key={check.id} className={`summary-check summary-check-${check.status}`}>
-            <span>{check.label}</span>
-            <strong>{check.status}</strong>
-            <p>{check.message}</p>
-          </div>
-        ))}
+        {(() => {
+          const checks = compatibility?.checks || [];
+          const passing = checks.filter((check) => check.status === "pass");
+          const needsAttention = checks.filter((check) => check.status !== "pass");
+          return (
+            <>
+              {checks.length > 0 ? (
+                <p className="summary-checks-tally">
+                  {passing.length} of {checks.length} compatibility checks passed
+                  {needsAttention.length > 0 ? " -- see below" : ""}
+                </p>
+              ) : null}
+              {/* Only the checks that need a decision are expanded by default --
+                  a passing check is confirmation, not something to read every
+                  time; it's still available in the disclosure below. */}
+              {needsAttention.map((check) => (
+                <div key={check.id} className={`summary-check summary-check-${check.status}`}>
+                  <span>{check.label}</span>
+                  <strong>{check.status}</strong>
+                  <p>{check.message}</p>
+                </div>
+              ))}
+              {passing.length > 0 ? (
+                <details className="summary-checks-detail">
+                  <summary>Show all {checks.length} checks</summary>
+                  {passing.map((check) => (
+                    <div key={check.id} className={`summary-check summary-check-${check.status}`}>
+                      <span>{check.label}</span>
+                      <strong>{check.status}</strong>
+                      <p>{check.message}</p>
+                    </div>
+                  ))}
+                </details>
+              ) : null}
+            </>
+          );
+        })()}
         {compatibilityStatus === "error" ? <p className="build-message-inline" role="alert">Server compatibility evidence is temporarily unavailable.</p> : null}
       </div>
 
@@ -69,6 +101,10 @@ const BuildSummary = ({ selection, estimate, compatibility, compatibilityStatus,
           <small>Dimensionless planning index; no benchmark or frame-rate claim.</small>
         </div>
       </div>
+
+      <GamingEstimate gaming={gaming} />
+
+      <BuildPerformance selection={selection} />
 
       {message ? <p className="build-message-inline" role={saveState === "error" ? "alert" : "status"}>{message}</p> : null}
 

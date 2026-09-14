@@ -30,8 +30,35 @@ const buildReferenceFields = {
   cabinets: { id: "cabinet", name: "cabinet" },
   storage: [
     { id: "primaryStorage", name: "primaryStorage" },
-    { id: "secondaryStorage", name: "secondaryStorage" },
+    { id: "secondaryStorage", name: "secondaryStorage", optional: true },
   ],
+};
+
+/**
+ * Saved-build part references that point at nothing in the catalog.
+ *
+ * A skipped optional part is stored as no component id and an empty name. That
+ * is an absent reference, not a dangling one. Treating it as orphaned matched
+ * the empty name against every product, found none, and failed the release gate
+ * for any build saved through "Continue without a secondary drive".
+ */
+const findOrphanBuildReferences = (saves, collections) => {
+  const orphans = [];
+  for (const savedBuild of saves) {
+    for (const [category, rawFields] of Object.entries(buildReferenceFields)) {
+      for (const fields of Array.isArray(rawFields) ? rawFields : [rawFields]) {
+        const componentId = savedBuild.componentIds?.[fields.id];
+        const componentName = String(savedBuild[fields.name] || "").trim();
+        if (fields.optional && !componentId && !componentName) continue;
+        const rows = collections[category] || [];
+        const exists = componentId
+          ? rows.some((item) => String(item._id) === String(componentId))
+          : Boolean(componentName) && rows.some((item) => item.name === componentName);
+        if (!exists) orphans.push({ buildId: String(savedBuild._id), category, componentId: componentId || null, componentName });
+      }
+    }
+  }
+  return orphans;
 };
 
 const audit = async () => {
@@ -59,19 +86,7 @@ const audit = async () => {
   const orphanMappings = offerMappings.filter(isOrphan);
   const orphanAffiliateDestinations = affiliateDestinations.filter(isOrphan);
   const saves = await Saves.find().lean();
-  const orphanBuildReferences = [];
-  for (const savedBuild of saves) {
-    for (const [category, rawFields] of Object.entries(buildReferenceFields)) {
-      for (const fields of Array.isArray(rawFields) ? rawFields : [rawFields]) {
-        const componentId = savedBuild.componentIds?.[fields.id];
-        const componentName = savedBuild[fields.name];
-        const exists = componentId
-          ? collections[category].some((item) => String(item._id) === String(componentId))
-          : collections[category].some((item) => item.name === componentName);
-        if (!exists) orphanBuildReferences.push({ buildId: String(savedBuild._id), category, componentId: componentId || null, componentName });
-      }
-    }
-  }
+  const orphanBuildReferences = findOrphanBuildReferences(saves, collections);
 
   const report = {
     generatedAt: new Date().toISOString(),
@@ -117,8 +132,12 @@ const audit = async () => {
   await mongoose.disconnect();
 };
 
-audit().catch(async (error) => {
-  console.error(error);
-  try { await mongoose.disconnect(); } catch {}
-  process.exit(1);
-});
+if (require.main === module) {
+  audit().catch(async (error) => {
+    console.error(error);
+    try { await mongoose.disconnect(); } catch {}
+    process.exit(1);
+  });
+}
+
+module.exports = { findOrphanBuildReferences };

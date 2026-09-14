@@ -23,7 +23,7 @@ class RunPipelineTests(unittest.TestCase):
                 calls.append(command)
                 return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
 
-            status = run_pipeline(pipeline_dir=pipeline_dir, limit=5, command_runner=runner)
+            status = run_pipeline(pipeline_dir=pipeline_dir, limit=5, command_runner=runner, publish_reports=False)
 
             self.assertEqual(status["status"], "succeeded")
             self.assertIn("audit_icecat.py", calls[0][1])
@@ -40,6 +40,22 @@ class RunPipelineTests(unittest.TestCase):
                 ["succeeded", "succeeded", "succeeded", "succeeded", "succeeded", "succeeded", "succeeded"],
             )
             self.assertFalse((pipeline_dir / "runtime" / "pipeline.lock").exists())
+
+    def test_publishes_reports_only_when_a_shared_database_is_configured(self):
+        def runner(command, **_kwargs):
+            return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
+
+        with tempfile.TemporaryDirectory() as directory:
+            pipeline_dir = Path(directory) / "with-database"
+            pipeline_dir.mkdir()
+            status = run_pipeline(pipeline_dir=pipeline_dir, command_runner=runner, publish_reports=True)
+            self.assertEqual(status["stages"][-1]["name"], "publish_reports")
+
+        with tempfile.TemporaryDirectory() as directory:
+            pipeline_dir = Path(directory) / "local-only"
+            pipeline_dir.mkdir()
+            status = run_pipeline(pipeline_dir=pipeline_dir, command_runner=runner, publish_reports=False)
+            self.assertNotIn("publish_reports", [stage["name"] for stage in status["stages"]])
 
     def test_stops_after_failure_and_redacts_output(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -357,6 +357,7 @@ const Build = () => {
             <BuildSummary
               selection={selection}
               estimate={estimate}
+              gaming={serverAnalytics?.gaming}
               saveState={saveState}
               message={message}
               sourceSaveId={sourceSaveId}
@@ -392,6 +393,10 @@ const Build = () => {
         canContinue={isStepSelected(selection, currentStepId)}
         isReview={currentStepId === "review"}
         onContinue={handleContinue}
+        onSave={handleSave}
+        saveState={saveState}
+        sourceSaveId={sourceSaveId}
+        message={message}
       />
     </div>
   );

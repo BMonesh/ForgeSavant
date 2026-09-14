@@ -12,6 +12,7 @@ const { evaluateCompatibility } = require("../services/compatibility.service");
 const { estimatePerformance } = require("../services/analytics.service");
 const { presentCatalogItem, summarizePricing } = require("../services/catalog-provenance.service");
 const { readBenchmarkCatalog } = require("../services/benchmark-catalog.service");
+const { estimateGamingTiers } = require("../services/gaming-estimate.service");
 const adminOfferRoutes = require("./admin-offers.routes");
 const adminAnalyticsRoutes = require("./admin-analytics.routes");
 const adminContentRoutes = require("./admin-content.routes");
@@ -169,7 +170,20 @@ router.post("/analytics/estimate", async (req, res, next) => {
     const missing = [!processor && "processor", !gpu && "gpu"].filter(Boolean);
     if (missing.length) return res.status(404).json({ error: "Analytics components not found", missing });
 
-    return res.json(estimatePerformance(processor, gpu));
+    // The gaming bands need the GPU's benchmark. If that evidence is unavailable
+    // the estimate reports why; it must not fail the rest of the response.
+    let gpuBenchmark = null;
+    try {
+      const partNumber = String(gpu.identity?.manufacturerPartNumber || "").replace(/[^a-z0-9]/gi, "").toUpperCase();
+      const { records } = await readBenchmarkCatalog({ category: "gpus" });
+      gpuBenchmark = partNumber
+        ? records.find((row) => String(row.manufacturerPartNumber || "").replace(/[^a-z0-9]/gi, "").toUpperCase() === partNumber) || null
+        : null;
+    } catch {
+      gpuBenchmark = null;
+    }
+
+    return res.json({ ...estimatePerformance(processor, gpu), gaming: estimateGamingTiers(gpu, gpuBenchmark) });
   } catch (error) {
     return next(error);
   }

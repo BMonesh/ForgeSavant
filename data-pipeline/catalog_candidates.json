@@ -1,0 +1,2725 @@
+{
+  "schemaVersion": "1.0",
+  "source": "mdcomputers_in",
+  "note": "Proposed catalog additions. Specifications are read from each product's published name; confirm before use.",
+  "candidates": {
+    "cabinets": [
+      {
+        "category": "cabinets",
+        "name": "Lian Li A3-mATX Mini Tower Case",
+        "manufacturer": "LIAN LI",
+        "manufacturerPartNumber": "",
+        "gtin": "4718466015624",
+        "identitySource": "page gtin",
+        "price": 7340.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/lian-li/g99-a3x-in/g99-a3x-in-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/lian-li-a3-mini-tower-cabinet-g99-a3x-in",
+        "retailerSku": "LIAN-LI-A3-MATX-BLACK",
+        "specifications": {
+          "motherboard_support": "Micro-ATX"
+        },
+        "derivedFrom": "Lian Li A3-mATX Mini Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "AeroCool Bionic RGB ATX Mid Tower Case",
+        "manufacturer": "AEROCOOL",
+        "manufacturerPartNumber": "",
+        "gtin": "4710562758672",
+        "identitySource": "page gtin",
+        "price": 3199.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/aerocool/bionic-g-bk-v2/bionic-g-bk-v2-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/aerocool-mid-tower-cabinet-bionic-g-bk-v2",
+        "retailerSku": "AEROCOOL-BIONIC-G-BK-V2",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "AeroCool Bionic RGB ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Alseye Ai Pro ARGB Mesh White E-ATX Mid Tower Case",
+        "manufacturer": "ALSEYE",
+        "manufacturerPartNumber": "",
+        "gtin": "4897059875897",
+        "identitySource": "page gtin",
+        "price": 8930.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/alseye/ai-pro-white/ai-pro-white-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/alseye-ai-pro-white-mid-tower-cabinet",
+        "retailerSku": "ALSEYE-MID-TOWER-AI-PRO-WHITE",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Alseye Ai Pro ARGB Mesh White E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cooler Master Shark X Mini ITX Case with SMPS, CPU Cooler and Fan",
+        "manufacturer": "COOLER MASTER",
+        "manufacturerPartNumber": "",
+        "gtin": "4719512157176",
+        "identitySource": "page gtin",
+        "price": 360000.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cooler master/abk-ffb4-s38l1-r1/abk-ffb4-s38l1-r1-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cooler-master-shark-x-mini-tower-cabinet-abk-ffb4-s38l1-r1",
+        "retailerSku": "COOLER-MASTER-SHARK-X-BLACK",
+        "specifications": {
+          "motherboard_support": "Mini-ITX"
+        },
+        "derivedFrom": "Cooler Master Shark X Mini ITX Case with SMPS, CPU Cooler and Fan",
+        "priceOutlier": true
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar Airface Eco RGB E-ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483778728",
+        "identitySource": "page gtin",
+        "price": 10300.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-5ya2b-rgb/cgr-5ya2b-rgb-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-airface-eco-rgb-mid-tower-cabinet-cgr-5ya2b-rgb",
+        "retailerSku": "COUGAR-AIRFACE-ECO-RGB-BK",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Cougar Airface Eco RGB E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar Airface Eco RGB White E-ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483778735",
+        "identitySource": "page gtin",
+        "price": 10550.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-5ya2w-rgb/cgr-5ya2w-rgb-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-airface-eco-rgb-mid-tower-cabinet-cgr-5ya2w-rgb",
+        "retailerSku": "COUGAR-AIRFACE-ECO-RGB-WHITE",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Cougar Airface Eco RGB White E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar Airface Pure Pro ARGB ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483779268",
+        "identitySource": "page gtin",
+        "price": 5050.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-2ga5b-p/cgr-2ga5b-p-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-airface-pure-pro-mid-tower-cabinet-cgr-2ga5b-p",
+        "retailerSku": "COUGAR-AIRFACE-PURE-PRO-BK",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Cougar Airface Pure Pro ARGB ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar FV150 Mini Pink M-ATX Mini Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4711649770495",
+        "identitySource": "page gtin",
+        "price": 4550.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-2qa6p-rgb/cgr-2qa6p-rgb-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-fv150-mini-pink-cabinet-cgr-2qa6p-rgb",
+        "retailerSku": "COUGAR-FV150-MINI-RGB-PINK",
+        "specifications": {
+          "motherboard_support": "Micro-ATX"
+        },
+        "derivedFrom": "Cougar FV150 Mini Pink M-ATX Mini Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar FV150 RGB ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483778230",
+        "identitySource": "page gtin",
+        "price": 7150.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-5ka1b-rgb/cgr-5ka1b-rgb-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-fv150-mid-tower-cabinet-cgr-5ka1b-rgb",
+        "retailerSku": "COUGAR-FV150-RGB-BK-385KA10-0001",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Cougar FV150 RGB ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar FV150 RGB White ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483778247",
+        "identitySource": "page gtin",
+        "price": 7580.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-5ka1w-rgb/cgr-5ka1w-rgb-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-fv150-white-mid-tower-cabinet-cgr-5ka1w-rgb",
+        "retailerSku": "COUGAR-FV150-RGB-WH-385KA10-0002",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Cougar FV150 RGB White ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar FV270 RGB White E-ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483777431",
+        "identitySource": "page gtin",
+        "price": 17300.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-58m6w-rgb/cgr-58m6w-rgb-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-fv270-rgb-white-mid-tower-cabinet",
+        "retailerSku": "COUGAR-FV270-RGB-WHITE",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Cougar FV270 RGB White E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar MX110 RGB ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483778995",
+        "identitySource": "page gtin",
+        "price": 3700.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-2bd2b-rgb/cgr-2bd2b-rgb-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-mx110-rgb-mid-tower-cabinet",
+        "retailerSku": "COUGAR-MX110-RGB-BK",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Cougar MX110 RGB ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar MX230 RGB E-ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4711649770587",
+        "identitySource": "page gtin",
+        "price": 5700.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/2pc8b-rgb/cgr-2pc8b-rgb-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-mx230-rgb-mid-tower-cabinet",
+        "retailerSku": "COUGAR-MX230-RGB-BK",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Cougar MX230 RGB E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar MX230 RGB White E-ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4711649770594",
+        "identitySource": "page gtin",
+        "price": 6050.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-2pc8w-rgb/cgr-2pc8w-rgb-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-mx230-rgb-white-mid-tower-cabinet",
+        "retailerSku": "COUGAR-MX230-RGB-WHITE",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Cougar MX230 RGB White E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar MX600 Mini V2 ARGB M-ATX Mini Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4711649770792",
+        "identitySource": "page gtin",
+        "price": 4300.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-2tc9b-rgb/cgr-2tc9b-rgb-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-mx600-mini-v2-cabinet-cgr-2tc9b-rgb",
+        "retailerSku": "COUGAR-MX600-MINI-V2",
+        "specifications": {
+          "motherboard_support": "Micro-ATX"
+        },
+        "derivedFrom": "Cougar MX600 Mini V2 ARGB M-ATX Mini Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar MX600 Mini V2 ARGB White M-ATX Mini Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4711649770808",
+        "identitySource": "page gtin",
+        "price": 4550.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-2tc9w-rgb/cgr-2tc9w-rgb-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-mx600-mini-v2-white-cabinet-cgr-2tc9w-rgb",
+        "retailerSku": "COUGAR-MX600-MINI-V2-WHITE",
+        "specifications": {
+          "motherboard_support": "Micro-ATX"
+        },
+        "derivedFrom": "Cougar MX600 Mini V2 ARGB White M-ATX Mini Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Cougar Omnyx ARGB ATX Mid Tower Case",
+        "manufacturer": "COUGAR",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483779442",
+        "identitySource": "page gtin",
+        "price": 12880.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/cougar/cgr-2wa3b-rgb/cgr-2wa3b-rgb-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cougar-omnyx-mid-tower-cabinet-cgr-2wa3b-rgb",
+        "retailerSku": "COUGAR-OMNYX-RGB-MID-BK",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Cougar Omnyx ARGB ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "DeepCool CL600 ARGB ATX Mid Tower Case",
+        "manufacturer": "DEEPCOOL",
+        "manufacturerPartNumber": "",
+        "gtin": "6933412765622",
+        "identitySource": "page gtin",
+        "price": 8950.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/deepcool/r-cl600-bknna2-g-1/r-cl600-bknna2-g-1-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/deepcool-cl600-mid-tower-cabinet-r-cl600-bknna2-g-1",
+        "retailerSku": "DEEPCOOL-CL600-ATX-MID-BLK",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "DeepCool CL600 ARGB ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "DeepCool CL6600 ARGB ATX Mid Tower Case",
+        "manufacturer": "DEEPCOOL",
+        "manufacturerPartNumber": "",
+        "gtin": "6933412765295",
+        "identitySource": "page gtin",
+        "price": 20200.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/deepcool/r-cl6600-bknna0-g-1/r-cl6600-bknna0-g-1-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/deepcool-cl6600-mid-tower-cabinet",
+        "retailerSku": "DEEPCOOL-R-CL6600-BKNNA0-G-1",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "DeepCool CL6600 ARGB ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Define 7 Dark E-ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172702214",
+        "identitySource": "page gtin",
+        "price": 24550.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-def7a-03/fd-c-def7a-03-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-define-7-dark-mid-tower-cabinet-fd-c-def7a-03",
+        "retailerSku": "FRACTAL-DESIGN-C-DEF7A-03",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Fractal Design Define 7 Dark E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Epoch TG Light Tint ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172709640",
+        "identitySource": "page gtin",
+        "price": 13950.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-epo1a-02/fd-c-epo1a-02-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-epoch-tg-light-tint-cabinet-fd-c-epo1a-02",
+        "retailerSku": "FRACTAL-DESIGN-EPOCH-TG-LIGHT-TINT-BLK",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Fractal Design Epoch TG Light Tint ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Epoch TG RGB Light Tint ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172709664",
+        "identitySource": "page gtin",
+        "price": 16900.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-epo1a-04/fd-c-epo1a-04-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-epoch-tg-rgb-light-tint-cabinet-fd-c-epo1a-04",
+        "retailerSku": "FRACTAL-DESIGN-EPO1A-04-TG-RGB-LIGHT-TINT",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Fractal Design Epoch TG RGB Light Tint ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Epoch White TG Clear Tint ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172709657",
+        "identitySource": "page gtin",
+        "price": 13950.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-epo1a-03/fd-c-epo1a-03-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-epoch-white-tg-clear-tint-cabinet-fd-c-epo1a-03",
+        "retailerSku": "FRACTAL-DESIGN-EPOCH-WH-TG-CLEAR-TINT",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Fractal Design Epoch White TG Clear Tint ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Epoch White TG RGB Clear Tint ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172709688",
+        "identitySource": "page gtin",
+        "price": 16900.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-epo1a-05/fd-c-epo1a-05-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-epoch-wh-tg-rgb-clear-tint-cabinet-fd-c-epo1a-05",
+        "retailerSku": "FRACTAL-DESIGN-EPO1A-05-WH-TG-RGB",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Fractal Design Epoch White TG RGB Clear Tint ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Focus 2 Mesh RGB TG Clear Tint ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172703471",
+        "identitySource": "page gtin",
+        "price": 10650.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-foc2a-03 /fd-c-foc2a-01-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-focus-2-mesh-rgb-mid-tower-cabinet-fd-c-foc2a-03",
+        "retailerSku": "FRACTAL-DESIGN-C-FOC2A-03-TG-BK",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Fractal Design Focus 2 Mesh RGB TG Clear Tint ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Focus 2 Mesh RGB White TG Clear Tint ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "FRACTAL-DESIGN-C-FOC2A-04-WH",
+        "gtin": "",
+        "identitySource": "page sku",
+        "price": 10650.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-foc2a-04/fd-c-foc2a-04-image-main.JPG",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-focus-2-mesh-rgb-mid-tower-cabinet-fd-c-foc2a-04",
+        "retailerSku": "FRACTAL-DESIGN-C-FOC2A-04-WH",
+        "specifications": {
+          "motherboard_support": "ATX"
+        },
+        "derivedFrom": "Fractal Design Focus 2 Mesh RGB White TG Clear Tint ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Meshify 2 TG Light Tint E-ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172702443",
+        "identitySource": "page gtin",
+        "price": 21400.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-mes2a-03/fractal-design-meshify-2-blk-tg-light-tint-pc-cabinet-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-meshify-2-tg-light-tint-cabinet-fd-c-mes2a-03",
+        "retailerSku": "FD-C-MES2A-03-BLK-TG-L-TINT",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Fractal Design Meshify 2 TG Light Tint E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Meshify 3 Ambience Pro RGB White E-ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172707202",
+        "identitySource": "page gtin",
+        "price": 31850.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-mes3a-05/fractal-design-meshify-3-ambience-pro-rgb-white-tg-clear-tint-pc-cabinet-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-meshify-3-mid-tower-cabinet-fd-c-mes3a-05",
+        "retailerSku": "FD-C-MES3A-05-AMB-PRO-WH-RGB",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Fractal Design Meshify 3 Ambience Pro RGB White E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Meshify 3 RGB TG Light Tint E-ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172709503",
+        "identitySource": "page gtin",
+        "price": 23350.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-mes3a-06/fd-c-mes3a-06-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-meshify-3-mid-tower-cabinet-fd-c-mes3a-06",
+        "retailerSku": "FRACTAL-DESIGN-MES3A-06-MID-BLK",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Fractal Design Meshify 3 RGB TG Light Tint E-ATX Mid Tower Case",
+        "priceOutlier": false
+      },
+      {
+        "category": "cabinets",
+        "name": "Fractal Design Meshify 3 Solid E-ATX Mid Tower Case",
+        "manufacturer": "FRACTAL DESIGN",
+        "manufacturerPartNumber": "",
+        "gtin": "7340172707165",
+        "identitySource": "page gtin",
+        "price": 20000.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/cabinet/fractal-design/fd-c-mes3a-01/fractal-design-meshify-3-black-solid-pc-cabinet-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/fractal-design-meshify-3-solid-mid-tower-cabinet-fd-c-mes3a-01",
+        "retailerSku": "FD-C-MES3A-01-SOLID-BLK",
+        "specifications": {
+          "motherboard_support": "E-ATX"
+        },
+        "derivedFrom": "Fractal Design Meshify 3 Solid E-ATX Mid Tower Case",
+        "priceOutlier": false
+      }
+    ],
+    "storage": [
+      {
+        "category": "storage",
+        "name": "WD Black SN7100 NVMe 2TB Gen4 SSD",
+        "manufacturer": "WESTERN DIGITAL (WD)",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 29799.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/w-d/wds200t4x0e/wds200t4x0e-image.webp",
+        "retailerUrl": "https://mdcomputers.in/product/wd-black-sn7100-2tb-nvme-ssd-wds200t4x0e",
+        "retailerSku": "WD-BLACK-SN7100-2TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "WD Black SN7100 NVMe 2TB Gen4 SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Toshiba MG09 18TB 7200 RPM SATA Enterprise Hard Drive",
+        "manufacturer": "TOSHIBA",
+        "manufacturerPartNumber": "TOSHIBA-MG09-18TB",
+        "gtin": "",
+        "identitySource": "page sku",
+        "price": 84850.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/hdd/toshiba/mg-series/mg09aca18te-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/toshiba-mg09-18tb-enterprise-hard-drive-mg09aca18te",
+        "retailerSku": "TOSHIBA-MG09-18TB",
+        "specifications": {
+          "interface": "SATA"
+        },
+        "derivedFrom": "Toshiba MG09 18TB 7200 RPM SATA Enterprise Hard Drive",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Adata Legend 900 Pro 1TB NVMe Gen4 SSD",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4711658150691",
+        "identitySource": "page gtin",
+        "price": 18620.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/adata/sleg-900p-1tcs/sleg-900p-1tcs-image.webp",
+        "retailerUrl": "https://mdcomputers.in/product/adata-legend-900-pro-1tb-nvme-sleg-900p-1tcs",
+        "retailerSku": "ADATA-LEGEND-900-PRO-1TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Adata Legend 900 Pro 1TB NVMe Gen4 SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Samsung 9100 PRO 1TB NVMe Gen5 SSD",
+        "manufacturer": "SAMSUNG",
+        "manufacturerPartNumber": "",
+        "gtin": "8806095811628",
+        "identitySource": "page gtin",
+        "price": 30799.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/samsung/mz-vap1t0bw/mz-vap1t0bw-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/samsung-9100-pro-1tb-nvme-ssd-mz-vap1t0bw",
+        "retailerSku": "SAMSUNG-9100-PRO-1TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Samsung 9100 PRO 1TB NVMe Gen5 SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "ADATA Legend 970 Pro 1TB NVMe Gen5 SSD",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4711085947628",
+        "identitySource": "page gtin",
+        "price": 14060.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/adata/sleg-970p-1tci/sleg-970p-1tci-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/adata-legend-970-pro-1tb-nvme-ssd-sleg-970p-1tci",
+        "retailerSku": "ADATA-LEGEND-970-PRO-1TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "ADATA Legend 970 Pro 1TB NVMe Gen5 SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Corsair MP700 Elite 1TB NVMe Gen5 SSD",
+        "manufacturer": "CORSAIR",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 19880.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/corsair/cssd-f1000gbmp700enh/cssd-f1000gbmp700enh-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/corsair-mp700-elite-1tb-nvme-ssd-cssd-f1000gbmp700enh",
+        "retailerSku": "CORSAIR-MP700-ELITE-1TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Corsair MP700 Elite 1TB NVMe Gen5 SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "SAMSUNG 990 EVO Plus 1TB M.2 NVMe SSD",
+        "manufacturer": "SAMSUNG",
+        "manufacturerPartNumber": "",
+        "gtin": "8806095575674",
+        "identitySource": "page gtin",
+        "price": 23840.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/samsung/mz-v9s1t0bw/mz-v9s1t0bw-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/samsung-990-evo-plus-1tb-nvme-ssd-mz-v9s1t0bw",
+        "retailerSku": "SAMSUNG-990-EVO-PLUS-1TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "SAMSUNG 990 EVO Plus 1TB M.2 NVMe SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Gigabyte Aorus Gen5 12000 2TB M.2 NVMe Gen5 Internal SSD",
+        "manufacturer": "GIGABYTE",
+        "manufacturerPartNumber": "",
+        "gtin": "4719331855956",
+        "identitySource": "page gtin",
+        "price": 28245.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/gigabyte/ag512k2tb/ag512k2tb-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/gigabyte-aorus-12000-2tb-nvme-ssd-ag512k2tb-g10",
+        "retailerSku": "GIGABYTE AORUS GEN5 12000 2TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Gigabyte Aorus Gen5 12000 2TB M.2 NVMe Gen5 Internal SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "HP S650 240GB SATA SSD",
+        "manufacturer": "H P",
+        "manufacturerPartNumber": "",
+        "gtin": "6955914614086",
+        "identitySource": "page gtin",
+        "price": 1995.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/h p/s650-2-5/s650-2-5-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/hp-s650-black-240gb-ssd",
+        "retailerSku": "HP-S650-2-5-240GB",
+        "specifications": {
+          "interface": "SATA"
+        },
+        "derivedFrom": "HP S650 240GB SATA SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Kingston KC600 SATA Rev 3.0 256GB SSD",
+        "manufacturer": "KINGSTON",
+        "manufacturerPartNumber": "",
+        "gtin": "740617300161",
+        "identitySource": "page gtin",
+        "price": 11240.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/kingston/skc600-256g/skc600-256g-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/kingston-kc600-256gb-ssd-skc600-256g",
+        "retailerSku": "KINGSTON-KC600-256GB",
+        "specifications": {
+          "interface": "SATA"
+        },
+        "derivedFrom": "Kingston KC600 SATA Rev 3.0 256GB SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Crucial T700 4TB M.2 NVMe Gen5 Internal SSD with Heatsink",
+        "manufacturer": "CRUCIAL",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 68304.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/crucial/ct4000t700ssd5/ct4000t700ssd5-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/crucial-t700-4tb-nvme-ssd-ct4000t700ssd5",
+        "retailerSku": "CRUCIAL T700 4TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Crucial T700 4TB M.2 NVMe Gen5 Internal SSD with Heatsink",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Seagate Barracuda Q5 1TB M.2 NVMe Gen3 Internal SSD",
+        "manufacturer": "SEAGATE",
+        "manufacturerPartNumber": "",
+        "gtin": "8719706027724",
+        "identitySource": "page gtin",
+        "price": 5617.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/seagate/zp1000cv3a001/zp1000cv3a001-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seagate-barracuda-q5-1tb-nvme-ssd-zp1000cv3a001",
+        "retailerSku": "SEAGATE-BARRACUDA-Q5-1TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Seagate Barracuda Q5 1TB M.2 NVMe Gen3 Internal SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Crucial P2 2TB M.2 NVMe Internal SSD",
+        "manufacturer": "CRUCIAL",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 10468.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/crucial/ct2000p2ssd8/ct2000p2ssd8-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/crucial-p2-2tb-nvme-ssd-ct2000p2ssd8",
+        "retailerSku": "CRUCIAL P2 2TB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Crucial P2 2TB M.2 NVMe Internal SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Gigabyte 512GB M.2 NVMe",
+        "manufacturer": "GIGABYTE",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 4849.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/gigabyte/gp-gsm2ne3512gntd/gp-gsm2ne3512gntd-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/gigabyte-512gb-nvme-ssd-gp-gsm2ne3512gntd",
+        "retailerSku": "GIGABYTE 512GB M.2 NVMe",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Gigabyte 512GB M.2 NVMe",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Adata XPG Spectrix S40G RGB 4TB M.2 NVMe Internal SSD",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4710273776019",
+        "identitySource": "page gtin",
+        "price": 41475.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/adata/as40g-4tt-c/as40g-4tt-c-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/adata-xpg-spectrix-s40g-4tb-nvme-ssd-as40g-4tt-c",
+        "retailerSku": "ADATA XPG SPECTRIX S40G RGB 4TB M2 NVME",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Adata XPG Spectrix S40G RGB 4TB M.2 NVMe Internal SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Colorful CN700 512GB M.2 NVMe Gen4 SSD",
+        "manufacturer": "COLORFUL",
+        "manufacturerPartNumber": "COLORFUL-CN700-512GB",
+        "gtin": "",
+        "identitySource": "page sku",
+        "price": 3643.5,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/colorful/cn700-512gb/cn700-512gb-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/colorful-cn700-512gb-nvme-ssd",
+        "retailerSku": "COLORFUL-CN700-512GB",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Colorful CN700 512GB M.2 NVMe Gen4 SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Toshiba MG04 Series 4TB 7200 RPM 3.5 Inch SATA Enterprise Hard Drive",
+        "manufacturer": "TOSHIBA",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 11899.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/hdd/toshiba/mg04aca400e/mg04aca400e-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/toshiba-mg04-4tb-enterprise-hard-drive-mg04aca400e",
+        "retailerSku": "TOSHIBA MG04 ENTERPRISE 4TB",
+        "specifications": {
+          "interface": "SATA"
+        },
+        "derivedFrom": "Toshiba MG04 Series 4TB 7200 RPM 3.5 Inch SATA Enterprise Hard Drive",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Western Digital Black SN750 1TB M.2 NVMe Internal SSD With Heatsink",
+        "manufacturer": "WESTERN DIGITAL (WD)",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 19110.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/w-d/wds100t3xhc/wds100t3xhc-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/wd-black-sn750-1tb-nvme-ssd-wds100t3xhc",
+        "retailerSku": "WESTERN DIGITAL BLACK SN750 1TB M.2",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Western Digital Black SN750 1TB M.2 NVMe Internal SSD With Heatsink",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Kingston A1000 M.2 NVMe 480GB SSD",
+        "manufacturer": "KINGSTON",
+        "manufacturerPartNumber": "",
+        "gtin": "0740617278378",
+        "identitySource": "page gtin",
+        "price": 8312.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/kingston/sa1000m8-480g/sa1000m8-480g-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/kingston-a1000-480gb-nvme-ssd-sa1000m8-480g",
+        "retailerSku": "KINGSTON-A1000-480GB-M.2",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Kingston A1000 M.2 NVMe 480GB SSD",
+        "priceOutlier": false
+      },
+      {
+        "category": "storage",
+        "name": "Galax Gamer 480GB M.2 NVMe",
+        "manufacturer": "GALAX",
+        "manufacturerPartNumber": "",
+        "gtin": "4895147136790",
+        "identitySource": "page gtin",
+        "price": 6111.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ssd/galax/bkna1m4t6bg28cnlbyxwxn/bkna1m4t6bg28cnlbyxwxn-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/galax-gamer-480gb-nvme-ssd-bkna1m4t6bg28cnlbyxwxn",
+        "retailerSku": "GALAX GAMER 480GB M.2",
+        "specifications": {
+          "interface": "NVMe"
+        },
+        "derivedFrom": "Galax Gamer 480GB M.2 NVMe",
+        "priceOutlier": false
+      }
+    ],
+    "power_supplies": [
+      {
+        "category": "power_supplies",
+        "name": "Cooler Master MWE Gold 850 Watt V2 ATX 3.1 Fully Modular SMPS",
+        "manufacturer": "COOLER MASTER",
+        "manufacturerPartNumber": "",
+        "gtin": "4719512152768",
+        "identitySource": "page gtin",
+        "price": 10000.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coolermaster/mpe-8501-afaag-3ein/mpe-8501-afaag-3ein-image.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cooler-master-mwe-gold-850-v2-modular-smps-mpe-8501-afaag-3ein",
+        "retailerSku": "CM-MWE-GOLD-850-V2-ATX-3-1",
+        "specifications": {
+          "wattage": "850W"
+        },
+        "derivedFrom": "Cooler Master MWE Gold 850 Watt V2 ATX 3.1 Fully Modular SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus ROG Strix 650W 650 Watt 80 Plus Gold SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4718017375818",
+        "identitySource": "page gtin",
+        "price": 10030.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/rog-strix-650g/rog-strix-650g-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asus-rog-strix-650g-gold-modular-smps",
+        "retailerSku": "ASUS 80 PLUS GOLD FULLY MODULAR",
+        "specifications": {
+          "wattage": "650W"
+        },
+        "derivedFrom": "Asus ROG Strix 650W 650 Watt 80 Plus Gold SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus ROG Strix 850 Watt White Fully Modular Gold Smps",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 15150.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/rog-strix-850g-white/rog-strix-850g-white-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asus-rog-strix-850g-gold-modular-white-smps",
+        "retailerSku": "ASUS-ROG-STRIX-GOLD-FULLY-M-WH",
+        "specifications": {
+          "wattage": "850W"
+        },
+        "derivedFrom": "Asus ROG Strix 850 Watt White Fully Modular Gold Smps",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus ROG THOR 1200P 1200 Watt 80 Plus Platinum SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4718017128537",
+        "identitySource": "page gtin",
+        "price": 25250.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/90ye0080-b001i0/90ye0080-b001i0-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asus-rog-thor-1200p-platinum-modular-smps",
+        "retailerSku": "ASUS ROG THOR 1200P 80 PLUS PLATINUM FULLY MODULAR",
+        "specifications": {
+          "wattage": "1200W"
+        },
+        "derivedFrom": "Asus ROG THOR 1200P 1200 Watt 80 Plus Platinum SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Seasonic M12II Evo 520W",
+        "manufacturer": "SEASONIC",
+        "manufacturerPartNumber": "",
+        "gtin": "4711173870760",
+        "identitySource": "page gtin",
+        "price": 5930.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/seasonic/ss-520gm2/ss-520gm2-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seasonic-m12ii-evo-bronze-modular-smps-ss-520gm2",
+        "retailerSku": "SEASONIC M12II EVO 520 WATT 80 PLUS BRONZE",
+        "specifications": {
+          "wattage": "520W"
+        },
+        "derivedFrom": "Seasonic M12II Evo 520W",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Seasonic M12II EVO 620W Bronze SMPS",
+        "manufacturer": "SEASONIC",
+        "manufacturerPartNumber": "SEASONIC-M12II-EVO-SS-620GM",
+        "gtin": "",
+        "identitySource": "page sku",
+        "price": 6971.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/seasonic/m12ii-evo-620w/m12ii-evo-620-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seasonic-m12ii-evo-bronze-modular-smps-ss-620gm",
+        "retailerSku": "SEASONIC-M12II-EVO-SS-620GM",
+        "specifications": {
+          "wattage": "620W"
+        },
+        "derivedFrom": "Seasonic M12II EVO 620W Bronze SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Seasonic S12II 620W",
+        "manufacturer": "SEASONIC",
+        "manufacturerPartNumber": "",
+        "gtin": "4711173870791",
+        "identitySource": "page gtin",
+        "price": 6200.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/seasonic/s12ii-620w/s12ii-620w-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seasonic-s12ii-bronze-smps-ss-620gb",
+        "retailerSku": "SEASONIC S12II 620 Watt 80 Plus Bronze",
+        "specifications": {
+          "wattage": "620W"
+        },
+        "derivedFrom": "Seasonic S12II 620W",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Seasonic Platinum 460W",
+        "manufacturer": "SEASONIC",
+        "manufacturerPartNumber": "",
+        "gtin": "4711173870838",
+        "identitySource": "page gtin",
+        "price": 11445.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/seasonic/ss-460flii/ss-460flii-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seasonic-platinum-modular-smps-ss-460flii",
+        "retailerSku": "SEASONIC FANLESS 460 WATT 80 PLUS PLATINUM",
+        "specifications": {
+          "wattage": "460W"
+        },
+        "derivedFrom": "Seasonic Platinum 460W",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Seasonic Prime Gold 850W Fully Modular SMPS",
+        "manufacturer": "SEASONIC",
+        "manufacturerPartNumber": "SEASONIC-PRIME-SSR-850GD",
+        "gtin": "",
+        "identitySource": "page sku",
+        "price": 13151.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/seasonic/ssr-850gd/ssr-850gd-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seasonic-prime-gold-modular-smps-ssr-850gd",
+        "retailerSku": "SEASONIC-PRIME-SSR-850GD",
+        "specifications": {
+          "wattage": "850W"
+        },
+        "derivedFrom": "Seasonic Prime Gold 850W Fully Modular SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Seasonic S12II 430W",
+        "manufacturer": "SEASONIC",
+        "manufacturerPartNumber": "",
+        "gtin": "4711173870241",
+        "identitySource": "page gtin",
+        "price": 5078.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/seasonic/ss-430gb/ss-430gb-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seasonic-s12ii-bronze-smps-ss-430gb",
+        "retailerSku": "SEASONIC S12II 430 WATT 80 PLUS BRONZE",
+        "specifications": {
+          "wattage": "430W"
+        },
+        "derivedFrom": "Seasonic S12II 430W",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Seasonic X 650W",
+        "manufacturer": "SEASONIC",
+        "manufacturerPartNumber": "",
+        "gtin": "4711173870845",
+        "identitySource": "page gtin",
+        "price": 10249.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/seasonic/ss-650km3/ss-650km3-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seasonic-gold-modular-smps-ss-650km3",
+        "retailerSku": "SEASONIC SS-650KMIII 650 WATT 80 PLUS GOLD",
+        "specifications": {
+          "wattage": "650W"
+        },
+        "derivedFrom": "Seasonic X 650W",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Seasonic Snowsilent 750W",
+        "manufacturer": "SEASONIC",
+        "manufacturerPartNumber": "",
+        "gtin": "4711173873099",
+        "identitySource": "page gtin",
+        "price": 16357.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/seasonic/ss-750xp2s/ss-750xp2s-image-01.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seasonic-snow-silent-platinum-modular-white-smps-ss-750xp2s",
+        "retailerSku": "SEASONIC SNOWSILENT SERIES 750 WATT 80 PLUS PLATINUM",
+        "specifications": {
+          "wattage": "750W"
+        },
+        "derivedFrom": "Seasonic Snowsilent 750W",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Seasonic Prime Gold 750W",
+        "manufacturer": "SEASONIC",
+        "manufacturerPartNumber": "",
+        "gtin": "4711173873457",
+        "identitySource": "page gtin",
+        "price": 12101.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/seasonic/ssr-750gd/ssr-750gd-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/seasonic-prime-gold-modular-smps-ssr-750gd",
+        "retailerSku": "SEASONIC PRIME GOLD 750 WATT 80 PLUS GOLD",
+        "specifications": {
+          "wattage": "750W"
+        },
+        "derivedFrom": "Seasonic Prime Gold 750W",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus ROG THOR 1000W Platinum III Gaming ATX 3.1 Fully Modular SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4711387610626",
+        "identitySource": "page gtin",
+        "price": 36750.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/rog-thor-1000p3-gaming/rog-thor-1000p3-gaming-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/asus-rog-thor-1000p3-gaming-platinum-modular-smps",
+        "retailerSku": "ASUS-ROG-THOR-1000P3-GAMING-PSU",
+        "specifications": {
+          "wattage": "1000W"
+        },
+        "derivedFrom": "Asus ROG THOR 1000W Platinum III Gaming ATX 3.1 Fully Modular SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus ROG Thor 1200W Platinum III ATX 3.1 Fully Modular SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4711387610473",
+        "identitySource": "page gtin",
+        "price": 39700.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/rog-thor-1200p3-gaming/rog-thor-1200p3-gaming-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/asus-rog-thor-1200p3-gaming-platinum-modular-smps",
+        "retailerSku": "ASUS-ROG-THOR-1200P3-GAMING-PSU",
+        "specifications": {
+          "wattage": "1200W"
+        },
+        "derivedFrom": "Asus ROG Thor 1200W Platinum III ATX 3.1 Fully Modular SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus TUF Gaming Gold Bronze 850 Watt ATX 3.1 Fully Modular SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4711081786603",
+        "identitySource": "page gtin",
+        "price": 15000.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/tuf-gaming-850g-atx-3-1/tuf-gaming-850g-atx-3-1-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/asus-tuf-gaming-850w-gold-atx-3-1-modular-smps",
+        "retailerSku": "ASUS-TUF-GAMING-850G-ATX-3-1",
+        "specifications": {
+          "wattage": "850W"
+        },
+        "derivedFrom": "Asus TUF Gaming Gold Bronze 850 Watt ATX 3.1 Fully Modular SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus TUF Gaming Bronze 750 Watt SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4718017724050",
+        "identitySource": "page gtin",
+        "price": 10950.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/tuf-gaming-750b/tuf-gaming-750b-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/asus-tuf-gaming-750b-bronze-smps",
+        "retailerSku": "ASUS-TUF-GAMING-750B",
+        "specifications": {
+          "wattage": "750W"
+        },
+        "derivedFrom": "Asus TUF Gaming Bronze 750 Watt SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus TUF Gaming EVO Bronze 650 Watt ATX 3.1 Fully Modular SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4711636170581",
+        "identitySource": "page gtin",
+        "price": 7650.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/tuf-gaming-650b-evo/tuf-gaming-650b-evo-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/asus-tuf-gaming-evo-650w-bronze-modular-smps",
+        "retailerSku": "ASUS-TUF-GAMING-650B-EVO",
+        "specifications": {
+          "wattage": "650W"
+        },
+        "derivedFrom": "Asus TUF Gaming EVO Bronze 650 Watt ATX 3.1 Fully Modular SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus TUF Gaming EVO Bronze 750 Watt ATX 3.1 Fully Modular SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4711636170437",
+        "identitySource": "page gtin",
+        "price": 9700.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/tuf-gaming-750b-evo/tuf-gaming-750b-evo-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/asus-tuf-gaming-evo-750w-bronze-modular-smps",
+        "retailerSku": "ASUS-TUF-GAMING-750B-EVO",
+        "specifications": {
+          "wattage": "750W"
+        },
+        "derivedFrom": "Asus TUF Gaming EVO Bronze 750 Watt ATX 3.1 Fully Modular SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus TUF Gaming EVO Gold 750 Watt ATX 3.1 Fully Modular SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4711636287906",
+        "identitySource": "page gtin",
+        "price": 13700.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/tuf-gaming-750g-evo/tuf-gaming-750g-evo-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/asus-tuf-gaming-750g-evo-gold-modular-smps",
+        "retailerSku": "ASUS-TUF-GAMING-750G-EVO",
+        "specifications": {
+          "wattage": "750W"
+        },
+        "derivedFrom": "Asus TUF Gaming EVO Gold 750 Watt ATX 3.1 Fully Modular SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Asus TUF Gaming EVO Gold 850 Watt ATX 3.1 Fully Modular SMPS",
+        "manufacturer": "ASUS",
+        "manufacturerPartNumber": "",
+        "gtin": "4711636287746",
+        "identitySource": "page gtin",
+        "price": 14100.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/asus/tuf-gaming-850g-evo/tuf-gaming-850g-evo-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/asus-tuf-gaming-850g-evo-gold-modular-smps",
+        "retailerSku": "ASUS-TUF-GAMING-850G-EVO",
+        "specifications": {
+          "wattage": "850W"
+        },
+        "derivedFrom": "Asus TUF Gaming EVO Gold 850 Watt ATX 3.1 Fully Modular SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Coconut SM65 X550 Bronze 550 Watt SMPS",
+        "manufacturer": "COCONUT",
+        "manufacturerPartNumber": "",
+        "gtin": "8906108343488",
+        "identitySource": "page gtin",
+        "price": 2500.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coconut/sm65-550w-bk/coconut-sm65-x550-smps-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/coconut-sm65-x550-bronze-smps",
+        "retailerSku": "COCONUT-SM65-BRONZE-550W-BLK",
+        "specifications": {
+          "wattage": "550W"
+        },
+        "derivedFrom": "Coconut SM65 X550 Bronze 550 Watt SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Coconut SM65 X550 Bronze 550 Watt White SMPS",
+        "manufacturer": "COCONUT",
+        "manufacturerPartNumber": "",
+        "gtin": "8906108344201",
+        "identitySource": "page gtin",
+        "price": 2750.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coconut/sm65-550w-wh/coconut-sm65-x550-white-smps-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/coconut-sm65-x550-bronze-white-smps",
+        "retailerSku": "COCONUT-SM65-550WATT-WH",
+        "specifications": {
+          "wattage": "550W"
+        },
+        "derivedFrom": "Coconut SM65 X550 Bronze 550 Watt White SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Coconut SM70 X650 Bronze 650 Watt SMPS",
+        "manufacturer": "COCONUT",
+        "manufacturerPartNumber": "",
+        "gtin": "8906108343495",
+        "identitySource": "page gtin",
+        "price": 2900.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coconut/sm70-650w-bk/coconut-sm70-x650-smps-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/coconut-sm70-x650-bronze-smps",
+        "retailerSku": "COCONUT-SM70-BRONZE-650W-BLK",
+        "specifications": {
+          "wattage": "650W"
+        },
+        "derivedFrom": "Coconut SM70 X650 Bronze 650 Watt SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Coconut SM70 X650 Bronze 650 Watt White SMPS",
+        "manufacturer": "COCONUT",
+        "manufacturerPartNumber": "",
+        "gtin": "8906108344218",
+        "identitySource": "page gtin",
+        "price": 3150.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coconut/sm70-650w-wh/coconut-sm70-x650-white-smps-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/coconut-sm70-x650-bronze-white-smps",
+        "retailerSku": "COCONUT-SM70-BRONZE-650W-WH",
+        "specifications": {
+          "wattage": "650W"
+        },
+        "derivedFrom": "Coconut SM70 X650 Bronze 650 Watt White SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Coconut SM80 X750 Bronze 750 Watt SMPS",
+        "manufacturer": "COCONUT",
+        "manufacturerPartNumber": "",
+        "gtin": "8906108344225",
+        "identitySource": "page gtin",
+        "price": 3750.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coconut/sm80-750w-bk/coconut-sm80-x750-smps-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/coconut-sm80-x750-bronze-smps",
+        "retailerSku": "COCONUT-SM80-750WATT-BLK",
+        "specifications": {
+          "wattage": "750W"
+        },
+        "derivedFrom": "Coconut SM80 X750 Bronze 750 Watt SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Coconut SM85 X850 Bronze 850 Watt SMPS",
+        "manufacturer": "COCONUT",
+        "manufacturerPartNumber": "",
+        "gtin": "8906108344232",
+        "identitySource": "page gtin",
+        "price": 5000.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coconut/sm85-850w-bk/coconut-sm85-x850-smps-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/coconut-sm85-x850-bronze-smps",
+        "retailerSku": "COCONUT-SM85-850WATT-BLACK",
+        "specifications": {
+          "wattage": "850W"
+        },
+        "derivedFrom": "Coconut SM85 X850 Bronze 850 Watt SMPS",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Cooler Master Elite Gold 1000 Watt ATX 3.1 Fully Modular Smps",
+        "manufacturer": "COOLER MASTER",
+        "manufacturerPartNumber": "",
+        "gtin": "4719512162781",
+        "identitySource": "page gtin",
+        "price": 13900.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coolermaster/mpx-a005-afag/mpx-a005-afag-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cooler-master-elite-gold-1000-modular-smps-mpx-a005-afag",
+        "retailerSku": "CM-ELITE-MPX-A005-AFAG",
+        "specifications": {
+          "wattage": "1000W"
+        },
+        "derivedFrom": "Cooler Master Elite Gold 1000 Watt ATX 3.1 Fully Modular Smps",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Cooler Master Elite Gold 750 Watt ATX 3.1 Fully Modular Smps",
+        "manufacturer": "COOLER MASTER",
+        "manufacturerPartNumber": "",
+        "gtin": "4719512163481",
+        "identitySource": "page gtin",
+        "price": 8160.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coolermaster/mpx-7505-afag/cooler-master-elite-gold-750-atx-3-1-smps-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cooler-master-elite-gold-750-modular-smps-mpx-7505-afag",
+        "retailerSku": "COOLER-MASTER-ELITE-750W-ATX-3-1",
+        "specifications": {
+          "wattage": "750W"
+        },
+        "derivedFrom": "Cooler Master Elite Gold 750 Watt ATX 3.1 Fully Modular Smps",
+        "priceOutlier": false
+      },
+      {
+        "category": "power_supplies",
+        "name": "Cooler Master Elite Gold 850 Watt ATX 3.1 Fully Modular Smps",
+        "manufacturer": "COOLER MASTER",
+        "manufacturerPartNumber": "",
+        "gtin": "4719512163498",
+        "identitySource": "page gtin",
+        "price": 9000.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/smps/coolermaster/mpx-8505-afag/cooler-master-elite-gold-850-atx-3-1-smps-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/cooler-master-elite-gold-850-modular-smps-mpx-8505-afag",
+        "retailerSku": "COOLER-MASTER-ELITE-850W-ATX-3-1",
+        "specifications": {
+          "wattage": "850W"
+        },
+        "derivedFrom": "Cooler Master Elite Gold 850 Watt ATX 3.1 Fully Modular Smps",
+        "priceOutlier": false
+      }
+    ],
+    "ram": [
+      {
+        "category": "ram",
+        "name": "Adata XPG Lancer Blade 32GB (16GBx2) 6000MHz CL36 DDR5 RAM",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4711658152282",
+        "identitySource": "page gtin",
+        "price": 56999.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/adata/ax5u6000c3616g-dtlabbk/ax5u6000c3616g-dtlabbk-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/adata-ram-xpg-lancer-blade-32gb-ddr5-ax5u6000c3616g-dtlabbk",
+        "retailerSku": "ADATA-XPG-LANCER-BLADE-32GB-6000MHZ-DDR5",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Adata XPG Lancer Blade 32GB (16GBx2) 6000MHz CL36 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Kingston Fury Beast 32GB 5600MHz CL36 DDR5 RAM",
+        "manufacturer": "KINGSTON",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 44720.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/kinsgton/kf556c36bbe2-32/kf556c36bbe2-32-image.webp",
+        "retailerUrl": "https://mdcomputers.in/product/kingston-ram-fury-beast-32gb-ddr5-kf556c36bbe2-32",
+        "retailerSku": "KINGSTON-FURY-BEAST-DDR5-KF556C36BBE2-32",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Kingston Fury Beast 32GB 5600MHz CL36 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Patriot Viper Elite 4GB (4GBx1) DDR4 2400MHz (Grey)",
+        "manufacturer": "PATRIOT",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 2109.45,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/patriot/pve44g240c6gy/pve44g240c6gy-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/patriot-ram-viper-elite-4gb-ddr4-pve44g240c6gy",
+        "retailerSku": "PATRIOT VIPER ELITE 4GB DDR4 2400MHz",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Patriot Viper Elite 4GB (4GBx1) DDR4 2400MHz (Grey)",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Corsair Vengeance RGB 8GB 5200MHz CL40 DDR5 RAM",
+        "manufacturer": "CORSAIR",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 14599.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ram/corsair/cmh8gx5m1b5200c40/corsair-cmh8gx5m1b5200c40-ddr5-rgb-ram-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/corsair-ram-vengeance-8gb-ddr5-cmh8gx5m1b5200c40",
+        "retailerSku": "CORSAIR-VENGEANCE-RGB-8G-D5-5200",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Corsair Vengeance RGB 8GB 5200MHz CL40 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "G.Skill Ripjaws S5 16GB 5600MHz CL40 DDR5 RAM",
+        "manufacturer": "G.SKILL",
+        "manufacturerPartNumber": "",
+        "gtin": "4711549510016",
+        "identitySource": "page gtin",
+        "price": 27879.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/g skill/f5-5600j4040c16gx1-rs5k/f5-5600j4040c16gx1-rs5k-image.webp",
+        "retailerUrl": "https://mdcomputers.in/product/g-skill-ram-ripjaws-s5-16gb-ddr5-f5-5600j4040c16gx1-rs5k",
+        "retailerSku": "G-SKILL-RIPJAWS-S5-D5-16G-5600",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "G.Skill Ripjaws S5 16GB 5600MHz CL40 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Corsair Vengeance RGB 96GB (48GBx2) 7200MHz CL40 DDR5 RAM",
+        "manufacturer": "CORSAIR",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 114700.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/corsair/cmh96gx5m2b7200c40/cmh96gx5m2b7200c40-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/corsair-ram-vengeance-96gb-ddr5-cmh96gx5m2b7200c40",
+        "retailerSku": "CORSAIR-VENGEANCE-RGB-96GB-DDR5-7200MHZ",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Corsair Vengeance RGB 96GB (48GBx2) 7200MHz CL40 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "EVM 8GB 2666MHz CL19 DDR4 Laptop RAM",
+        "manufacturer": "EVM",
+        "manufacturerPartNumber": "EVM-8GB-DDR4-2666MHZ-T8G2666S88P",
+        "gtin": "",
+        "identitySource": "page sku",
+        "price": 4539.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/evm/evmt8g2666s88p/evmt8g2666s88p-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/evm-ram-8gb-ddr4-evmt8g2666s88p",
+        "retailerSku": "EVM-8GB-DDR4-2666MHZ-T8G2666S88P",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "EVM 8GB 2666MHz CL19 DDR4 Laptop RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Kingston Value 32GB 5600MHz CL46 DDR5 Laptop RAM",
+        "manufacturer": "KINGSTON",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 53240.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/kinsgton/kvr56s46bd8-32/kvr56s46bd8-32-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/kingston-value-ram-32gb-ddr5-kvr56s46bd8-32",
+        "retailerSku": "KINGSTON-VALUE-DDR5-32GB-5600",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Kingston Value 32GB 5600MHz CL46 DDR5 Laptop RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Adata 16GB 4800MHz CL40 DDR5 RAM",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4711085936448",
+        "identitySource": "page gtin",
+        "price": 28040.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/adata/ad5u480016g-s/ad5u480016g-s-image-main0.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/adata-ram-16gb-ddr5-4800mhz-ad5u480016g-s",
+        "retailerSku": "ADATA-16GB-DDR5-4800MHZ-CL40",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Adata 16GB 4800MHz CL40 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Adata XPG Lancer Blade White 32GB (16GBx2) 6000MHz CL48 DDR5 RAM",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4711085948342",
+        "identitySource": "page gtin",
+        "price": 60080.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/adata/ax5u6000c4816g-dtlabwh/ax5u6000c4816g-dtlabwh-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/adata-ram-xpg-lancer-blade-32gb-ddr5-ax5u6000c4816g-dtlabwh",
+        "retailerSku": "ADATA-XPG-LANCER-BLADE-32GB-DDR5-6000MHZ-WH",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Adata XPG Lancer Blade White 32GB (16GBx2) 6000MHz CL48 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Corsair Vengeance RGB 16GB 5200MHz CL40 DDR5 Ram",
+        "manufacturer": "CORSAIR",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 20562.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ram/corsair/cmh16gx5m1b5200c40/cmh16gx5m1b5200c40-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/corsair-ram-vengeance-cmh16gx5m1b5200c40",
+        "retailerSku": "CORSAIR-VENGEANCE-RGB-16GB-DDR5-5200MHZ",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Corsair Vengeance RGB 16GB 5200MHz CL40 DDR5 Ram",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "G.Skill Flare X5 64GB (32GBx2) 6000MHz CL36 DDR5 Ram",
+        "manufacturer": "G.SKILL",
+        "manufacturerPartNumber": "",
+        "gtin": "4713294237637",
+        "identitySource": "page gtin",
+        "price": 74480.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/ram/gskill/f5-6000j3636f32gx2-fx5/f5-6000j3636f32gx2-fx5-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/g-skill-ram-flare-x5-64gb-ddr5-f5-6000j3636f32gx2-fx5",
+        "retailerSku": "GSKILL-FLARE-X5-DDR5-6000MHZ",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "G.Skill Flare X5 64GB (32GBx2) 6000MHz CL36 DDR5 Ram",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "TeamGroup T-Force Vulcan 16GB 6000MHz CL38 DDR5 RAM",
+        "manufacturer": "TEAMGROUP",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 23260.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/teamgroup/flbd516g6000hc38g01/flbd516g6000hc38g01-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/teamgroup-ram-vulcan-16gb-ddr5-flbd516g6000hc38j01",
+        "retailerSku": "TEAMGROUP-T-FORCE-VULCAN-DDR5-16GB-6000MHZ",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "TeamGroup T-Force Vulcan 16GB 6000MHz CL38 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Adata XPG Gammix D35 64GB (32GBx2) 3200MHz CL16 DDR4 RAM",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4711085942883",
+        "identitySource": "page gtin",
+        "price": 59480.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/adata/ax4u320032g16a-dtbkd35/ax4u320032g16a-dtbkd35-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/adata-ram-xpg-gammix-d35-64gb-ddr4-ax4u320032g16a-dtbkd35",
+        "retailerSku": "ADATA-XPG-GAMMIX-D35-DDR4-64GB-3200MHZ-BLK",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Adata XPG Gammix D35 64GB (32GBx2) 3200MHz CL16 DDR4 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Adata XPG Spectrix D35G RGB 64GB (32GBx2) 3200MHz CL16 DDR4 RAM",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4711085943361",
+        "identitySource": "page gtin",
+        "price": 52940.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/adata/ax4u320032g16a-dtbkd35g/ax4u320032g16a-dtbkd35g-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/adata-ram-xpg-spectrix-d35g-64gb-ddr4-ax4u320032g16a-dtbkd35g",
+        "retailerSku": "ADATA-XPG-SPECTRIX-D35G-DDR4-RGB-64GB-3200MHZ-BLK",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Adata XPG Spectrix D35G RGB 64GB (32GBx2) 3200MHz CL16 DDR4 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Crucial 8GB 3200MHz CL22 DDR4 RAM",
+        "manufacturer": "CRUCIAL",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 6150.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/crucial/cb8gu3200/cb8gu3200-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/crucial-ram-cb8gu3200",
+        "retailerSku": "CRUCIAL-8GB-DDR4-3200MHZ",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Crucial 8GB 3200MHz CL22 DDR4 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Kingston Fury Beast RGB 32GB (16GBx2) 6000MHz CL30 DDR5 RAM",
+        "manufacturer": "KINGSTON",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 44960.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/kinsgton/kf560c30bbak2-32/kf560c30bbak2-32-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/kingston-ram-fury-beast-32gb-ddr5-kf560c30bbak2-32",
+        "retailerSku": "KINGSTON-FURY-BEAST-RGB-32GB-DDR5-6000MHZ",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Kingston Fury Beast RGB 32GB (16GBx2) 6000MHz CL30 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Adata XPG Spectrix D50 16GB (16GBx1) DDR4 3200MHz RGB RAM (Tungsten Grey)",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4711085931276",
+        "identitySource": "page gtin",
+        "price": 3360.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/adata/ax4u320016g16a-st50/ax4u320016g16a-st50-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/adata-ram-xpg-spectrix-d50-16gb-ddr4-ax4u320016g16a-st50",
+        "retailerSku": "ADATA XPG SPECTRIX D50",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Adata XPG Spectrix D50 16GB (16GBx1) DDR4 3200MHz RGB RAM (Tungsten Grey)",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Corsair Vengeance DDR5 8GB 4800MHz CL40 Laptop Ram",
+        "manufacturer": "CORSAIR",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 5288.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/corsair/cmsx8gx5m1a4800c40/cmsx8gx5m1a4800c40-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/corsair-ram-vengeance-cmsx8gx5m1a4800c40",
+        "retailerSku": "CORSAIR-VENGEANCE-DDR5-8GB-4800MHZ",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "Corsair Vengeance DDR5 8GB 4800MHz CL40 Laptop Ram",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "G.Skill Trident Z5 Neo RGB 64GB (32GBx2) 6000MHz CL30 DDR5 RAM",
+        "manufacturer": "G.SKILL",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 86810.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/g skill/f5-6000j3040g32gx2-tz5nr/f5-6000j3040g32gx2-tz5nr-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/g-skill-ram-trident-z5-neo-64gb-ddr5-f5-6000j3040g32gx2-tz5nr",
+        "retailerSku": "G-SKILL-TRIDENT-Z5-NEO-RGB-64GB-DDR5",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "G.Skill Trident Z5 Neo RGB 64GB (32GBx2) 6000MHz CL30 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "TeamGroup T-Force Delta RGB White 32GB (16GBx2) 6000MHz CL38 DDR5 RAM",
+        "manufacturer": "TEAMGROUP",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 60820.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/teamgroup/ff4d532g6000hc38adc01/ff4d532g6000hc38adc01-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/teamgroup-ram-t-force-delta-rgb-ff4d532g6000hc38adc01",
+        "retailerSku": "TEAMGROUP-DELTA-RGB-32G-D5-6000-WH",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "TeamGroup T-Force Delta RGB White 32GB (16GBx2) 6000MHz CL38 DDR5 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Corsair Vengeance Lpx 16GB 3600MHz CL18 DDR4 RAM",
+        "manufacturer": "CORSAIR",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 14540.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/corsair/cmk16gx4m1z3600c18/cmk16gx4m1z3600c18-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/corsair-ram-vengeance-lpx-cmk16gx4m1z3600c18",
+        "retailerSku": "CORSAIR-VENGEANCE-LPX-16GB-DDR4-3600MHZ",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Corsair Vengeance Lpx 16GB 3600MHz CL18 DDR4 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "G.Skill Ripjaws V 8GB 3600MHz CL19 DDR4 RAM",
+        "manufacturer": "G.SKILL",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 3832.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/g skill/f4-3600c19s-8gvrb/g-skill-ripjaws-8gb-ddr4-ram-image-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/g-skill-ram-ripjaws-v-8gb-ddr4-3600mhz-f4-3600c19s-8gvrb",
+        "retailerSku": "G-SKILL-RIPJAWS-V-8GB-DDR4-3600",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "G.Skill Ripjaws V 8GB 3600MHz CL19 DDR4 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Thermaltake Toughram Z-One RGB 16GB (8GBx2) DDR4 3600MHz RGB",
+        "manufacturer": "THERMALTAKE",
+        "manufacturerPartNumber": "",
+        "gtin": "4713227525046",
+        "identitySource": "page gtin",
+        "price": 11791.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/thermaltake/r019d408gx2-3600c18a/toughram-z-one-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/thermaltake-ram-toughram-z-one-rgb-16gb-r019d408gx2-3600c18a",
+        "retailerSku": "THERMALTAKE TOUGHRAM Z ONE RGB 16GB DDR4 3600MHZ",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Thermaltake Toughram Z-One RGB 16GB (8GBx2) DDR4 3600MHz RGB",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Adata XPG Spectrix D41 RGB 32GB (16GBX2) 3000MHz CL16 DDR4 RAM",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4710273772974",
+        "identitySource": "page gtin",
+        "price": 14442.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/adata/ax4u3000316g16a-dt41/ax4u3000316g16a-dt41-images-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/adata-ram-xpg-spectrix-d41-32gb-ddr4-ax4u3000316g16a-dt41",
+        "retailerSku": "ADATA-XPG-SPECTRIX-D41-D4-3000-RGB-T-GRAY",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Adata XPG Spectrix D41 RGB 32GB (16GBX2) 3000MHz CL16 DDR4 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "G.Skill Ripjaws V 8GB 3000MHz CL16 DDR4 RAM",
+        "manufacturer": "G.SKILL",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 1722.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/g skill/f4-3000c16s-8gvrb/f4-2400c17s-4gvr-1.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/gskill-ram-ripjaws-v-8gb-ddr4-3000mhz-f4-3000c16s-8gvrb",
+        "retailerSku": "G.SKILL RIPJAWS V 8GB DDR4 3000MHZ RED",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "G.Skill Ripjaws V 8GB 3000MHz CL16 DDR4 RAM",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "G.Skill Trident Z RGB 16GB (8GBx2) DDR4 4000MHz",
+        "manufacturer": "G.SKILL",
+        "manufacturerPartNumber": "",
+        "gtin": "848354033851",
+        "identitySource": "page gtin",
+        "price": 13545.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/g skill/f4-4000c18d-16gtzrb/f4-4000c18d-16gtzrb-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/g-skill-ram-trident-z-16gb-ddr4-f4-4000c18d-16gtzrb",
+        "retailerSku": "G.SKILL TRIDENT Z RGB 16GB DDR4 4000MHz",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "G.Skill Trident Z RGB 16GB (8GBx2) DDR4 4000MHz",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "G.Skill Trident Z5 RGB 32GB (16GBx2) DDR5 6000MHz (Matte Black)",
+        "manufacturer": "G.SKILL",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 39500.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/g skill/f5-6000u4040e16gx2-tz5rk/gskill-trident-z5-rgb-32gb-ddr5-matte-black-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/gskill-ram-trident-z5-32gb-ddr5-f5-6000u4040e16gx2-tz5rk",
+        "retailerSku": "GSKILL TRIDENT Z5 RGB 32GB DDR5 6000MHZ MATTE BLACK",
+        "specifications": {
+          "ram_type": "DDR5"
+        },
+        "derivedFrom": "G.Skill Trident Z5 RGB 32GB (16GBx2) DDR5 6000MHz (Matte Black)",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Adata XPG Gammix D30 16GB DDR4 3600MHz Red",
+        "manufacturer": "ADATA",
+        "manufacturerPartNumber": "",
+        "gtin": "4710273774497",
+        "identitySource": "page gtin",
+        "price": 27578.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/adata/ax4u360038g18a-dr30/ax4u360038g18a-dr30-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/adata-ram-xpg-gammix-d30-16gb-ddr4-ax4u360038g18a-dr30",
+        "retailerSku": "ADATA XPG GAMMIX D30 16GB DDR4 3600MHZ RED",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Adata XPG Gammix D30 16GB DDR4 3600MHz Red",
+        "priceOutlier": false
+      },
+      {
+        "category": "ram",
+        "name": "Ant Esports 690 Neo FP 4GB DDR4 2666MHz Laptop RAM",
+        "manufacturer": "ANT ESPORTS",
+        "manufacturerPartNumber": "",
+        "gtin": "8906136071865",
+        "identitySource": "page gtin",
+        "price": 892.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/memory/ant esports/ae4gd4s26m08c/ae4gd4s26m08c-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/ant-esports-ram-690-neo-fp-4gb-ae4gd4s26m08c",
+        "retailerSku": "ANT-ESPORTS-690-NEO-FP-4GB-DDR4-2666MHZ",
+        "specifications": {
+          "ram_type": "DDR4"
+        },
+        "derivedFrom": "Ant Esports 690 Neo FP 4GB DDR4 2666MHz Laptop RAM",
+        "priceOutlier": false
+      }
+    ],
+    "motherboards": [
+      {
+        "category": "motherboards",
+        "name": "MSI B550M-A Pro Motherboard",
+        "manufacturer": "MSI",
+        "manufacturerPartNumber": "",
+        "gtin": "4719072752613",
+        "identitySource": "page gtin",
+        "price": 6250.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/msi/b550m-a-pro/b550m-a-pro-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/msi-b550m-a-pro-motherboard",
+        "retailerSku": "MSI",
+        "specifications": {
+          "chipset": "B550M",
+          "socket": "AM4",
+          "memory_type": "DDR4",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "MSI B550M-A Pro Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Msi Pro B550M-P WIFI6E Motherboard",
+        "manufacturer": "MSI",
+        "manufacturerPartNumber": "",
+        "gtin": "4711377453530",
+        "identitySource": "page gtin",
+        "price": 9450.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/msi/pro-b550m-p-wifi6e/msi-pro-b550m-p-wifi6e-main.webp",
+        "retailerUrl": "https://mdcomputers.in/product/msi-pro-b550m-p-wifi6e-motherboard",
+        "retailerSku": "MSI-PRO-B550M-P-WIFI6E-M-ATX-DDR4",
+        "specifications": {
+          "chipset": "B550M",
+          "socket": "AM4",
+          "memory_type": "DDR4",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "Msi Pro B550M-P WIFI6E Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Gigabyte X870E AORUS PRO X3D WIFI7 ATX Motherboard",
+        "manufacturer": "GIGABYTE",
+        "manufacturerPartNumber": "",
+        "gtin": "4719331878603",
+        "identitySource": "page gtin",
+        "price": 38850.0,
+        "currency": "INR",
+        "availability": "in_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/gigabyte/x870e-aorus-pro-x3d/x870e-a-pro-x-image-main0.webp",
+        "retailerUrl": "https://mdcomputers.in/product/gigabyte-x870e-aorus-pro-x3d-motherboard",
+        "retailerSku": "GIGABYTE-X870E-AORUS-PRO-X3D",
+        "specifications": {
+          "chipset": "X870E",
+          "socket": "AM5",
+          "memory_type": "DDR5"
+        },
+        "derivedFrom": "Gigabyte X870E AORUS PRO X3D WIFI7 ATX Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock A520M/AC (Wi-Fi) DDR4 Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483932328",
+        "identitySource": "page gtin",
+        "price": 7000.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/90-mxbe70-a0iayiz/90-mxbe70-a0iayiz-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-a520m-ac-wifi-motherboard",
+        "retailerSku": "ASROCK A520M AC WI-FI",
+        "specifications": {
+          "chipset": "A520M",
+          "socket": "AM4",
+          "memory_type": "DDR4",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock A520M/AC (Wi-Fi) DDR4 Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock B450M Steel Legend Pink Edition Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 7585.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b450m-steel-legend-pink/b450m-steel-legend-pink-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b450m-steel-legend-pink-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B450M",
+          "socket": "AM4",
+          "memory_type": "DDR4",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "Asrock B450M Steel Legend Pink Edition Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B450M/ac (Wi-Fi) Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483932809",
+        "identitySource": "page gtin",
+        "price": 7675.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b450m-ac/b450m-ac-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b450m-ac-wifi-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B450M",
+          "socket": "AM4",
+          "memory_type": "DDR4",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock B450M/ac (Wi-Fi) Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B460 Phantom Gaming 4 Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "",
+        "identitySource": "none",
+        "price": 8987.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b460-phantom-gaming-4/b460-phantom-gaming-4-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b460-phantom-gaming-4-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B460"
+        },
+        "derivedFrom": "ASRock B460 Phantom Gaming 4 Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock B460 Steel Legend Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483931284",
+        "identitySource": "page gtin",
+        "price": 11400.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b460-steel-legend/b460-steel-legend-img-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b460-steel-legend-motherboard",
+        "retailerSku": "ASRock",
+        "specifications": {
+          "chipset": "B460"
+        },
+        "derivedFrom": "Asrock B460 Steel Legend Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B460M Pro4 Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483931161",
+        "identitySource": "page gtin",
+        "price": 8099.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b460m-pro4/b460m-pro4-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b460m-pro4-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B460M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock B460M Pro4 Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B460M Steel Legend Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483931291",
+        "identitySource": "page gtin",
+        "price": 9767.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b460m-steel-legend/b460m-steel-legend-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b460m-steel-legend-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B460M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock B460M Steel Legend Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B460M-HDV Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483931307",
+        "identitySource": "page gtin",
+        "price": 6499.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b460m-hdv/b460m-hdv-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b460m-hdv-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B460M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock B460M-HDV Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock B550 Extreme4 Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483931567",
+        "identitySource": "page gtin",
+        "price": 16799.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b550-extreme-4/b550-extreme-4-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b550-extreme-4-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B550",
+          "socket": "AM4",
+          "memory_type": "DDR4"
+        },
+        "derivedFrom": "Asrock B550 Extreme4 Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock B550 PG Velocita Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483931550",
+        "identitySource": "page gtin",
+        "price": 18999.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b550-pg-velocita/b550-pg-velocita-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b550-pg-velocita-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B550",
+          "socket": "AM4",
+          "memory_type": "DDR4"
+        },
+        "derivedFrom": "Asrock B550 PG Velocita Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock B550 Taichi (Wi-Fi) Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483931642",
+        "identitySource": "page gtin",
+        "price": 23050.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b550-taichi/b550-taichi-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b550-taichi-wifi-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B550",
+          "socket": "AM4",
+          "memory_type": "DDR4"
+        },
+        "derivedFrom": "Asrock B550 Taichi (Wi-Fi) Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B550 Taichi Razer Edition Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483933059",
+        "identitySource": "page gtin",
+        "price": 27620.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/90-mxben0-a0iayz/90-mxben0-a0iayz-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b550-taichi-razer-edition-wifi-motherboard",
+        "retailerSku": "ASROCK B550 TAICHI RAZER EDITION",
+        "specifications": {
+          "chipset": "B550",
+          "socket": "AM4",
+          "memory_type": "DDR4"
+        },
+        "derivedFrom": "ASRock B550 Taichi Razer Edition Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B550M Pro4 Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483931598",
+        "identitySource": "page gtin",
+        "price": 9111.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b550m-pro4/b550m-pro4-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b550m-pro4-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B550M",
+          "socket": "AM4",
+          "memory_type": "DDR4",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock B550M Pro4 Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B560 Pro4 Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483933721",
+        "identitySource": "page gtin",
+        "price": 10600.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/90-mxbfi0-a0iayz/90-mxbfi0-a0iayz-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b560-pro4-motherboard",
+        "retailerSku": "ASROCK B560 PRO4",
+        "specifications": {
+          "chipset": "B560"
+        },
+        "derivedFrom": "ASRock B560 Pro4 Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock B560 Steel Legend Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483933745",
+        "identitySource": "page gtin",
+        "price": 13200.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/90-mxbfd0-a0iayz/90-mxbfd0-a0iayz-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b560-steel-legend-motherboard",
+        "retailerSku": "ASROCK B560 STEEL LEGEND",
+        "specifications": {
+          "chipset": "B560"
+        },
+        "derivedFrom": "Asrock B560 Steel Legend Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock B560M Pro4 AC (Wi-Fi) Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483933738",
+        "identitySource": "page gtin",
+        "price": 10050.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/90-mxbgi0-a0iayz/90-mxbgi0-a0iayz-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b560m-pro4-ac-wifi-motherboard",
+        "retailerSku": "ASROCK B560M PRO4 AC",
+        "specifications": {
+          "chipset": "B560M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "Asrock B560M Pro4 AC (Wi-Fi) Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B560M Pro4 Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483933714",
+        "identitySource": "page gtin",
+        "price": 9300.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/90-mxbel0-a0iayz/90-mxbel0-a0iayz-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b560m-pro4-motherboard",
+        "retailerSku": "ASROCK B560M PRO4",
+        "specifications": {
+          "chipset": "B560M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock B560M Pro4 Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B560M Pro4/ac Plus (Wi-Fi) Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483934544",
+        "identitySource": "page gtin",
+        "price": 10100.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b560m-pro4-ac-plus/asrock-b560m-pro4ac-plus-wifi-motherboard-image_main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b560m-pro4-ac-plus-wifi-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B560M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock B560M Pro4/ac Plus (Wi-Fi) Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock B560M-ITX/ac (Wi-Fi) Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483933912",
+        "identitySource": "page gtin",
+        "price": 9850.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/b560m-itx-ac/asrock-b560m-itx-ac-wifi-ddr4-motherboard-image_main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-b560m-itx-ac-wifi-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "B560M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock B560M-ITX/ac (Wi-Fi) Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock H410M-HDV M.2 Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483931314",
+        "identitySource": "page gtin",
+        "price": 5800.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/h410m-hdv-m.2/h410m-hdv-m.2-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-h410m-hdv-m-2-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "H410M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "Asrock H410M-HDV M.2 Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock H410M-HDV Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483933370",
+        "identitySource": "page gtin",
+        "price": 5249.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/h410m-hdv/h410m-hdv-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-h410m-hdv-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "H410M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "Asrock H410M-HDV Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock H510M/ac (WiFi) Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "90-MXBFU0-A01AYZ",
+        "gtin": "4710483934254",
+        "identitySource": "page mpn",
+        "price": 7250.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/h510m-ac/h510mac-wifi-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-h510m-ac-wifi-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "H510M",
+          "form_factor": "Micro-ATX"
+        },
+        "derivedFrom": "ASRock H510M/ac (WiFi) Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock X570 PG Velocita WIFI6 DDR4 ATX Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4710483933073",
+        "identitySource": "page gtin",
+        "price": 25195.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/90-mxber0-a0iayz/90-mxber0-a0iayz-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-x570-pg-velocita-wifi-motherboard",
+        "retailerSku": "ASROCK X570 PG VELOCITA",
+        "specifications": {
+          "chipset": "X570",
+          "socket": "AM4",
+          "memory_type": "DDR4"
+        },
+        "derivedFrom": "ASRock X570 PG Velocita WIFI6 DDR4 ATX Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock X570 Phantom Gaming 4 DDR4 ATX Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4717677338881",
+        "identitySource": "page gtin",
+        "price": 13999.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/x570-phantom-gaming-4/x570-phantom-gaming-4_main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-x570-phantom-gaming-4-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "X570",
+          "socket": "AM4",
+          "memory_type": "DDR4"
+        },
+        "derivedFrom": "ASRock X570 Phantom Gaming 4 DDR4 ATX Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock X570 Phantom Gaming-ITX/TB3 Wi-Fi M-ITX Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4717677339147",
+        "identitySource": "page gtin",
+        "price": 20300.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/90-mxbbi0-a0iayiz/90-mxbbi0-a0iayiz-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-x570-phantom-gaming-itx-tb3-wifi-motherboard",
+        "retailerSku": "ASROCK-X570-PHANTOM-GAMING-ITX-TB3",
+        "specifications": {
+          "chipset": "X570",
+          "socket": "AM4",
+          "memory_type": "DDR4"
+        },
+        "derivedFrom": "Asrock X570 Phantom Gaming-ITX/TB3 Wi-Fi M-ITX Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "ASRock X570 Steel Legend ATX Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4717677338904",
+        "identitySource": "page gtin",
+        "price": 18500.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/x570-steel-legend/x570-steel-legend_main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-x570-steel-legend-motherboard",
+        "retailerSku": "ASROCK",
+        "specifications": {
+          "chipset": "X570",
+          "socket": "AM4",
+          "memory_type": "DDR4"
+        },
+        "derivedFrom": "ASRock X570 Steel Legend ATX Motherboard",
+        "priceOutlier": false
+      },
+      {
+        "category": "motherboards",
+        "name": "Asrock X570 Taichi Wi-Fi ATX Motherboard",
+        "manufacturer": "ASROCK",
+        "manufacturerPartNumber": "",
+        "gtin": "4717677338683",
+        "identitySource": "page gtin",
+        "price": 27215.0,
+        "currency": "INR",
+        "availability": "out_of_stock",
+        "imageUrl": "https://mdcomputers.in/image/catalog/motherboard/asrock/x570-taichi/x570-taichi-image-main.jpg",
+        "retailerUrl": "https://mdcomputers.in/product/asrock-x570-taichi-wifi-motherboard",
+        "retailerSku": "ASROCK-X570-TAICHI-DDR4",
+        "specifications": {
+          "chipset": "X570",
+          "socket": "AM4",
+          "memory_type": "DDR4"
+        },
+        "derivedFrom": "Asrock X570 Taichi Wi-Fi ATX Motherboard",
+        "priceOutlier": false
+      }
+    ]
+  }
+}

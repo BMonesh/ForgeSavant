@@ -23,3 +23,10 @@ services:
         value: 2005.monesh@gmail.com
       - key: AMAZON_ASSOCIATE_TAG
         value: forgesavantpc-21
+      # Public OAuth client identifier: it is embedded in every browser bundle, so
+      # it is not a secret. The server verifies ID tokens against it, and Vite reads
+      # the VITE_ copy at build time; without it the sign-in button is not rendered.
+      - key: GOOGLE_CLIENT_ID
+        value: 208063553262-toavnmm8l19j85fhsc4he8e993v22n0k.apps.googleusercontent.com
+      - key: VITE_GOOGLE_CLIENT_ID
+        value: 208063553262-toavnmm8l19j85fhsc4he8e993v22n0k.apps.googleusercontent.com

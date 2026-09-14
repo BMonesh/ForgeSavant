@@ -4,13 +4,7 @@ import {
   FiArrowRight,
   FiCheck,
   FiChevronDown,
-  FiCpu,
-  FiDatabase,
-  FiHardDrive,
-  FiServer,
-  FiShield,
   FiTool,
-  FiZap,
 } from "react-icons/fi";
 import "../Styles/home.css";
 import heroCase from "../assets/forgesavant-exploded-case-transparent.webp";
@@ -25,12 +19,12 @@ import api from "../services/api";
 import BrandLogo from "./ui/BrandLogo";
 
 const categories = [
-  { key: "processors", name: "Processors", noun: "in catalog", image: processorImg, icon: FiCpu },
-  { key: "gpus", name: "Graphics cards", noun: "in catalog", image: gpuImg, icon: FiZap },
-  { key: "motherboards", name: "Motherboards", noun: "in catalog", image: motherboardImg, icon: FiServer },
-  { key: "ram", name: "Memory", noun: "kits", image: ramImg, icon: FiDatabase },
-  { key: "storage", name: "Storage", noun: "drives", image: storageImg, icon: FiHardDrive },
-  { key: "powerSupplies", name: "Power supplies", noun: "verified", image: psuImg, icon: FiShield },
+  { key: "processors", name: "Processors", noun: "in catalog", image: processorImg },
+  { key: "gpus", name: "Graphics cards", noun: "in catalog", image: gpuImg },
+  { key: "motherboards", name: "Motherboards", noun: "in catalog", image: motherboardImg },
+  { key: "ram", name: "Memory", noun: "kits", image: ramImg },
+  { key: "storage", name: "Storage", noun: "drives", image: storageImg },
+  { key: "powerSupplies", name: "Power supplies", noun: "verified", image: psuImg },
 ];
 
 const faqs = [
@@ -100,19 +94,19 @@ const Home = () => {
           <div className="hero-note hero-note-top"><span>01</span> Start from workload</div>
           <div className="hero-note hero-note-bottom"><span>02</span> Verify every fit</div>
         </div>
+      </section>
 
-        <aside className="home-hero-aside" aria-label="ForgeSavant modes">
-          <div>
-            <span>Guided builder</span>
-            <h2>Choose with constraints</h2>
-            <p>Each choice narrows the next list using visible compatibility rules.</p>
-          </div>
-          <div>
-            <span>Build library</span>
-            <h2>Return to decisions</h2>
-            <p>Save a configuration, reopen it later and replace parts without starting over.</p>
-          </div>
-        </aside>
+      <section className="home-modes" aria-label="ForgeSavant modes">
+        <div>
+          <span>Guided builder</span>
+          <h2>Choose with constraints</h2>
+          <p>Each choice narrows the next list using visible compatibility rules.</p>
+        </div>
+        <div>
+          <span>Build library</span>
+          <h2>Return to decisions</h2>
+          <p>Save a configuration, reopen it later and replace parts without starting over.</p>
+        </div>
       </section>
 
       <section className="featured-build" id="recommended" aria-labelledby="featured-title">
@@ -138,13 +132,6 @@ const Home = () => {
         <div className="featured-art">
           <img src={featuredBuild} alt="Black performance desktop PC with visible internal components" />
         </div>
-
-        <dl className="featured-specs">
-          <div><dt>Source</dt><dd>Catalog API<br />current application data</dd></div>
-          <div><dt>Compatibility</dt><dd>Explicit rules<br />visible before advancing</dd></div>
-          <div><dt>Pricing</dt><dd>Live, stale, estimated<br />or unavailable</dd></div>
-          <div><dt>Saving</dt><dd>Private builds<br />account required</dd></div>
-        </dl>
       </section>
 
       <section className="component-section" id="components" aria-labelledby="component-title">
@@ -156,12 +143,14 @@ const Home = () => {
           <p>ForgeSavant turns specifications into a guided sequence, so you do not need to memorize every socket, interface or power rule.</p>
         </div>
         <div className="component-grid">
-          {categories.map(({ key, name, noun, image, icon: Icon }) => (
-            <Link key={name} to="/build" className="component-card">
-              <span className="component-card-icon"><Icon aria-hidden="true" /></span>
+          {categories.map(({ key, name, noun, image }) => (
+            <Link
+              key={name}
+              to="/build"
+              className={`component-card ${key === "gpus" ? "component-card-featured" : ""}`}
+            >
               <img src={image} alt="" />
               <span><strong>{name}</strong><small>{catalogMeta.counts?.[key] ?? "—"} {noun}</small></span>
-              <FiArrowRight aria-hidden="true" />
             </Link>
           ))}
         </div>

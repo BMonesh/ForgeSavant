@@ -1,0 +1,89 @@
+name: Scheduled pipeline
+
+# Collection is only meaningful with durable shared state. Every stage reads and
+# writes the observation store in Atlas, so a run here deduplicates against runs
+# from any other host. Without OBSERVATION_STORE_URI this workflow refuses to
+# run rather than silently re-accepting every prior observation as new.
+on:
+  schedule:
+    # 02:30 UTC daily, which is early morning IST and off-peak for Icecat.
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Limit Open Icecat lookups (0 runs the full catalog)"
+        required: false
+        default: "0"
+
+permissions:
+  contents: read
+
+concurrency:
+  # run_pipeline.py takes a local lock, which cannot see another runner. This is
+  # what actually prevents two overlapping scheduled runs.
+  group: scheduled-pipeline
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    name: Collect and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OBSERVATION_STORE_URI: ${{ secrets.OBSERVATION_STORE_URI }}
+      URI: ${{ secrets.URI }}
+      ICECAT_USERNAME: ${{ secrets.ICECAT_USERNAME }}
+      ICECAT_PASSWORD: ${{ secrets.ICECAT_PASSWORD }}
+      ICECAT_LANGUAGE: EN
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Require durable observation storage
+        run: |
+          if [ -z "$OBSERVATION_STORE_URI" ]; then
+            echo "OBSERVATION_STORE_URI is not set."
+            echo "Without it each run starts from an empty lake and re-accepts every observation."
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: data-pipeline/requirements.txt
+
+      - name: Install pipeline dependencies
+        run: python -m pip install -r data-pipeline/requirements.txt
+
+      - name: Run pipeline
+        run: python data-pipeline/run_pipeline.py --limit ${{ github.event.inputs.limit || 0 }}
+
+      - name: Summarise run
+        if: always()
+        run: |
+          if [ -f data-pipeline/analytics/pipeline_status.json ]; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+          status = json.loads(pathlib.Path("data-pipeline/analytics/pipeline_status.json").read_text(encoding="utf-8"))
+          print(f"## Pipeline {status.get('status')}\n")
+          print("| Stage | Status | Seconds |")
+          print("|---|---|---:|")
+          for stage in status.get("stages", []):
+              print(f"| {stage['name']} | {stage['status']} | {stage.get('durationSeconds', 0)} |")
+          if status.get("error"):
+              print(f"\n**Error:** {status['error']}")
+          PY
+          fi
+
+      - name: Upload run reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-reports
+          path: |
+            data-pipeline/analytics/*.json
+            data-pipeline/icecat_coverage_report.json
+          if-no-files-found: warn
+          retention-days: 14

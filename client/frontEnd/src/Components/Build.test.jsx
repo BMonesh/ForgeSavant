@@ -98,7 +98,11 @@ describe("Build journey", () => {
 
     expect(await screen.findByRole("heading", { name: "Server verified" })).toBeInTheDocument();
     expect(await screen.findByText(/CPU index 356 \/ 12 GB GPU memory · low confidence/i)).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Save build" }));
+    // Save from the status dock specifically. That slot used to be a status
+    // label styled as a button, so clicking it on the final step did nothing
+    // while the real control sat below the fold.
+    const dock = screen.getByRole("contentinfo", { name: "Build status" });
+    await user.click(within(dock).getByRole("button", { name: "Save build" }));
 
     await waitFor(() => expect(api.post).toHaveBeenCalledWith(
       "/saves",

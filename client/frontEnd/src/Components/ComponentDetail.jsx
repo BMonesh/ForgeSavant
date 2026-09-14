@@ -19,6 +19,13 @@ const formatDate = (value) => value
 
 const priceEvidence = (component) => {
   const pricing = component?.pricing || {};
+  const observed = pricing.status === "live" || pricing.status === "stale";
+  // An observation of stock the retailer cannot sell is evidence of what the
+  // price was, not of what you would pay. Unavailable listings are also the
+  // least likely to be repriced, so they must not read as a live price.
+  if (observed && pricing.availability === "out_of_stock") {
+    return { key: "unpurchasable", label: "Last listed price · out of stock" };
+  }
   if (pricing.status === "live") return { key: "live", label: "Live observation" };
   if (pricing.status === "stale") return { key: "stale", label: "Stale observation" };
   if (Number.isFinite(Number(component?.price))) return { key: "planning", label: "Planning value" };

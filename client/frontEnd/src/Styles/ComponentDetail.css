@@ -59,6 +59,8 @@
 .pricing-proof.stale { border-color: var(--color-warning); }
 .pricing-proof.planning { border-color: var(--color-accent); }
 .pricing-proof.unavailable { border-color: var(--color-subtle); }
+/* Observed, but for stock that cannot be bought: never styled as live. */
+.pricing-proof.unpurchasable { border-color: var(--color-subtle); }
 
 .pricing-proof > strong {
   font-family: var(--font-display);
@@ -102,6 +104,7 @@
 .evidence-label.stale { border-color: var(--color-warning); color: var(--color-warning); }
 .evidence-label.planning { border-color: var(--color-accent); color: var(--color-accent); }
 .evidence-label.missing,
+.evidence-label.unpurchasable,
 .evidence-label.unavailable { color: var(--color-muted); }
 
 .component-detail-grid {

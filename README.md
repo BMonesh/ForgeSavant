@@ -45,7 +45,7 @@ ForgeSavant/
 ├── data-pipeline/          # Python data processing pipeline
 │   ├── raw_data/           # Scraped CSVs from vendor sources
 │   ├── cleaned_data/       # Normalized, deduplicated CSVs
-│   ├── scraper.py          # Web scraper with rate limiting
+│   ├── scrape_retailers.py # Retailer price collection (exact-match, robots-aware)
 │   ├── data_cleaner.py     # Pandas-based cleaning & normalization
 │   ├── compatibility_engine.py  # Rule-based hardware validation
 │   └── import_to_mongo.py  # CSV -> MongoDB document importer
@@ -86,10 +86,113 @@ npm run analytics:model-readiness
 ```
 
 Start manufacturer review from the tracked
-`data-pipeline/manufacturer_evidence_template.json`; the populated
-`manufacturer_evidence_feed.json` is ignored. Retail snapshots include only
+`data-pipeline/manufacturer_evidence_template.json`, or generate a capture sheet
+for every product still missing content:
+
+```bash
+npm run catalog:coverage             # rebuild the ranked gap queue
+npm run catalog:manufacturer:scaffold  # write a ready-to-transcribe feed
+```
+
+The scaffold fills in the category, verified name, manufacturer part number, and
+the exact official URL from the identity manifest, then leaves every
+specification `null` and `observedAt` empty. It does not crawl manufacturer
+sites and never copies values from the seed catalog; a reviewer transcribes each
+value from the official page. Ingestion rejects any record whose specifications
+are still blank. Pass `--component gpus` or `--limit 5` to work in batches, and
+`--force` to regenerate over an existing sheet. The populated
+`manufacturer_evidence_feed.json` is ignored by git. Retail snapshots include only
 offers previously approved through the signed admin import flow, so seed prices
 cannot accidentally become training data.
+
+### Retailer price collection
+
+When no affiliate API or partner feed is available, prices can be read directly
+from public retailer product pages:
+
+```bash
+npm run retail:scrape          # report only; visits pages but exports nothing
+npm run retail:scrape:apply    # export the matched offers for signed admin review
+```
+
+The collector is deliberately narrow:
+
+- **Exact matching only.** A price is attached to a catalog product only when a
+  verified manufacturer part number resolves to exactly one retailer URL.
+  Matching compares whole token runs, never substrings, because `BX8071513600K`
+  is a prefix of `BX8071513600KF` and those are different processors. Products
+  listed under several URLs are reported as `ambiguous` for a human to resolve,
+  never guessed.
+- **Bounded requests.** Discovery reads published sitemaps and is matched
+  offline, so a full run costs a few feed requests plus one page per matched
+  product — currently 32 of 58 products across mdcomputers.in and
+  primeabgb.com — not a site crawl.
+- **robots.txt is fetched and honoured** per host, including `Crawl-delay`,
+  with a 1.5–3s delay between requests.
+- **Structured data, not selectors.** Offers are read from schema.org `Product`
+  JSON-LD that retailers publish for machines, so a theme change does not
+  silently produce wrong prices. A page without that markup is an error, never
+  a zero price. Where an offer carries several `priceSpecification` entries the
+  selling price is taken and the list price discarded.
+- **The page must agree with its own URL.** A slug is the retailer's claim about
+  which product a page is; the page's structured data is a second, independent
+  claim. When they conflict the offer is rejected — primeabgb.com publishes a
+  Seagate ST2000DM004 under a slug ending `st2000dm008`, and trusting the slug
+  would have attached that price to the wrong drive.
+- **Retailers are cross-checked.** Where two sources quote the same part number,
+  a spread wider than 25% is reported for review rather than silently applied.
+- **Ambiguity is settled by a person, not a heuristic.** A part number listed
+  under several URLs is usually a variant pair — a `B550M-A` beside a
+  `B550M-A WIFI II`. Run `--inspect-ambiguous` to fetch each candidate so the
+  report shows the retailer's own title and price next to the verified catalog
+  name, then record the choice in a file and pass it as `--resolutions`:
+
+  ```json
+  [{ "manufacturerPartNumber": "PRIME-B550M-A",
+     "url": "https://mdcomputers.in/product/asus-prime-b550m-a-motherboard" }]
+  ```
+
+  A part number can be ambiguous at more than one retailer, so list a URL for
+  each; a retailer resolves only when exactly one of its own candidates appears.
+  The chosen page still has to corroborate the part number before its price is
+  used, so a wrong choice is refused rather than trusted.
+- **Display and training are separate permissions.** primeabgb.com's robots.txt
+  declares `Content-Signal: ai-train=no`, so its offers are exported with
+  `ai_training_permitted: false`. Those prices may be shown but must not become
+  model training data.
+- **Review is still required.** Output is an offer feed for the existing signed
+  administrator preview/apply workflow. The collector never writes to MongoDB
+  and never edits compatibility specifications, so only a reviewed import can
+  mark a price live.
+
+`amazon.in` is supported only through operator-supplied ASINs via
+`--identifiers`; that adapter performs no search, browse, or crawl. Amazon's
+Conditions of Use prohibit automated data gathering regardless of what
+`robots.txt` permits, so enabling it is an explicit operator decision.
+Honouring `robots.txt` is not the same as having permission under a site's
+terms of service, and that judgement rests with the operator per site.
+
+### Shared pipeline state and scheduled runs
+
+The observation lake is gitignored, so by default it exists only on the machine
+that created it. A scheduled or deployed run starting from an empty lake would
+re-accept every prior observation as new, so set `OBSERVATION_STORE_URI` to move
+the store into MongoDB. Both steps are idempotent and dry-run by default:
+
+```bash
+npm run lake:migrate         # report what would copy
+npm run lake:migrate:apply   # append-only; the local files are left in place
+```
+
+`.github/workflows/pipeline.yml` then runs the full pipeline daily and refuses
+to start without `OBSERVATION_STORE_URI`. It expects the repository secrets
+`OBSERVATION_STORE_URI`, `URI`, `ICECAT_USERNAME`, and `ICECAT_PASSWORD`.
+
+Each run also publishes its analytics summaries with
+`npm run reports:publish:apply`. The administrator data-health console reads a
+local analytics file when one exists and otherwise falls back to the published
+copy, so a deployed API with no `data-pipeline/analytics/` directory still
+shows the results of a run that happened elsewhere.
 
 **What it handles:**
 - Normalizes inconsistent formats across vendors (`3.7 ghz` -> `3.7 GHz`, `amd` -> `AMD`, `LGA1700` -> `LGA 1700`)
@@ -212,7 +315,11 @@ Amazon affiliate destinations are intentionally separate from retailer price
 observations. They store only an exact catalog relationship, ASIN, and a
 generated Amazon.in URL containing the configured public Associate tag. They do
 not import Amazon titles, images, prices, availability, reviews, or
-specifications, and the application does not scrape Amazon pages.
+specifications.
+
+Price collection from retailer product pages is a separate, opt-in tool
+described under [Retailer price collection](#retailer-price-collection). It is
+not part of the affiliate feature and does not run automatically.
 
 Configure the public tag locally:
 

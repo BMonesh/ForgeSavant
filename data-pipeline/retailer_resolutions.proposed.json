@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "records": [
+    {
+      "manufacturerPartNumber": "BX8071513700K",
+      "url": "https://mdcomputers.in/product/intel-i7-13700k-bx8071513700k-desktop-processor",
+      "_source": "mdcomputers_in",
+      "_catalogName": "Intel Core i7-13700K",
+      "_chose": "Intel Core i7-13700K Processor",
+      "_price": 31450.0
+    },
+    {
+      "manufacturerPartNumber": "MAG-B550-TOMAHAWK",
+      "url": "https://mdcomputers.in/product/msi-mag-b550-tomahawk-motherboard",
+      "_source": "mdcomputers_in",
+      "_catalogName": "MSI MAG B550 TOMAHAWK",
+      "_chose": "MSI MAG B550 Tomahawk Motherboard",
+      "_price": 16680.0
+    },
+    {
+      "manufacturerPartNumber": "MAG-B660-TOMAHAWK-WIFI",
+      "url": "https://mdcomputers.in/product/msi-mag-b660-tomahawk-wifi-ddr5-motherboard",
+      "_source": "mdcomputers_in",
+      "_catalogName": "MSI MAG B660 TOMAHAWK WIFI",
+      "_chose": "MSI MAG B660 Tomahawk WIFI Motherboard",
+      "_price": 22340.0
+    },
+    {
+      "manufacturerPartNumber": "MPG-Z790-EDGE-WIFI",
+      "url": "https://mdcomputers.in/product/msi-mpg-z790-edge-wifi-motherboard",
+      "_source": "mdcomputers_in",
+      "_catalogName": "MSI MPG Z790 EDGE WIFI",
+      "_chose": "MSI MPG Z790 Edge WIFI Motherboard",
+      "_price": 38680.0
+    },
+    {
+      "manufacturerPartNumber": "PRIME-B550M-A",
+      "url": "https://mdcomputers.in/product/asus-prime-b550m-a-motherboard",
+      "_source": "mdcomputers_in",
+      "_catalogName": "ASUS PRIME B550M-A",
+      "_chose": "Asus Prime B550M-A Motherboard",
+      "_price": 9250.0
+    },
+    {
+      "manufacturerPartNumber": "ROG-STRIX-B550-F-GAMING",
+      "url": "https://mdcomputers.in/product/asus-rog-strix-b550-f-gaming-motherboard",
+      "_source": "mdcomputers_in",
+      "_catalogName": "ASUS ROG STRIX B550-F GAMING",
+      "_chose": "Asus ROG Strix B550-F Gaming Motherboard",
+      "_price": 18900.0
+    },
+    {
+      "manufacturerPartNumber": "TUF-GAMING-B760M-PLUS-WIFI",
+      "url": "https://mdcomputers.in/product/asus-tuf-gaming-b760m-plus-wifi-motherboard",
+      "_source": "mdcomputers_in",
+      "_catalogName": "ASUS TUF GAMING B760M-PLUS WIFI",
+      "_chose": "Asus TUF Gaming B760M-PLUS WIFI Motherboard",
+      "_price": 19690.0
+    },
+    {
+      "manufacturerPartNumber": "MAG-B550-TOMAHAWK",
+      "url": "https://www.primeabgb.com/online-price-reviews-india/msi-mag-b550-tomahawk-amd-b550-motherboard/",
+      "_source": "primeabgb_com",
+      "_catalogName": "MSI MAG B550 TOMAHAWK",
+      "_chose": "MSI MAG B550 TOMAHAWK AMD Motherboard",
+      "_price": 16438.0
+    },
+    {
+      "manufacturerPartNumber": "PRO-B650-P-WIFI",
+      "url": "https://www.primeabgb.com/online-price-reviews-india/msi-pro-b650-p-wifi-motherboard-pro-b650-p-wifi/",
+      "_source": "primeabgb_com",
+      "_catalogName": "MSI PRO B650-P WIFI",
+      "_chose": "MSI Pro B650-P WIFI Motherboard PRO-B650-P-WIFI",
+      "_price": 19999.0
+    }
+  ]
+}

@@ -49,7 +49,7 @@ const Benchmarks = () => {
         <div className="benchmark-table-scroll">
           <table className="benchmark-table">
             <thead><tr><th scope="col">Rank</th><th scope="col">Exact catalog product</th><th scope="col">Median score</th><th scope="col">Public samples</th><th scope="col">Collected</th><th scope="col">Evidence</th></tr></thead>
-            <tbody>{records.map((row) => <tr key={`${row.category}:${row.manufacturerPartNumber}`}><td><strong>#{row.categoryRank}</strong></td><td><strong>{row.catalogName}</strong><span>{row.manufacturerPartNumber}</span></td><td><strong>{Math.round(row.metricValue).toLocaleString()}</strong><span>{row.unit}</span></td><td>{row.sampleCount?.toLocaleString() || "—"}</td><td>{new Date(row.observedAt).toLocaleDateString()}</td><td><a href={row.sourceRecordUrl} target="_blank" rel="noreferrer">Open source <FiArrowUpRight aria-hidden="true" /></a></td></tr>)}</tbody>
+            <tbody>{records.map((row) => <tr key={`${row.category}:${row.manufacturerPartNumber}`}><td><strong>#{row.categoryRank}</strong></td><td><strong>{row.catalogName}</strong><span>{row.manufacturerPartNumber}</span></td><td><strong>{Math.round(row.metricValue).toLocaleString()}</strong><span>{row.unit}</span></td><td>{row.sampleCount?.toLocaleString() || "—"}</td><td>{new Date(row.observedAt).toLocaleDateString()}</td><td><a href={row.sourcePageUrl || row.sourceRecordUrl} target="_blank" rel="noreferrer">Open source <FiArrowUpRight aria-hidden="true" /></a></td></tr>)}</tbody>
           </table>
         </div>
       </section>

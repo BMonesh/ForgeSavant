@@ -1,10 +1,6 @@
 .Build_Page {
   min-height: calc(100svh - var(--nav-height));
-  background:
-    linear-gradient(rgb(245 243 234 / 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(245 243 234 / 0.025) 1px, transparent 1px),
-    var(--color-background);
-  background-size: var(--grid-size) var(--grid-size);
+  background: var(--color-background);
   color: var(--color-text);
 }
 
@@ -26,9 +22,9 @@
 .Build-Area,
 .hardware-stage {
   border: 1px solid var(--color-border);
-  border-radius: 0;
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: none;
+  box-shadow: var(--shadow-panel);
 }
 
 .compatibility-rail {
@@ -190,9 +186,10 @@
   align-items: center;
   gap: 8px;
   border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
   background: var(--color-background);
   color: var(--color-muted);
-  padding-inline: 12px;
+  padding-inline: 16px;
 }
 
 .search-control:focus-within,
@@ -204,10 +201,10 @@
   min-height: 48px;
   width: 100%;
   border: 1px solid var(--color-border);
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   background: var(--color-background);
   color: var(--color-text);
-  padding: 10px 32px 10px 11px;
+  padding: 10px 32px 10px 16px;
 }
 
 .picker-toolbar select:disabled,
@@ -224,7 +221,7 @@
   border: 0;
   border-bottom: 1px solid var(--color-border);
   border-left: 4px solid transparent;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-text);
   cursor: pointer;
@@ -258,6 +255,7 @@
   justify-content: center;
   overflow: hidden;
   border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   background: var(--color-elevated);
 }
 
@@ -272,21 +270,29 @@
 .price-provenance {
   display: block;
   width: max-content;
-  margin-top: 0.35rem;
-  border: 1px solid var(--color-border);
-  color: var(--color-muted);
+  margin-top: 0.3rem;
+  color: var(--color-subtle);
   font-family: var(--font-utility);
-  font-size: 0.6rem;
+  font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 0.18rem 0.34rem;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
-.price-provenance.live { border-color: var(--color-success); color: var(--color-success); }
-.price-provenance.stale { border-color: var(--color-warning); color: var(--color-warning); }
+.price-provenance.live { color: var(--color-success); }
+.price-provenance.stale { color: var(--color-warning); }
+/* Observed, but for stock the retailer cannot sell: never styled as a live price. */
+.price-provenance.unavailable { color: var(--color-muted); text-decoration: line-through; }
 .component-facts { display: flex; flex-wrap: wrap; gap: 5px; }
-.component-facts em { border: 1px solid var(--color-border); background: var(--color-background); color: var(--color-muted); font-family: var(--font-utility); font-size: 0.64rem; font-style: normal; padding: 4px 6px; }
+.component-facts em {
+  border-radius: var(--radius-pill);
+  background: var(--color-elevated);
+  color: var(--color-muted);
+  font-family: var(--font-utility);
+  font-size: 0.64rem;
+  font-style: normal;
+  padding: 4px 10px;
+}
 .component-price { color: var(--color-text); font-family: var(--font-utility); font-size: 0.75rem; font-weight: 800; }
 
 .picker-actions,
@@ -311,9 +317,9 @@
   min-height: 44px;
   align-items: center;
   justify-content: center;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  padding: 10px 15px;
+  padding: 10px 20px;
   font-weight: 800;
 }
 
@@ -349,11 +355,20 @@
   justify-content: center;
   overflow: hidden;
   border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+  isolation: isolate;
+}
+
+.stage-visual-frame::before {
+  position: absolute;
+  inset: -20% -10%;
+  z-index: -1;
   background:
-    linear-gradient(rgb(245 243 234 / 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(245 243 234 / 0.055) 1px, transparent 1px),
-    var(--color-background);
-  background-size: 28px 28px;
+    radial-gradient(circle at 35% 40%, rgb(255 95 174 / 0.28), transparent 55%),
+    radial-gradient(circle at 65% 60%, rgb(124 92 255 / 0.28), transparent 55%);
+  filter: blur(40px);
+  content: "";
 }
 
 .stage-axis { position: absolute; background: color-mix(in srgb, var(--color-accent) 55%, transparent); }
@@ -401,6 +416,21 @@
 .summary-totals div { display: grid; gap: 4px; border: 1px solid var(--color-border); background: var(--color-elevated); padding: 12px; }
 .summary-totals small { color: var(--color-muted); line-height: 1.45; }
 .summary-checks { display: grid; gap: 0; border-top: 1px solid var(--color-border); }
+.summary-checks-tally { padding: 12px 0; color: var(--color-success); font-family: var(--font-utility); font-size: 0.74rem; font-weight: 700; text-transform: uppercase; }
+.summary-checks-detail { padding-top: 4px; }
+.summary-checks-detail summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-family: var(--font-utility);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  padding: 8px 0;
+  text-transform: uppercase;
+}
+.summary-checks-detail summary:hover { color: var(--color-text); }
 .summary-check { display: grid; grid-template-columns: minmax(130px, 0.35fr) auto 1fr; align-items: start; gap: 14px; border-bottom: 1px solid var(--color-border); padding: 12px 0; }
 .summary-check > span,
 .summary-check > strong { font-size: 0.74rem; text-transform: uppercase; }
@@ -417,8 +447,12 @@
   min-height: 92px;
   grid-template-columns: minmax(320px, 1.25fr) minmax(150px, 0.38fr) minmax(180px, 0.44fr) minmax(220px, 0.55fr);
   align-items: center;
-  border-top: 1px solid var(--color-border);
-  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
+  margin-inline: clamp(16px, 2.5vw, 36px);
+  overflow: hidden;
 }
 
 .dock-checks,
@@ -438,16 +472,27 @@
   gap: 9px;
   margin: 14px 24px;
   border: 1px solid var(--color-accent);
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   background: var(--color-accent);
   color: var(--color-background);
   cursor: pointer;
-  padding: 12px 18px;
+  padding: 12px 22px;
   font-weight: 900;
 }
 
 .dock-continue:disabled { border-color: var(--color-border); background: var(--color-elevated); color: var(--color-subtle); cursor: not-allowed; }
 .dock-review-ready { border-color: var(--color-success); background: var(--color-success); }
+/* Save feedback belongs in the dock: it is the only region pinned to the
+   viewport, so a message rendered further up the review page is unreadable. */
+.dock-message {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 6px 14px 10px;
+  color: var(--color-muted);
+  font-family: var(--font-utility);
+  font-size: 0.72rem;
+}
+.dock-message[role="alert"] { color: var(--color-warning); }
 
 .rail-step:focus-visible,
 .component-row:focus-visible,
@@ -526,3 +571,66 @@
   .component-row { transition: none; }
   .picker-skeleton { animation: none; }
 }
+
+/* Review step: where the chosen CPU and GPU rank against catalog benchmarks. */
+.build-performance { display: grid; gap: 14px; border-top: 1px solid var(--color-border); padding-top: 18px; }
+.performance-state { margin: 0; color: var(--color-muted); font-size: 0.82rem; }
+.performance-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; }
+.performance-heading h3 { margin: 4px 0 0; font-size: 1.15rem; letter-spacing: -0.02em; }
+.performance-link { display: inline-flex; align-items: center; gap: 6px; color: var(--color-muted); font-family: var(--font-utility); font-size: 0.7rem; text-decoration: none; }
+.performance-link:hover { color: var(--color-accent); }
+.performance-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.performance-card { display: grid; align-content: start; gap: 12px; min-width: 0; border: 1px solid var(--color-border); background: var(--color-background); padding: 14px; }
+.performance-card-head > span { color: var(--color-muted); font-family: var(--font-utility); font-size: 0.64rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.performance-card-head > strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+.performance-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; margin-top: 12px; }
+.performance-stats div { display: grid; gap: 2px; border-left: 2px solid var(--color-accent); padding-left: 8px; }
+.performance-stats small { color: var(--color-muted); font-size: 0.62rem; }
+.performance-stats b { font-family: var(--font-utility); font-size: 0.9rem; white-space: nowrap; }
+.performance-missing { margin: 10px 0 0; color: var(--color-muted); font-size: 0.78rem; line-height: 1.5; }
+.performance-ranking { margin-top: 10px; }
+.performance-ranking summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-family: var(--font-utility);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.performance-ranking summary:hover { color: var(--color-text); }
+.performance-bars { display: grid; gap: 7px; margin: 10px 0 0; padding: 0; list-style: none; }
+.performance-bars li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label value" "track track"; align-items: baseline; gap: 3px 8px; color: var(--color-muted); font-size: 0.7rem; }
+.bar-label { grid-area: label; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track { grid-area: track; height: 6px; background: var(--color-elevated); }
+.bar-fill { display: block; height: 100%; background: var(--color-border); }
+.bar-value { grid-area: value; font-family: var(--font-utility); text-align: right; }
+.performance-bars li.is-selected { color: var(--color-text); font-weight: 700; }
+.performance-bars li.is-selected .bar-fill { background: var(--color-accent); }
+.performance-source { display: flex; justify-content: space-between; gap: 10px; color: var(--color-subtle); font-size: 0.66rem; }
+.performance-source a { display: inline-flex; align-items: center; gap: 4px; color: var(--color-muted); }
+.performance-caveats { display: grid; gap: 4px; margin: 0; padding-left: 16px; color: var(--color-subtle); font-size: 0.7rem; line-height: 1.5; }
+@media (max-width: 900px) {
+  .performance-grid { grid-template-columns: 1fr; }
+}
+
+/* Estimated gaming bands. Styled as an estimate throughout, never as a result. */
+.gaming-estimate { display: grid; gap: 14px; border-top: 1px solid var(--color-border); padding-top: 18px; }
+.gaming-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.gaming-heading h3 { margin: 4px 0 0; font-size: 1.15rem; letter-spacing: -0.02em; }
+.estimate-badge { border: 1px dashed var(--color-warning); color: var(--color-warning); font-family: var(--font-utility); font-size: 0.64rem; letter-spacing: 0.05em; padding: 4px 8px; text-transform: uppercase; }
+.gaming-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.gaming-tier { display: grid; gap: 8px; border: 1px dashed var(--color-border); background: var(--color-background); padding: 12px; }
+.tier-resolution { color: var(--color-muted); font-family: var(--font-utility); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.tier-meter { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+.tier-meter i { height: 5px; background: var(--color-elevated); }
+.tier-meter i.on { background: var(--color-accent); }
+.tier-band { font-family: var(--font-utility); font-size: 1rem; }
+.gaming-method { color: var(--color-muted); font-size: 0.74rem; line-height: 1.5; }
+.gaming-method summary { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.gaming-method p { margin: 8px 0 4px; }
+.gaming-method ul { margin: 0; padding-left: 16px; }
+.gaming-unavailable { margin: 0; border: 1px dashed var(--color-border); color: var(--color-muted); font-size: 0.8rem; line-height: 1.55; padding: 12px; }
+@media (max-width: 700px) { .gaming-tiers { grid-template-columns: 1fr; } }

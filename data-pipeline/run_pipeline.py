@@ -14,6 +14,8 @@ import time
 from typing import Callable
 
 
+from observation_store import load_project_env
+
 BASE_DIR = Path(__file__).resolve().parent
 SECRET_PATTERNS = (
     (re.compile(r"(mongodb(?:\+srv)?://[^:\s]+:)[^@\s]+", re.IGNORECASE), r"\1[REDACTED]"),
@@ -64,7 +66,12 @@ def run_pipeline(
     pipeline_dir: Path = BASE_DIR,
     limit: int = 0,
     command_runner: Callable[..., subprocess.CompletedProcess] = subprocess.run,
+    publish_reports: bool | None = None,
 ) -> dict:
+    # Resolved once, here, so the stage list is a function of the arguments
+    # rather than of whatever happens to be in the environment.
+    if publish_reports is None:
+        publish_reports = bool(os.getenv("OBSERVATION_STORE_URI") or os.getenv("URI"))
     status_path = pipeline_dir / "analytics" / "pipeline_status.json"
     lock_path = pipeline_dir / "runtime" / "pipeline.lock"
     status = {
@@ -86,6 +93,13 @@ def run_pipeline(
     ]
     if limit > 0:
         commands[0][1].extend(["--limit", str(limit)])
+
+    # Only meaningful once a shared database is configured. A run on a host that
+    # keeps its lake locally has nothing to publish to other hosts.
+    if publish_reports:
+        commands.append(
+            ("publish_reports", [sys.executable, str(pipeline_dir / "publish_reports.py"), "--apply"])
+        )
 
     with PipelineLock(lock_path):
         write_json_atomic(status_path, status)
@@ -130,6 +144,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run catalog, retail-offer, and analytics stages with locking and health reporting")
     parser.add_argument("--limit", type=int, default=0, help="Limit Open Icecat lookups; zero runs the full catalog")
     args = parser.parse_args()
+    load_project_env()
     status = run_pipeline(limit=args.limit)
     print(json.dumps(status, indent=2, ensure_ascii=False))
     return 0 if status["status"] == "succeeded" else 1

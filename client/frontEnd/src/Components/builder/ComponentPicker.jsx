@@ -173,10 +173,20 @@ const ComponentPicker = ({
           </>
         ) : filteredItems.length > 0 ? (
           filteredItems.map((item) => {
-            const facts = getItemUtilityFacts(item, stepId).slice(0, 4);
+            // Show the single most useful spec inline; the rest is still
+            // in item.specifications for a future detail view, but a wall
+            // of 4 chips per row is exactly the "too much at once" problem.
+            const facts = getItemUtilityFacts(item, stepId).slice(0, 1);
             const isSelected = selectedId === item._id;
             const pricingStatus = item.pricing?.status || "sample";
-            const pricingLabel = pricingStatus === "live" ? "Live price" : pricingStatus === "stale" ? "Stale price" : "Planning price";
+            // A retailer observation for something it cannot sell is not a price
+            // you can pay, and unavailable listings are the ones least likely to
+            // be repriced. Say so rather than showing it as a live price.
+            const isUnavailable = pricingStatus !== "sample" && item.pricing?.availability === "out_of_stock";
+            const pricingLabel = isUnavailable
+              ? "Out of stock"
+              : pricingStatus === "live" ? "Live price" : pricingStatus === "stale" ? "Stale price" : "Planning price";
+            const pricingClass = isUnavailable ? "unavailable" : pricingStatus;
             return (
               <button
                 key={item._id}
@@ -202,7 +212,12 @@ const ComponentPicker = ({
                 <span>
                   <strong>{item.name}</strong>
                   <small>{item.manufacturer || item.type || "Component"}</small>
-                  <small className={`price-provenance ${pricingStatus}`} title={item.pricing?.observedAt ? `Observed ${new Date(item.pricing.observedAt).toLocaleString()}` : "Development catalog value"}>
+                  <small
+                    className={`price-provenance ${pricingClass}`}
+                    title={item.pricing?.observedAt
+                      ? `${isUnavailable ? "Last listed price, not currently purchasable. " : ""}Observed ${new Date(item.pricing.observedAt).toLocaleString()}`
+                      : "Development catalog value"}
+                  >
                     {pricingLabel}{item.pricing?.source && pricingStatus !== "sample" ? ` · ${item.pricing.source.replaceAll("_", " ")}` : ""}
                   </small>
                 </span>
