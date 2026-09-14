@@ -29,13 +29,43 @@ const BuildSummary = ({ selection, estimate, gaming, compatibility, compatibilit
       </div>
 
       <div className="summary-checks" aria-label="Server compatibility evidence">
-        {(compatibility?.checks || []).map((check) => (
-          <div key={check.id} className={`summary-check summary-check-${check.status}`}>
-            <span>{check.label}</span>
-            <strong>{check.status}</strong>
-            <p>{check.message}</p>
-          </div>
-        ))}
+        {(() => {
+          const checks = compatibility?.checks || [];
+          const passing = checks.filter((check) => check.status === "pass");
+          const needsAttention = checks.filter((check) => check.status !== "pass");
+          return (
+            <>
+              {checks.length > 0 ? (
+                <p className="summary-checks-tally">
+                  {passing.length} of {checks.length} compatibility checks passed
+                  {needsAttention.length > 0 ? " -- see below" : ""}
+                </p>
+              ) : null}
+              {/* Only the checks that need a decision are expanded by default --
+                  a passing check is confirmation, not something to read every
+                  time; it's still available in the disclosure below. */}
+              {needsAttention.map((check) => (
+                <div key={check.id} className={`summary-check summary-check-${check.status}`}>
+                  <span>{check.label}</span>
+                  <strong>{check.status}</strong>
+                  <p>{check.message}</p>
+                </div>
+              ))}
+              {passing.length > 0 ? (
+                <details className="summary-checks-detail">
+                  <summary>Show all {checks.length} checks</summary>
+                  {passing.map((check) => (
+                    <div key={check.id} className={`summary-check summary-check-${check.status}`}>
+                      <span>{check.label}</span>
+                      <strong>{check.status}</strong>
+                      <p>{check.message}</p>
+                    </div>
+                  ))}
+                </details>
+              ) : null}
+            </>
+          );
+        })()}
         {compatibilityStatus === "error" ? <p className="build-message-inline" role="alert">Server compatibility evidence is temporarily unavailable.</p> : null}
       </div>
 

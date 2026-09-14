@@ -98,25 +98,28 @@ const BuildPerformance = ({ selection }) => {
             </header>
 
             {chart.rows.length > 0 ? (
-              <ol className="performance-bars">
-                {chart.rows.map((row) => {
-                  const isSelected = row === chart.selected;
-                  const width = chart.top > 0 ? Math.max(2, (Number(row.metricValue) / chart.top) * 100) : 0;
-                  return (
-                    <li
-                      key={row.manufacturerPartNumber}
-                      className={isSelected ? "is-selected" : ""}
-                      aria-current={isSelected ? "true" : undefined}
-                    >
-                      <span className="bar-label" title={row.catalogName}>{row.catalogName}</span>
-                      <span className="bar-track" aria-hidden="true">
-                        <span className="bar-fill" style={{ width: `${width}%` }} />
-                      </span>
-                      <span className="bar-value">{Math.round(row.metricValue).toLocaleString("en-IN")}</span>
-                    </li>
-                  );
-                })}
-              </ol>
+              <details className="performance-ranking">
+                <summary>Show full ranking ({chart.rows.length} parts)</summary>
+                <ol className="performance-bars">
+                  {chart.rows.map((row) => {
+                    const isSelected = row === chart.selected;
+                    const width = chart.top > 0 ? Math.max(2, (Number(row.metricValue) / chart.top) * 100) : 0;
+                    return (
+                      <li
+                        key={row.manufacturerPartNumber}
+                        className={isSelected ? "is-selected" : ""}
+                        aria-current={isSelected ? "true" : undefined}
+                      >
+                        <span className="bar-label" title={row.catalogName}>{row.catalogName}</span>
+                        <span className="bar-track" aria-hidden="true">
+                          <span className="bar-fill" style={{ width: `${width}%` }} />
+                        </span>
+                        <span className="bar-value">{Math.round(row.metricValue).toLocaleString("en-IN")}</span>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </details>
             ) : null}
 
             {chart.selected ? (

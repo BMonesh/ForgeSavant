@@ -173,7 +173,10 @@ const ComponentPicker = ({
           </>
         ) : filteredItems.length > 0 ? (
           filteredItems.map((item) => {
-            const facts = getItemUtilityFacts(item, stepId).slice(0, 4);
+            // Show the single most useful spec inline; the rest is still
+            // in item.specifications for a future detail view, but a wall
+            // of 4 chips per row is exactly the "too much at once" problem.
+            const facts = getItemUtilityFacts(item, stepId).slice(0, 1);
             const isSelected = selectedId === item._id;
             const pricingStatus = item.pricing?.status || "sample";
             // A retailer observation for something it cannot sell is not a price

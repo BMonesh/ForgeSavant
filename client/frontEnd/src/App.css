@@ -5,26 +5,35 @@
   font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --color-background: #131313;
-  --color-surface: #201f1f;
-  --color-elevated: #2a2927;
+  --color-background: #0d0d10;
+  --color-surface: #17161b;
+  --color-elevated: #201f26;
   --color-text: #f5f3ea;
   --color-muted: #aba9a1;
   --color-subtle: #7b7973;
-  --color-border: #45433f;
+  --color-border: #302e35;
   --color-accent: #ffd700;
   --color-success: #ccff00;
   --color-warning: #ffb020;
   --color-danger: #ff3b30;
   --color-info: #4db8ff;
+  /* Ambient RGB-lighting glow, used ONLY behind product photography (hero
+     case renders, build-stage images) to echo how these parts actually
+     look lit up -- never used as UI chrome color, which stays the brand's
+     established gold so the redesign reads as a density fix, not a
+     rebrand. */
+  --glow-primary: #ff5fae;
+  --glow-secondary: #7c5cff;
   --font-display: "Public Sans", "Arial Narrow", sans-serif;
   --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
   --font-utility: "JetBrains Mono", "Cascadia Mono", monospace;
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
   --shadow-dialog: 0 22px 60px rgb(0 0 0 / 0.45);
-  --shadow-panel: none;
+  --shadow-panel: 0 24px 60px rgb(0 0 0 / 0.35);
+  --shadow-glow: 0 30px 80px -20px rgb(255 95 174 / 0.25), 0 30px 80px -20px rgb(124 92 255 / 0.2);
   --nav-height: 68px;
   --grid-size: 32px;
   --motion-fast: 120ms;
@@ -67,10 +76,6 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: var(--color-background);
-  background-image:
-    linear-gradient(rgb(245 243 234 / 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(245 243 234 / 0.025) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size);
   color: var(--color-text);
   font-family: var(--font-body);
   line-height: 1.5;
@@ -146,7 +151,7 @@ textarea:focus-visible,
 .ui-button,
 .MuiButton-root {
   min-height: 44px !important;
-  border-radius: 0 !important;
+  border-radius: var(--radius-pill) !important;
   font-family: var(--font-body) !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
