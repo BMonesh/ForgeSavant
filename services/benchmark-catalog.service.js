@@ -1,5 +1,8 @@
-const fs = require("node:fs/promises");
 const path = require("node:path");
+// Same file-first, database-fallback read the data-health console uses: the
+// deployed API has no analytics directory, so without the published copy the
+// build review's performance panel would always report evidence unavailable.
+const { loadReport } = require("./data-quality.service");
 
 const defaultPath = path.join(__dirname, "..", "data-pipeline", "analytics", "benchmark_catalog_summary.json");
 const allowedCategories = new Set(["processors", "gpus"]);
@@ -10,7 +13,7 @@ const readBenchmarkCatalog = async ({ category } = {}, summaryPath = process.env
     error.statusCode = 400;
     throw error;
   }
-  const parsed = JSON.parse(await fs.readFile(summaryPath, "utf8"));
+  const parsed = await loadReport("benchmark_catalog_summary", summaryPath);
   if (parsed?.schemaVersion !== "1.0" || !Array.isArray(parsed.records)) {
     const error = new Error("Benchmark summary has an unsupported schema");
     error.statusCode = 503;

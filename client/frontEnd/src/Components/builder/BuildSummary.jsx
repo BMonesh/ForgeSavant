@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { formatPrice, getBuildTotal, stepLabels } from "./buildUtils";
 import { useSession } from "../../auth/SessionContext";
+import BuildPerformance from "./BuildPerformance";
 
 const summarySteps = [
   "processor",
@@ -69,6 +70,8 @@ const BuildSummary = ({ selection, estimate, compatibility, compatibilityStatus,
           <small>Dimensionless planning index; no benchmark or frame-rate claim.</small>
         </div>
       </div>
+
+      <BuildPerformance selection={selection} />
 
       {message ? <p className="build-message-inline" role={saveState === "error" ? "alert" : "status"}>{message}</p> : null}
 

@@ -33,6 +33,8 @@ REPORTS = {
     "model_readiness_summary": "model_readiness_summary.json",
     "retail_snapshot_report": "retail_snapshot_report.json",
     "catalog_coverage_queue": "catalog_coverage_queue.json",
+    # Read by services/benchmark-catalog.service.js for /benchmarks and the build review.
+    "benchmark_catalog_summary": "benchmark_catalog_summary.json",
 }
 
 
